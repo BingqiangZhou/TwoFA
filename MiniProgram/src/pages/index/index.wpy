@@ -1,0 +1,426 @@
+<style lang="less">
+.calendar-root{
+    font-family: simhei;
+    font-size: 34rpx;
+    color: #353535;
+    /*background: #f1f1f1;*/
+}
+.calendar-navbar{
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    height: 70rpx;
+}
+.calendar-navbar-button{
+    flex-grow: 1;
+    width: 100rpx;
+    height: 70rpx;
+    line-height:70rpx;
+    text-align: center;
+    font-size: 30rpx;
+}
+.calendar-navbar-date{
+    flex-grow: 1;
+    width: 150rpx;
+    height: 70rpx;
+    line-height:70rpx;
+    text-align: center;
+    font-size: 30rpx;
+}
+.calendar-head{
+    border-top: solid 0.5rpx #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50rpx;
+    background: #fff;
+    font-size: 35rpx;
+}
+.calendar-head view{
+    text-align: center;
+    flex:1;
+}
+.calendar-body{
+    margin-top: 10rpx;
+    background: #f1f1f1;
+}
+.calendar-body-rows{
+    display: flex;
+    align-items: center;
+    height: 98rpx;
+    padding: 0 4rpx 8rpx;
+}
+.calendar-body-cols{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    height: 100%;
+    padding: 0 4rpx;
+}
+.calendar-body-item{
+    position:relative;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+}
+.calendar-body-day{
+    position: absolute;
+    left: 10rpx;
+    top: 10rpx;
+    text-align: center;
+}
+.calendar-body-dayex{
+    position: absolute;
+    left: 10rpx;
+    top: 60rpx;
+    text-align: center;
+    font-size: 25rpx;
+}
+.calendar-detail{
+    background: #fff;
+    height: 150rpx;
+    
+}
+.calendar-detail-day{
+    position: absolute;
+    margin-left: 80rpx;
+    font-size: 108rpx;
+    font-weight: bold;
+    color: #25C6FC;
+}
+.calendar-detail-info1{
+    position: absolute;
+    margin-top: 30rpx;
+    margin-left: 230rpx;
+    font-size: 30rpx;
+    font-weight: bold;
+}
+.calendar-detail-info2{
+    position: absolute;
+    margin-top: 80rpx;
+    margin-left: 230rpx;
+    font-size: 28rpx;
+}
+.calendar-detail-info3{
+    position: absolute;
+    margin-top: 20rpx;
+    margin-left: 630rpx;
+    font-size: 70rpx;
+}
+.view-hover{
+    background:#f9f9f9;
+}
+.date-selected
+{
+  background: #25C6FC;
+}
+.about-button-view{
+  background: white;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+}
+.about-button-my-setting{
+  margin-left: 2%;
+  background: #25C6FC;
+  color: white;
+  width: 350rpx;
+  height: 100rpx;
+  font-size: 40rpx;
+  float: left;
+}
+.about-button-setting-tips{
+  margin-right: 2%;
+  background: #f21f2b;
+  color: white;
+  width: 350rpx;
+  height: 100rpx;
+  font-size: 40rpx;
+}
+.blank-line{
+  height: 10rpx;
+  background: #f1f1f1;
+}
+.slogan{
+  background: white;
+  padding-top: 50rpx;
+  text-align: center;
+}
+.slogan-text{
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #25C6FC;
+}
+</style>
+<template>
+<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+  <view class="calendar-root" style="padding-top:calc(40px + {{barHeight}}px);">
+    <view class="calendar-navbar">
+        <view class="calendar-navbar-button" bindtap="Click_GoToday" hover="true" hover-class="view-hover">今日</view>
+        <view class="calendar-navbar-button" bindtap="Click_GoLastMonth" hover="true" hover-class="view-hover">{{sign.lastDay}}</view>
+        <view class="calendar-navbar-date">{{pageData.dateData.date}}</view>
+        <view class="calendar-navbar-button" bindtap="Click_GoNextMonth" hover="true" hover-class="view-hover">{{sign.nextDay}}</view>
+        <picker class="calendar-navbar-button" mode="date" start="1949-10-01" end="2100-01-01" bindchange="PickerBind_DateChange">
+            <view hover="true" hover-class="view-hover">跳转</view>
+        </picker>
+    </view>
+    <view class="calendar-head">
+        <view wx:for="一二三四五六日" wx:key="*this">{{item}}</view>
+    </view>
+    <view class="calendar-body">
+      <view class='blank-line'></view>
+        <view class="calendar-body-rows" wx:for="123456" wx:for-index="row" wx:key="*this">
+            <view class="calendar-body-cols" wx:for="1234567" wx:for-index="col" wx:key="*this">
+                <view wx:if="{{pageData.detailData.curDay === pageData.dateData.arrDays[row * 7 + col] && pageData.dateData.arrIsShow[row * 7 + col] }}" class="calendar-body-item date-selected" hover="true" hover-class="view-hover" data-day-index="{{row * 7 + col}}" bindtap="Click_SelectDay">
+                      <view hidden="{{!pageData.dateData.arrIsShow[row * 7 + col]}}">
+                        <view class="calendar-body-day">
+                          {{pageData.dateData.arrDays[row * 7 + col]}}
+                        </view>
+                        <view class="calendar-body-dayex">
+                          {{pageData.dateData.arrInfoExShow[row * 7 + col]}}
+                        </view>
+                      </view>
+                  </view>
+                   <view wx:else class="calendar-body-item" hover="true" hover-class="view-hover" data-day-index="{{row * 7 + col}}" bindtap="Click_SelectDay">
+                      <view hidden="{{!pageData.dateData.arrIsShow[row * 7 + col]}}">
+                      <view class="calendar-body-day">
+                        {{pageData.dateData.arrDays[row * 7 + col]}}
+                      </view>
+                      <view class="calendar-body-dayex">
+                        {{pageData.dateData.arrInfoExShow[row * 7 + col]}}
+                      </view>
+              </view>
+              </view>
+          </view>               
+            </view>
+    </view>
+    <view class="calendar-detail">
+        <view class="calendar-detail-day">{{pageData.detailData.curDay}}</view>
+        <view class="calendar-detail-info1">{{pageData.detailData.curInfo1}}</view>
+        <view class="calendar-detail-info2">{{pageData.detailData.curInfo2}}</view>
+    </view>
+    <view class='blank-line'></view>
+    <!-- <view class="about-button-view">
+        <button class='about-button-my-setting' bindtap='Click_MyRemind'>我的提醒</button>
+        <button class='about-button-setting-tips' bindtap='Click_SettingRemind'>设置提醒</button>
+        <button class='about-button-setting-tips' open-type="getUserInfo" bindgetuserinfo='Click_SettingRemind'>设置提醒</button>
+        <button class='about-button-red-envelope' bindtap='copyBtn'>悬赏</button>
+    </view> -->
+    <view class="slogan">
+      <text class="slogan-text">再牛逼的梦想也抵不过傻子似的坚持！</text>
+    </view>
+</view>
+</template>
+<script>
+  import wepy from 'wepy'
+  var ccFile = require('../../utils/calendar-converter.js')
+  var calendarConverter = new ccFile.CalendarConverter();
+  //月份天数表
+var DAY_OF_MONTH = [
+    [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+    [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+];
+
+//判断当前年是否闰年
+var isLeapYear = function(year){
+    if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))
+        return 1
+    else
+        return 0
+};
+
+//获取当月有多少天
+var getDayCount = function(year, month){
+    return DAY_OF_MONTH[isLeapYear(year)][month];
+};
+
+//获取当前索引下是几号
+var getDay = function(index) {
+    return index - curDayOffset;
+};
+var pageData = {
+    dateData: {
+        date: "",                //当前日期字符串
+        arrIsShow: [],           //是否显示此日期
+        arrDays: [],             //关于几号的信息
+        arrInfoEx: [],           //农历节假日等扩展信息
+        arrInfoExShow: [],       //处理后用于显示的扩展信息
+    },
+    //选择一天时显示的信息
+    detailData: {
+        curDay: "",         //detail中显示的日信息
+        curInfo1: "",
+        curInfo2: "",
+        curInfo3: "",
+    }
+}
+
+//获取此月第一天相对视图显示的偏移
+var getOffset = function()
+{
+    var offset = new Date(curYear, curMonth, 1).getDay();
+    offset = offset == 0 ? 6 : offset - 1; //注意这个转换，Date对象的getDay函数返回返回值是 0（周日） 到 6（周六） 
+    return offset;
+}
+
+//设置当前详细信息的索引，前台的详细信息会被更新
+var lastRefreshDetailDataIndex = 0;
+var refreshDetailData = function(index){
+    if (index == null)
+    {
+        index = lastRefreshDetailDataIndex
+    }
+    else
+    {
+        lastRefreshDetailDataIndex = index;
+    }
+    var curEx = pageData.dateData.arrInfoEx[index];
+    if (!curEx)
+        return;
+    curDay = curEx.sDay;
+    pageData.detailData.curDay = curEx.sDay;
+    pageData.detailData.curInfo1 = "农历" + curEx.lunarMonth + "月" + curEx.lunarDay + " " + curEx.lunarFestival;
+    pageData.detailData.curInfo2 = curEx.cYear+curEx.lunarYear + "年 " + curEx.cMonth + "月 " + curEx.cDay + "日";
+}
+
+//刷新全部数据
+var refreshPageData = function (year, month, day){
+    curMonth = month;
+    curYear = year;
+    curDay = day;
+
+    pageData.dateData.date = curYear + '年'+ (curMonth + 1) + '月';
+
+    var offset = getOffset();
+    var offset2 = getDayCount(curYear, curMonth) + offset;
+    for (var i = 0; i < 42; ++i)
+    {
+        pageData.dateData.arrIsShow[i] = i < offset || i >= offset2 ? false : true;
+        if (!pageData.dateData.arrIsShow[i])
+            continue;
+        pageData.dateData.arrDays[i] = i - offset + 1;
+        var d = new Date(year, month, i - offset + 1);
+        var dEx = calendarConverter.solar2lunar(d);
+        pageData.dateData.arrInfoEx[i] = dEx;
+        if ("" != dEx.lunarFestival)
+        {
+            pageData.dateData.arrInfoExShow[i] = dEx.lunarFestival;
+        }
+        else if ("初一" === dEx.lunarDay)
+        {
+            pageData.dateData.arrInfoExShow[i] = dEx.lunarMonth + "月";
+        }
+        else
+        {
+            pageData.dateData.arrInfoExShow[i] = dEx.lunarDay;
+        }
+    }
+    refreshDetailData(offset + day - 1);
+};
+
+var curDate = new Date();
+var curMonth = curDate.getMonth();
+var curYear = curDate.getFullYear();
+var curDay = curDate.getDate();
+refreshPageData(curYear, curMonth, curDay);
+
+  export default class Index extends wepy.page {
+    data = {
+      pageData: pageData,
+      hello: 'hello',
+      title: '首页',
+      sign:{
+        lastDay: '<',
+        nextDay: '>'
+      },
+      barHeight: wepy.$instance.globalData.statusBarHeight
+    };
+    methods = {
+      Click_GoToday()
+      {
+        curDate = new Date();
+        curMonth = curDate.getMonth();
+        curYear = curDate.getFullYear();
+        curDay = curDate.getDate();
+        refreshPageData(curYear, curMonth, curDay);
+        this.$apply();
+      },
+      Click_GoLastMonth()
+      {
+        if (0 == curMonth)
+        {
+            curMonth = 11;
+            --curYear
+        }
+        else
+        {
+            --curMonth;
+        }
+        refreshPageData(curYear, curMonth, 1);
+        this.$apply();
+      },
+      Click_GoNextMonth()
+      {
+        if (11 == curMonth)
+        {
+            curMonth = 0;
+            ++curYear
+        }
+        else
+        {
+            ++curMonth;
+        }
+        refreshPageData(curYear, curMonth, 1);
+        this.$apply();
+      },
+      PickerBind_DateChange(e)
+      {
+        var arr = e.detail.value.split("-");
+        refreshPageData(+arr[0], arr[1]-1, +arr[2]);
+        this.$apply();
+      },
+      Click_SelectDay(e)
+      {
+        refreshDetailData(e.currentTarget.dataset.dayIndex);
+        this.$apply();
+      },
+      Click_MyRemind()
+      {
+        wx.navigateTo({
+          url: '/pages/myremind/myremind'
+        })
+      },
+      Click_SettingRemind()
+      {
+        var openid = wx.getStorageSync("openid");
+        if (openid == '') {
+          wx.login(
+          {
+            success:function(res){
+              wx.request({
+                url: 'http://localhost:55624/Api/GetUserInfo', 
+                data:{  
+                  jsCode:res.code,  
+                }, 
+                method: 'get',
+                dataType: 'json',
+                success:function(res)
+                {
+                    //console.log(res.data);
+                    var userinfo = JSON.parse(res.data);
+                    wx.setStorage({key:'openid',data:userinfo.openid});
+                }
+              })
+            }
+          })
+        }
+        wx.navigateTo({
+          url: '/pages/settingtime/settingtime'
+        })  
+      }
+    };
+  }
+</script>

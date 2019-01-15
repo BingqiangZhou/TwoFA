@@ -1,0 +1,269 @@
+<style lang="less">
+	.code-view{
+    width: 100%;
+    height: 200rpx;
+  }
+  .code-layer{
+    padding: 2% 15%;
+  }
+  .code-info{
+    height: 100rpx;
+    float: left;
+  }
+  .code-copy{
+    width: 100rpx;
+    height: 100rpx;
+    margin-left: 10%;
+    margin-top: 30rpx;
+  }
+  .code-main-info{
+    font-size: 100rpx;
+  }
+  .account{
+    padding: 20% 0% 2% 10%;
+    //text-align: center;
+    //padding-top: 20%;
+    //border: 1rpx red solid;
+  }
+  .account-info{
+    font-size: 50rpx;
+    //color: #25C6FC;
+  }
+  .manufacturer-info{
+    font-size: 25rpx;
+  }
+  .account-switch-image{
+    margin-left: 2%;
+    width: 50rpx;
+    height: 50rpx;
+  }
+/*
+.account-list{
+    float: left;
+  }
+  .account-current{
+    float: right;
+  }
+  .account-list-show{
+    float: right;
+    height: 60rpx;
+    width: 60rpx;
+  }
+  .show-account{
+    clear: both;
+    font-size: 40rpx;    
+  }
+  .show-account-list{
+    padding:2%;
+    background: #25C6FC;
+    border: 1rpx white solid;
+  }
+  .show-account-selected-tip{
+    float: right;
+  }
+*/
+  .function{
+    font-size: 50rpx;
+  }
+  .function-list{
+    float: left;
+  }
+  .function-list-show{
+    float: right;
+    height: 60rpx;
+    width: 60rpx;
+  }
+  .show-function{
+    width: 100%;
+    height: 300rpx;
+    margin-top: 10rpx;
+    clear: both;
+  }
+  .function-view{
+    margin: 2% 0 2% 2%;
+    width: 30%;
+    float: left;
+    text-align: center;
+    //border: 1rpx #25C6FC solid;
+  }
+  .function-image{
+    width: 100%;
+    height: 200rpx;
+    //border: 1rpx #25C6FC solid;
+  }
+</style>
+<template>
+  <!-- border: 1rpx red solid; -->
+<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+</view>
+<view style="padding-top:calc(40px + {{barHeight}}px);font-size: 30rpx;">
+  <view class="account">
+    <text class="account-info">BingqiangZhou</text>
+    <image class="account-switch-image" mode='aspectFit' src="/img/gear.png">图片：切换账号</image>
+    <view class="manufacturer-info">manufacturer</view>
+  </view>
+  <view class="code-view">
+    <view class="code-layer">
+      <view class="code-info">
+        <view class="code-main-info">
+          <text>{{code}}</text>
+          <progress percent="{{countdown}}" border-radius="2" color="black"></progress>
+        </view>
+      </view>
+      <image src='/img/copy.png' mode='aspectFit' class="code-copy" bindtap="CopyCode"></image>
+    </view>
+  </view>
+  <!-- <view class="function">
+    <view class="function-list">功能</view>
+    <view wx:if="{{function_show}}">
+      <image class="function-list-show" mode='aspectFit' src="/img/up.png" bindtap="ShowControl(0)">当前：张开</image>
+    </view>
+    <view wx:else>
+      <image class="function-list-show" mode='aspectFit' src="/img/down.png" bindtap="ShowControl(0)">当前：合并</image>
+    </view>
+    <view class="account-current">当前账号:{{account_list[account_index].account}}</view>
+  </view> -->
+  <!-- <view wx:if="{{function_show}}"> -->
+    <view class="show-function">
+      <!-- <text>功能列表</text> -->
+      <view class="function-view">
+        <image class="function-image" mode='aspectFit' src="/img/cloud.png"></image>
+        <text>数据同步</text>
+      </view>
+      <view class="function-view">
+        <image class="function-image" mode='aspectFit' src="/img/user.png"></image>
+        <text>我的账户</text>
+      </view>
+      <view class="function-view">
+        <image class="function-image" mode='aspectFit' src="/img/add.png"></image>
+        <text>添加账号</text>
+      </view>
+    </view>
+  <!-- </view> -->
+  <view style="clear: both;"></view>
+  <!-- <view class="account">
+    <view wx:if="{{account_show}}">
+      <view class="account-list">账号</view>
+      <image class="account-list-show" mode='aspectFit' src="/img/up.png" bindtap="ShowControl(1)">当前：张开</image>
+    </view>
+    <view wx:else>
+      <view class="account-list">{{account_list[account_index].account}}</view>
+      <image class="account-list-show" mode='aspectFit' src="/img/down.png" bindtap="ShowControl(1)">当前：合并</image>
+    </view>
+    <view class="account-current">当前账号:{{account_list[account_index].account}}</view>
+  </view> -->
+  <!-- <view wx:if="{{account_show}}"> -->
+    <!-- <view scroll-y="true" class="show-account">
+      <view wx:for="{{account_list}}" wx:key="unique">
+          <view class="show-account-list" bindtap="SelectAccount({{index}})">
+            <view wx:if="{{index==account_index}}">
+              <view class="show-account-selected">
+                <view>{{item.account}}</view>
+                <view>厂商</view>
+                <view class="show-account-selected-tip">切换账号</view>
+              </view>
+            </view>
+            <view wx:else>
+              <view >{{item.account}}</view>
+            </view>
+          </view>
+      </view>
+    </view> -->
+  <!-- </view> -->
+</view>
+</template>
+<script>
+  import wepy from 'wepy'  
+  var totp = require('../../utils/totp.js')
+  export default class Index extends wepy.page {
+    data = {
+      title: '2FA',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      account_list: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
+      account_index: 0,
+      counter:0,
+      code:0,
+      countdown:0,
+      havaTimer:false
+      //account_show:true,
+      //function_show:true,
+    };
+    onLoad()
+    {
+      if (this.havaTimer == false) {
+        this.account_list.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
+        this.account_list.push({key:"123",account:"1",manufacturer:"GitHub"});
+        //console.log(this.account_list)
+        this.$apply();
+      }
+      var date = new Date();
+      this.counter = Math.floor(date.getTime() / (30*1000));
+      this.countdown = Math.ceil(date.getSeconds()%30 * (100/30));
+      // console.log(this.account_list[0].account)
+      // console.log(date.getTime());
+      // console.log(this.countdown);
+      // console.log(this.account_list[this.account_index].key);
+      // console.log(this.counter);
+      // console.log(this.account_index);
+      // this.$apply();
+      this.code = totp.GetCode(this.account_list[this.account_index].key,this.counter.toString()); 
+      this.$apply();
+    };
+    onShow()
+    {
+      var that = this;
+      //var ttotp = totp;
+      if (this.havaTimer == false) {
+        setInterval(function () {
+          that.countdown = (that.countdown+1) % 100;
+          if (that.countdown == 0) {
+            //console.log(ttotp.accountList[1].account)
+            that.counter = totp.GetCounter();
+            //console.log(that.counter);
+            that.code = totp.GetCode(that.key,that.counter.toString()); 
+          }
+          that.$apply();
+        }, 300);
+        this.havaTimer = true;
+      }
+    }
+    methods = {
+      CopyCode()
+      {
+        var that = this;
+        wx.setClipboardData({
+          data: that.code.toString(),
+          success: function (res) {
+            wx.showToast({
+              title: '验证码已复制'
+            })
+          }
+        })
+      },
+      // ShowControl(showElement)
+      // {
+      //   switch(parseInt(showElement))
+      //   {
+      //     case 0:
+      //       this.function_show = !this.function_show;
+      //       break;
+      //     case 1:
+      //       this.account_show = !this.account_show;
+      //       break;
+      //   }
+      //   this.$apply();
+      // },
+      // SelectAccount(index)
+      // {
+      //   if (this.account_index == index) {
+      //     return;
+      //   }
+      //   this.account_index = index;
+      //   this.code = totp.GetCode(this.account_list[this.account_index].key,this.counter.toString()); 
+      //   this.$apply();
+      // }
+    };
+  }
+</script>
+

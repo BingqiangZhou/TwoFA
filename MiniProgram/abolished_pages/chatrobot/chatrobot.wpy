@@ -1,0 +1,366 @@
+<style lang="less">
+page{
+  background-color: whitesmoke;
+}
+.news {  
+  margin-bottom: 120rpx;
+}  
+.chat-title{
+  top:0px;
+  width: 100%;
+  height: 40px;
+  font-size: 30px;
+  background: white;
+} 
+.img_null {  
+  height: 60rpx;  
+}  
+.l {  
+  height: 5rpx;  
+  width: 20%;  
+  margin-top: 30rpx;  
+  color: #000;  
+}  
+.guide{  
+  /*border: 1rpx red solid;*/
+  width: 100%;
+  text-align: center;
+  font-size: 28rpx;
+  margin-left: -20rpx;
+  color: gray;
+}
+.guide-url{
+  text-decoration: underline;
+}
+/* 聊天 */  
+.my_right {  
+  float: right;  
+  position: relative;  
+  right: 40rpx;  
+}  
+.you_left {  
+  float: left;  
+  position: relative;  
+  left: 5rpx;  
+}  
+.new_img {  
+  width: 100rpx;  
+  height: 100rpx;  
+  border-radius: 50%;  
+}  
+.sanjiao {  
+  top: 20rpx;  
+  position: relative;  
+  width: 0px;  
+  height: 0px;  
+  border-width: 10px;  
+  border-style: solid;  
+}  
+.my {  
+  border-color: transparent transparent transparent #95d4ff;  
+}  
+.you {  
+  border-color: transparent #95d4ff transparent transparent;  
+}   
+.sendmessage {  
+  background-color: white;  
+  width: 100%;  
+  position: fixed;
+  bottom: 0rpx;  
+  display: flex;  
+  flex-direction: row;
+  height: 90rpx;
+}
+.sendmessage input,.sendmessage text {  
+  width: 96%; 
+  /* margin-top:2rpx;   */
+  height: 80rpx;  
+  background-color: white;   
+  font-size: 32rpx;  
+  border: 0rpx solid #d0d0d0;
+  border-bottom: 2rpx solid #d0d0d0;
+  border-radius: 5rpx;
+  margin-left: 2%; 
+}  
+.historycon {  
+  height: 80%;  
+  /*border: 1px solid red;*/
+  width: 100%;  
+  flex-direction: column;  
+  display: flex;    
+  /*border-top: 0px;  */
+}    
+.history {  
+  height: 100%;
+  margin-top: 0rpx;  
+  margin: 20rpx;  
+  font-size: 32rpx;   
+  word-break: break-all;  
+  /*min-height: 80%;*/
+}  
+.chat-input{
+  margin-left: 5rpx;
+  bottom: 0px;
+}
+.back-icon{
+  margin-top: 25rpx;
+  margin-left: 25rpx; 
+  width:40rpx;
+  height:40rpx;
+}
+.other-record-content{
+  background-color: white ;
+  max-width: 500rpx;  
+  border-radius: 7px;   
+  padding: 20rpx 30rpx 20rpx 30rpx;
+}
+.other-record{
+  display: flex;
+  justify-content:flex-start;
+  margin-top: 10rpx;
+}
+.other-head-img{
+  width:70rpx;
+  height:70rpx;
+  margin: 10rpx 10rpx 10rpx 10rpx;
+}
+.other-record-content-triangle{ 
+width: 0; 
+height: 0; 
+border-top: 20rpx solid transparent; 
+border-right: 40rpx solid white; 
+border-bottom: 15rpx solid transparent;
+margin-top: 20rpx;  
+}
+.own-record{
+  display: flex;
+  justify-content:flex-end;
+  margin-top: 10rpx;
+}
+.own-record-content{
+  background-color: #25C6FC ;  
+  max-width: 500rpx;
+  border-radius: 7px;   
+  padding: 20rpx 30rpx 20rpx 30rpx;
+}
+.own-record-content-triangle { 
+width: 0; 
+height: 0; 
+border-top: 20rpx solid transparent; 
+border-left: 40rpx solid #25C6FC; 
+border-bottom: 20rpx solid transparent; 
+margin-top: 20rpx;  
+}
+.own-head-img{
+  width:70rpx;
+  height:70rpx;
+  margin: 10rpx 10rpx 10rpx 10rpx;
+  padding-right:30rpx; 
+}
+.beat-bug{
+  bottom: 0rpx;
+  height: 100rpx;
+}
+.show-btn {
+  margin-top: 100rpx;
+  color: #22cc22;
+} .modal-mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.5;
+  overflow: hidden;
+  z-index: 9000;
+  color: #fff;
+} .modal-dialog {
+  width: 80%;
+  overflow: hidden;
+  position: fixed;
+  top: 50%;
+  left: 0;
+  z-index: 9999;
+  background: #f9f9f9;
+  margin: -180rpx 10%;
+  border-radius: 36rpx;
+} .modal-title {
+  padding-top: 50rpx;
+  font-size: 36rpx;
+  color: #030303;
+  text-align: center;
+} .modal-content {
+  padding: 50rpx 32rpx;
+} .modal-input {
+  display: flex;
+  background: #fff;
+  border: 2rpx solid #ddd;
+  border-radius: 4rpx;
+  font-size: 28rpx;
+} .input {
+  width: 100%;
+  height: 82rpx;
+  font-size: 28rpx;
+  line-height: 28rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  color: #333;
+} input-holder {
+  color: #666;
+  font-size: 28rpx;
+} .modal-footer {
+  display: flex;
+  flex-direction: row;
+  height: 86rpx;
+  border-top: 1px solid #dedede;
+  font-size: 34rpx;
+  line-height: 86rpx;
+} .btn-cancel {
+  width: 50%;
+  color: #666;
+  text-align: center;
+  border-right: 1px solid #dedede;
+} .btn-confirm {
+  width: 50%;
+  color: #ec5300;
+  text-align: center;
+}
+</style>
+<template>
+    <view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view class='news' style="margin-top:calc(40px + {{barHeight}}px);" id='messageArea'>
+      <view class="historycon" >
+        <scroll-view scroll-y="true" style="height:calc(100% - 40px - {{barHeight}}px);" class="history">
+          <view class='guide'>
+            <text>聊天指南：</text>
+            <text selectable="true" class="guide-url" bindtap='Click_CopyGuideUrl'>https://bingqiangzhou.cn/guideline.html</text>
+          </view>
+          <block wx:for="{{newsList}}" wx:key>
+            <view wx:if="{{item.isUser==1}}">
+              <view class='own-record'>
+                <view  class='own-record-content'><text selectable="true">{{item.message}}</text></view>
+                <view class='own-record-content-triangle'></view>
+                <image class='own-head-img' src='../../img/guest.png'></image>
+              </view>
+            </view>
+            <view wx:else>
+              <view class='other-record'>
+                <image class='other-head-img' src='../../img/robot.png'></image>
+                <view class='other-record-content-triangle'></view>
+                <view wx:if="{{item.url != null}}">
+                  <view class='other-record-content'><text selectable="true">{{item.message}}\n{{item.url}}</text>  
+                  </view>
+                </view>
+                <view wx:else>
+                  <view class='other-record-content'><text selectable="true">{{item.message}}</text></view>
+                </view>
+              </view>
+            </view>
+          </block>
+          <view class="beat-bug"></view>
+          </scroll-view>
+        </view>
+    </view>
+    <!--弹窗-->
+<view class="modal-mask" wx:if="{{showModal}}"></view>
+<view class="modal-dialog" wx:if="{{showModal}}">
+  <view class="modal-title">生活不易，全靠演技！</view>
+  <view class="modal-content">
+    <view class="modal-input">
+      <input placeholder-class="input-holder" type="text" focus="true" confirm-type="send"  bindconfirm="ConfirmInput_SendMessage" bindblur='BlurInput' bindinput="ChangeInput_ChatMessage" class="input" placeholder=""></input>
+    </view>
+  </view>
+  <!-- <view class="modal-footer">
+    <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+    <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+  </view> -->
+</view>
+  <view class="sendmessage" wx:if="{{!showModal}}">
+    <!-- <input class="chat-input" adjust-position="false" bindfocus='FocusInput'
+      value='{{input}}' placeholder="" /> -->
+      <text class="chat-input" bindtap='ClickInput'></text>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '聊天机器人',
+      showModal: false,
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      newsList: [{ 'message':'白日放歌需纵酒，漫卷诗书喜欲狂。开始聊天吧！',isUser: 0 }],
+      input:null,
+      isUser:null
+    };
+    methods = {
+      BlurInput()
+      {
+        this.showModal=false;
+        this.$apply(); 
+      },
+      ClickInput()
+      {
+        this.showModal=true;
+        this.$apply();
+      },
+      Click_CopyGuideUrl()
+      {
+        wx.setClipboardData(
+          {
+            data:'https://bingqiangzhou.cn/guideline.html',
+            success:function()
+            {
+              wx.hideToast();
+              wx.showModal({
+                title: '提示',
+                content: '链接已复制，请打开浏览器查看指南！',
+                showCancel:false,
+              })
+            }
+          }
+        )
+      },
+      ChangeInput_ChatMessage(res)
+      {
+        this.input = res.detail.value;
+      },
+      ConfirmInput_SendMessage()
+      {
+        var _this = this;
+        if (this.input){
+          var msg = _this.input;
+          var temp = { 'message': msg, 'isUser': 1 };
+          _this.input = null;
+          _this.newsList.push(temp);
+          _this.showModal = false;
+          _this.$apply();
+          wx.request({
+            url: wepy.$instance.globalData.url + 'api/getMsg', 
+            data: {
+              msg: msg,
+            },
+            method:'get',
+            header: {
+            'content-type': 'application/json' // 默认值
+            },
+            success: function (res) {
+              temp = { 'message': res.data.result, 'isUser': 0};
+              _this.newsList.push(temp);
+              _this.$apply();
+              wx.createSelectorQuery().select('#messageArea').boundingClientRect(function (rect) {
+            // 使页面滚动到底部
+                wx.pageScrollTo({
+                  scrollTop: rect.bottom+666666,
+                  duration: 0,
+                  })
+                }).exec();
+              }
+          });
+        }
+      }
+    }
+  }
+</script>

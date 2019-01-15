@@ -1,0 +1,213 @@
+<style lang='less'>
+.about-image-view{
+  text-align:center; 
+  padding-top:200rpx;
+  margin-bottom:30rpx;
+}
+.about-image{
+  width:200rpx;
+  height:200rpx;
+  border: solid 1rpx gainsboro;
+}
+.about-content{
+    margin: 20rpx 60rpx 10rpx 60rpx;
+    font-size: 30rpx;
+    font-weight: normal;
+    text-indent: 2em;
+}
+.about-content-info
+{
+  text-decoration: underline;
+  color: #25C6FC;
+}
+.about-button-view{
+  margin-top:30rpx;
+}
+.about-button-share{
+  margin-left: 2%;
+  background: #25C6FC;
+  color: white;
+  width: 46%;
+  height: 100rpx;
+  font-size: 40rpx;
+  float: left;
+}
+.about-button-chat-robot{
+  margin-right: 2%;
+  background: #f21f2b;
+  color: white;
+  width: 46%;
+  height: 100rpx;
+  font-size: 40rpx;
+}
+.about-music-player{
+  text-align:center; 
+  margin-top:30rpx;
+  margin-bottom:30rpx;
+  /* margin-left: 2%; */
+  width: 100%;
+}
+.about-version{
+    position: absolute;
+    font-size: 30rpx;
+    font-weight: normal;
+    text-align: center;
+    color: gray;
+    height: 100rpx;
+    width: 100%;
+}
+audio {
+  margin-top: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+</style>
+<template>
+  	<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view class='about-image-view'>
+        <image class='about-image' src='{{miniprograminfo.logosrc}}'></image>
+    </view>
+    <view class='about-content'>
+        此小程序为个人主体类型的小程序，主要用于个人小程序开发学习。感谢您的访问！如果您有什么建议和反馈都可以联系作者。
+    </view>
+    <view class='about-content'>
+        作者邮箱号:<span class='about-content-info' bindtap='Click_CopyInfo'>{{miniprograminfo.email}}</span>
+    </view>
+    <view class='about-content'>
+        关联公众号:<span class='about-content-info' bindtap='Click_ShowOfficeAccountImage'>WE DEVELOP TOGETHER</span>
+    </view>
+    <official-account class='office-account'></official-account>
+    <!-- <official-account>hello</official-account> -->
+    <!-- <view class='about-button-view'>
+        <button class='about-button-share' open-type='share'>分享给好友</button>
+        <button class='about-button-chat-robot' bindtap='Click_RedirectChatRobot'>聊天机器人</button>
+    </view> -->
+    <!-- <view class='music-player'>
+      <audio class='about-music-player' poster='{{music.poster}}' title='{{music.name}}' name='{{music.name}}' author='{{music.author}}' src='{{music.src}}'  id='myAudio' 
+      bindtap='Click_AudioPlay' bindtimeupdate='TimeUpdate_Audio' bindpause='Click_AudioPause' controls  loop></audio>
+    </view> -->
+    <view class='about-version'>
+        <text>WeDevelopTogether\n{{miniprograminfo.versioninfo}}</text>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '关于',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      miniprograminfo: {
+        logosrc: wepy.$instance.globalData.url + 'data/logo.jpg',
+        versioninfo: wepy.$instance.globalData.versioninfo,
+        email: 'bingqiang_zhou@qq.com',
+        imgalist: [wepy.$instance.globalData.url + 'data/qrcode.jpg']
+      },
+      music: {
+        name: '',
+        author: '',
+        poster: wepy.$instance.globalData.url + 'data/song-picture.jpg',
+        src: wepy.$instance.globalData.url + 'data/song.mp3'
+      },
+      musicplaysign: {
+        playsign: false,
+        isfirsttime: true
+      }
+    };
+    onLoad() {
+      var that = this
+// 请求音乐信息
+      wx.request(
+        {
+          url: wepy.$instance.globalData.url + 'api/getinfo',
+          method: 'post',
+          dataType: 'json',
+          success: function (res) {
+            that.music.name = res.data.name;
+            that.music.author = res.data.author;
+            that.$apply();
+          },
+          fail: function () {
+            wx.showModal({
+              title: '提示',
+              content: '请求服务器失败,请联系作者！',
+              showCancel: false
+            })
+          }
+        }
+      )
+      this.audioCtx = wx.createAudioContext('myAudio')
+      this.audioCtx.title = 'play'
+    };
+    methods = {
+// 复制邮箱号
+      Click_CopyInfo() {
+        wx.setClipboardData({
+          data: this.miniprograminfo.email,
+          success: function (res) {
+            wx.showToast({
+              title: '邮箱号已复制'
+            })
+          }
+        })
+      },
+// 分享小程序
+      Click_ShareAppMessage() {
+        return {
+          title: 'WeDevelopTogether',
+          imageUrl: '/img/share-welcome.jpg',
+          path: '/pages/about/about'
+        }
+      },
+// 显示公众号图片
+      Click_ShowOfficeAccountImage() {
+        wx.previewImage({
+          urls: this.miniprograminfo.imgalist // 需要预览的图片http链接列表
+        })
+      },
+// 跳转到聊天机器人页面
+      Click_RedirectChatRobot() {
+        wx.navigateTo({
+          url: '/pages/chatrobot/chatrobot'
+        });
+      },
+// 监听音乐播放
+      Click_AudioPlay() {
+        if (this.musicplaysign.playsign === false)
+        {
+          this.audioCtx.play();
+          this.musicplaysign.playsign = true;
+          if (this.musicplaysign.isfirsttime == true)
+          {
+            wx.showLoading({
+              title: '加载资源中...'
+            });
+          }
+        }
+        else
+        {
+          this.audioCtx.pause()
+          this.musicplaysign.isfirsttime = false;
+        }
+        this.$apply();
+      },
+//监听播放时间更新      
+      TimeUpdate_Audio() {
+      	if (this.musicplaysign.isfirsttime === true)
+      	{
+          wx.hideLoading();
+          this.miniprograminfo.isfirsttime = false;
+          this.$apply();
+        }
+      },
+// 监听音乐暂停  
+      Click_AudioPause() {
+        wx.hideLoading();
+        this.miniprograminfo.isfirsttime = false;
+        this.musicplaysign.playsign = false;
+        this.$apply();
+      },
+    };
+  }
+</script>

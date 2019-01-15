@@ -1,0 +1,82 @@
+<style lang="less">
+	.tip-item{
+    border-radius: 5rpx;
+    border: 2rpx solid #25C6FC;
+  }
+  .tip-time{
+    float: left;
+    font-size: 50rpx;
+  }
+  .tip-delete{
+    float: right;
+    height: 60rpx;
+    width: 60rpx;
+  }
+  .tip-event{
+    clear: both;
+  }
+  .tip-empty{
+    margin-top: 10%;
+    text-align: center;
+    font-size: 50rpx;
+    color: #25C6FC;
+  }
+</style>
+<template>
+<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view style="padding-top:calc(40px + {{barHeight}}px);">
+      <view wx:if="{{tipList.length != 0}}">
+        <view wx:for="{{tipList}}" wx:key="unique">
+          <view class="tip-item">
+            <view class="tip-time">{{item.time}}</view>
+            <image class="tip-delete" mode='aspectFit' src="/img/delete.png" bindtap="DeleteTip({{index}})">删除</image>
+            <textarea class="tip-event" auto-height disabled = "true" value="{{item.event}}"></textarea>
+          </view>
+            <modal hidden="{{showModal}}" title="提示" confirm-text="确定" cancel-text="取消" bindcancel="CancelDeleteTip" bindconfirm="ComfirmDeleteTip">
+                您确定要删除这个提醒吗？
+            </modal>
+        </view>
+      </view>
+      <view wx:else>
+        <view class="tip-empty">
+          您还没有添加提醒！
+        </view>
+      </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '我的提醒',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      tipList:[{time:'2018-12-30',event:'好嗨哟好嗨哟好嗨哟好嗨哟'},{time:'2018-12-31',event:'happy'}],
+      showModal:true,
+      index:-1,
+    };
+    methods = {
+      DeleteTip(index)
+      {
+        //console.log(typeof(this.tipList));
+        this.index = index;
+        this.showModal = false;
+      },
+      ComfirmDeleteTip()
+      {
+        var info = this.tipList[this.index];
+        this.tipList.splice(this.index,1);
+        this.showModal = true;
+        this.index = -1;
+        this.$apply();
+      },
+      CancelDeleteTip()
+      {
+        this.showModal = true;
+        this.index = -1;
+        this.$apply();
+      }
+    };
+  }
+</script>

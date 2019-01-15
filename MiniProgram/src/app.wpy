@@ -1,0 +1,102 @@
+<style lang='less'>
+.title{
+    /*border: solid 1rpx red;*/
+    position: fixed;
+    top:0;
+    width: 100%;
+    font-size: 30px;
+    background: white;
+    z-index: 100;
+}
+.office-account{
+  margin-top: 30rpx;
+  width: 100%;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index/index',
+      'pages/about/about',
+      'pages/twofa/twofa'
+    ],
+    window: {
+      'backgroundTextStyle': 'light',
+      'navigationBarBackgroundColor': '#fff',
+      'navigationBarTextStyle': 'black',
+      'navigationStyle': 'custom'
+    },
+    tabBar: {
+      'color': '#353535',
+      'selectedColor': '#25C6FC',
+      'list': [
+        {
+          'text': '2FA',
+          'pagePath': 'pages/twofa/twofa',
+          'iconPath': 'img/heart.png',
+          'selectedIconPath': 'img/heart-selected.png'
+        },
+        {
+          'text': '首页',
+          'pagePath': 'pages/index/index',
+          'iconPath': 'img/index.png',
+          'selectedIconPath': 'img/index-selected.png'
+        },
+        {
+          'text': '关于',
+          'pagePath': 'pages/about/about',
+          'iconPath': 'img/smiley.png',
+          'selectedIconPath': 'img/smiley-selected.png'
+        }
+      ]
+    }
+  }
+
+  globalData = {
+    statusBarHeight: '',
+    versioninfo: 'v2.0.0',
+    url: 'https://bingqiangzhou.cn/SmallProgram/'
+  }
+  onLaunch() {
+    // this.testAsync();
+    var that = this
+    wx.getSystemInfo({
+      success: function(res) {
+        that.globalData.statusBarHeight = res.statusBarHeight
+      }
+    })
+  }
+ 
+  sleep (s) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise resolved')
+      }, s * 1000)
+    })
+  }
+
+  // getUserInfo(cb) {
+  //   const that = this
+  //   if (this.globalData.userInfo) {
+  //     return this.globalData.userInfo
+  //   }
+  //   wepy.getUserInfo({
+  //     success (res) {
+  //       that.globalData.userInfo = res.userInfo
+  //       cb && cb(res.userInfo)
+  //     }
+  //   })
+  // }
+}
+</script>

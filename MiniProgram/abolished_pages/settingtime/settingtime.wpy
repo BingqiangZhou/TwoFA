@@ -1,0 +1,221 @@
+<style lang="less">
+  .mail-tip{
+    margin-top: 10%;
+    text-align: center;
+  }
+	.mail-tip-info{
+    font-size: 30rpx;
+    color: #25C6FC;
+  }
+  .mail-input{
+    margin: 2% 5%;
+    height: 80rpx;
+    border: 2rpx solid #25C6FC;
+    border-radius: 5rpx;
+  }
+  .code-input{
+    margin: 2% 5%;
+    float: left;
+    height: 80rpx;
+    width: 40%;
+    border: 2rpx solid #25C6FC;
+    border-radius: 5rpx;
+  }
+  .code-button{
+    margin: 2% 5%;
+    float: right;
+    width: 30%;
+    border-radius: 5rpx;
+    font-size: 30rpx;
+    border: 2rpx solid #25C6FC;
+  }
+  .save-button{
+    margin: 0 5%;
+    width: 90%;
+    border: 2rpx solid #25C6FC;
+  }
+  .input-tip{
+    clear: both;
+    margin: 2% 5%;
+    text-align: left;
+    color: red;
+  }
+  .tip-info-details{
+   margin: 2% 8%; 
+  }
+  .date-picker{
+   border: 2rpx solid #25C6FC; 
+  }
+  .textarea{
+   border: 2rpx solid #25C6FC;
+  }
+  .add-tip-button{
+    margin: 8%;
+    border: 2rpx solid #25C6FC;
+    font-size: 30rpx;
+  }
+</style>
+<template>
+<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view style="padding-top:calc(40px + {{barHeight}}px);">
+      <view wx:if="{{isFirstTime}}">
+        <view class="mail-tip">
+          <view class="mail-tip-info">请输入您的邮箱，以便我们通过邮件的形式提醒您！</view>
+          <view class="mail-tip-info">我们将在每天0点发送邮件给您，以提醒当天事件！</view>
+        </view>
+          <input class="mail-input" placeholder='请输入邮箱' bindinput='GetMailValue' value='{{mail}}'/>
+          <input class="code-input" placeholder='请输入验证码' bindinput='GetCodeValue' value='{{code}}'/> 
+          <button class="code-button" bindtap='GetVerificationCode'>获取验证码</button>
+          <view class="input-tip">
+            {{tips}}
+          </view>
+          <button class='save-button' bindtap='SaveInfo'>保存</button>
+      </view>
+      <view wx:else>
+        <view class='mail-tip'>
+          <view class="mail-tip-info">我们将会将提醒邮件发送至{{mail}}</view>
+        </view>
+        <view class="tip-info-details">
+          <text>日期</text>
+          <picker class="date-picker" mode="date" value="{{selectedDay}}" start="{{today}}" end="2099-12-31" bindchange="DateChange">
+            {{selectedDay}}
+          </picker>
+        </view>
+        <view class="tip-info-details">
+          <text>事件</text>
+          <view class="textarea">
+            <textarea bindinput="TextAreaInput" auto-height placeholder="如:爸爸生日" />
+          </view>
+        </view>
+        <view class="input-tip">
+            {{tips}}
+          </view>
+        <button class='add-tip-button' bindtap='AddTipInfo'>添加</button>
+      </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '设置提醒',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      mail: '',
+      isFirstTime: false,
+      code: '',
+      vCode: '',
+      tips: '',
+      today:'',
+      selectedDay:'',
+      event:'',
+    };
+    onLoad()
+    {
+      //wx.setStorage({key:'mail',data:'1299050656@qq.com'});
+      var mail = wx.getStorageSync("mail");
+      if (mail == '') {
+        //请求用户id,获取数据库数据
+        var openid = wx.getStorageSync("openid");
+      }
+      var date = new Date();
+      this.today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      this.selectedDay = this.today;
+      this.mail = mail;
+      this.$apply();
+    }
+    methods = {
+      GetMailValue(e)
+      {
+        this.mail = e.detail.value;
+      },
+      GetCodeValue(e)
+      {
+        this.code = e.detail.value;
+      },
+      GetVerificationCode()
+      {
+        var that = this;
+        var reg = new RegExp('^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$'); 
+        var emailVar = reg.test(this.mail); // 得到的值为布尔型
+        if (emailVar == false) {
+          this.tips = '请输入正确的邮箱号！';
+          return;
+        }
+        else{
+          this.tips = '';
+          this.vCode = Math.floor(Math.random() * 10e5);
+          console.log(this.vCode);
+          // return;
+          wx.request({
+                url: 'http://localhost:55624/Api/GetVerificationCode', 
+                data:{  
+                  code: this.vCode,  
+                  email:this.mail
+                }, 
+                method: 'get',
+                dataType: 'json',
+                success:function(res)
+                {
+                    // //console.log(res.data);
+                    // var userinfo = JSON.parse(res.data);
+                    // wx.setStorage({key:'openid',data:userinfo.openid});
+                    if (res.data.result) {
+                      that.tips = '验证码，已发送到您的邮箱！';
+                    }else{
+                      that.tips = '请输入正确的邮箱号！';
+                    }
+                },
+                fail:function()                
+                {
+                  that.tips = '请输入正确的邮箱号,如果您确认您的邮箱无误，请联系作者：bingqiang_zhou@qq.com';
+                  //console.log("hello");
+                },
+                complete:function()
+                {
+                  that.$apply();
+                }
+              })
+        }
+      },
+      SaveInfo()
+      {
+        if (this.code == this.vCode) {
+          wx.setStorage({key:'mail',data:this.mail});
+          this.isFirstTime = false;
+          wx.showToast({
+              title: '验证成功'
+            })
+        }
+      },
+      DateChange(e)
+      {
+        this.selectedDay =  e.detail.value;
+        this.$apply();
+      },
+      TextAreaInput(e)
+      {
+        this.event =  e.detail.value;
+        this.$apply();
+      },
+      AddTipInfo()
+      {
+        if (this.event == '') {
+          this.tips = '请输入提醒事件';
+          return;
+        }
+        else if (this.selectedDay == this.today) {
+          this.tips = '今天快要过去，请选择之后的时间！';
+          return; 
+        }else{
+          console.log(this.event);
+          console.log(this.selectedDay);
+          this.tips = '';
+          this.$apply();
+          //TODO request 添加到数据库 
+        }
+      },
+    };
+  }
+</script>
