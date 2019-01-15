@@ -1,0 +1,12 @@
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\TwoFA.Model.exe.config
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\TwoFA.Model.exe
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\TwoFA.Model.pdb
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\EntityFramework.dll
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\EntityFramework.SqlServer.dll
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\EntityFramework.xml
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\bin\Debug\EntityFramework.SqlServer.xml
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\obj\Debug\TwoFA.Model.csprojAssemblyReference.cache
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\obj\Debug\TwoFA.Model.csproj.CoreCompileInputs.cache
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\obj\Debug\TwoFA.Model.csproj.CopyComplete
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\obj\Debug\TwoFA.Model.exe
+E:\Other files\毕设\mine\TwoFA\TwoFA.Model\obj\Debug\TwoFA.Model.pdb
