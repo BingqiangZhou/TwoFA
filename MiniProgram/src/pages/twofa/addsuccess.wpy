@@ -1,0 +1,50 @@
+<style lang="less">
+	.add-success-tips{
+		font-size: 50rpx;
+	    color: #25C6FC;
+	    margin-top: 30%;
+	    text-align: center;
+	}
+	.add-success{
+		width: 60%;
+		margin-left: 20%;
+	}
+	.redirect-button{
+		margin-left: 2%;
+	    background: #25C6FC;
+	    color: white;
+	    width: 96%;
+	    height: 100rpx;
+	    font-size: 40rpx;
+	}
+</style>
+<template>
+	<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view style="padding-top:calc(40px + {{barHeight}}px);">
+    	<view class="add-success-tips">账号添加成功!</view>
+    	<image src='/img/check_blud.png' mode='aspectFit' class="add-success"></image>
+    	<button bindtap="RedirectToTwoFA" class="redirect-button">完成</button>
+    </view>
+</template>
+<script>
+	import wepy from 'wepy'
+	export default class Index extends wepy.page {
+	    data = {
+	      title: '账号添加成功',
+	      barHeight: wepy.$instance.globalData.statusBarHeight,
+	    };
+	    onLoad() {
+	    };
+	    methods = {
+	    	RedirectToTwoFA()
+	    	{
+	    		//console.log("hello");
+	    		wx.switchTab({
+                    url: '/pages/twofa/twofa'
+                  })
+	    	}
+	    };
+  	}
+</script>

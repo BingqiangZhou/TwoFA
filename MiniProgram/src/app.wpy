@@ -29,7 +29,10 @@ export default class extends wepy.app {
     pages: [
       'pages/index/index',
       'pages/about/about',
-      'pages/twofa/twofa'
+      'pages/twofa/twofa',
+      'pages/twofa/addaccount',
+      'pages/twofa/addsuccess',
+      'pages/twofa/myaccount'
     ],
     window: {
       'backgroundTextStyle': 'light',

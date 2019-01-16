@@ -15,10 +15,16 @@
     height: 100rpx;
     margin-left: 10%;
     margin-top: 30rpx;
+    border: 2rpx whitesmoke solid;
   }
   .code-main-info{
     font-size: 100rpx;
   }
+  /*
+  .code-color{
+    color: #25C6FC;
+  }
+  */
   .account{
     padding: 20% 0% 2% 10%;
     //text-align: center;
@@ -31,11 +37,13 @@
   }
   .manufacturer-info{
     font-size: 25rpx;
+    color: #25C6FC;
   }
   .account-switch-image{
     margin-left: 2%;
     width: 50rpx;
     height: 50rpx;
+    border: 2rpx whitesmoke solid;
   }
 /*
 .account-list{
@@ -84,7 +92,7 @@
     width: 30%;
     float: left;
     text-align: center;
-    //border: 1rpx #25C6FC solid;
+    border: 2rpx whitesmoke solid;
   }
   .function-image{
     width: 100%;
@@ -99,19 +107,19 @@
 </view>
 <view style="padding-top:calc(40px + {{barHeight}}px);font-size: 30rpx;">
   <view class="account">
-    <text class="account-info">BingqiangZhou</text>
-    <image class="account-switch-image" mode='aspectFit' src="/img/gear.png">图片：切换账号</image>
-    <view class="manufacturer-info">manufacturer</view>
+    <text class="account-info">{{accountList[accountIndex].account}}</text>
+    <image class="account-switch-image" mode='aspectFit' src="/img/gear_blud.png">图片：切换账号</image>
+    <view class="manufacturer-info">{{accountList[accountIndex].manufacturer}}</view>
   </view>
   <view class="code-view">
     <view class="code-layer">
       <view class="code-info">
         <view class="code-main-info">
-          <text>{{code}}</text>
+          <text class="code-color">{{code}}</text>
           <progress percent="{{countdown}}" border-radius="2" color="black"></progress>
         </view>
       </view>
-      <image src='/img/copy.png' mode='aspectFit' class="code-copy" bindtap="CopyCode"></image>
+      <image src='/img/copy_blud.png' mode='aspectFit' class="code-copy" bindtap="CopyCode"></image>
     </view>
   </view>
   <!-- <view class="function">
@@ -128,49 +136,20 @@
     <view class="show-function">
       <!-- <text>功能列表</text> -->
       <view class="function-view">
-        <image class="function-image" mode='aspectFit' src="/img/cloud.png"></image>
+        <image class="function-image" mode='aspectFit' src="/img/cloud_blud.png"></image>
         <text>数据同步</text>
       </view>
-      <view class="function-view">
-        <image class="function-image" mode='aspectFit' src="/img/user.png"></image>
+      <view class="function-view" bindtap="MyAccount">
+        <image class="function-image" mode='aspectFit' src="/img/user_blud.png"></image>
         <text>我的账户</text>
       </view>
-      <view class="function-view">
-        <image class="function-image" mode='aspectFit' src="/img/add.png"></image>
+      <view class="function-view" bindtap="AddAccount">
+        <image class="function-image" mode='aspectFit' src="/img/add_blud.png"></image>
         <text>添加账号</text>
       </view>
     </view>
   <!-- </view> -->
   <view style="clear: both;"></view>
-  <!-- <view class="account">
-    <view wx:if="{{account_show}}">
-      <view class="account-list">账号</view>
-      <image class="account-list-show" mode='aspectFit' src="/img/up.png" bindtap="ShowControl(1)">当前：张开</image>
-    </view>
-    <view wx:else>
-      <view class="account-list">{{account_list[account_index].account}}</view>
-      <image class="account-list-show" mode='aspectFit' src="/img/down.png" bindtap="ShowControl(1)">当前：合并</image>
-    </view>
-    <view class="account-current">当前账号:{{account_list[account_index].account}}</view>
-  </view> -->
-  <!-- <view wx:if="{{account_show}}"> -->
-    <!-- <view scroll-y="true" class="show-account">
-      <view wx:for="{{account_list}}" wx:key="unique">
-          <view class="show-account-list" bindtap="SelectAccount({{index}})">
-            <view wx:if="{{index==account_index}}">
-              <view class="show-account-selected">
-                <view>{{item.account}}</view>
-                <view>厂商</view>
-                <view class="show-account-selected-tip">切换账号</view>
-              </view>
-            </view>
-            <view wx:else>
-              <view >{{item.account}}</view>
-            </view>
-          </view>
-      </view>
-    </view> -->
-  <!-- </view> -->
 </view>
 </template>
 <script>
@@ -180,8 +159,8 @@
     data = {
       title: '2FA',
       barHeight: wepy.$instance.globalData.statusBarHeight,
-      account_list: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
-      account_index: 0,
+      accountList: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
+      accountIndex: 0,
       counter:0,
       code:0,
       countdown:0,
@@ -192,8 +171,8 @@
     onLoad()
     {
       if (this.havaTimer == false) {
-        this.account_list.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
-        this.account_list.push({key:"123",account:"1",manufacturer:"GitHub"});
+        this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
+        this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
         //console.log(this.account_list)
         this.$apply();
       }
@@ -207,7 +186,7 @@
       // console.log(this.counter);
       // console.log(this.account_index);
       // this.$apply();
-      this.code = totp.GetCode(this.account_list[this.account_index].key,this.counter.toString()); 
+      this.code = totp.GetCode(this.accountList[this.accountIndex].key,this.counter.toString()); 
       this.$apply();
     };
     onShow()
@@ -239,6 +218,17 @@
               title: '验证码已复制'
             })
           }
+        })
+      },
+      AddAccount(){
+        wx.navigateTo({
+          url: '/pages/twofa/addaccount'
+        })
+      },
+      MyAccount()
+      {
+        wx.navigateTo({
+          url: '/pages/twofa/myaccount'
         })
       },
       // ShowControl(showElement)

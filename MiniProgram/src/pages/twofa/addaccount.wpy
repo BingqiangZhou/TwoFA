@@ -1,0 +1,139 @@
+<style lang='less'>
+  .add-account-tips{
+    font-size: 35rpx;
+    color: #25C6FC;
+    margin-top: 30%;
+    text-align: center;
+  }
+  .tips{
+    color: red;
+  }
+  .ScanCode-button{
+    margin-top: 30%;
+    margin-left: 2%;
+    background: #25C6FC;
+    color: white;
+    width: 96%;
+    height: 100rpx;
+    font-size: 40rpx;
+  }
+  .input-token
+  {
+    width: 100%;
+    margin-top: 20rpx;
+    text-align: center;
+    text-decoration: underline;
+    color: #25C6FC;
+  }
+  .input-token-tips{
+    font-size: 40rpx;
+    margin-top: 30%;
+    margin-left: 2%;
+  }
+  .input-token-input{
+    margin-top: 50rpx;
+    border: 1rpx #25C6FC solid;
+    height: 80rpx;
+    font-size: 40rpx;
+    width: 96%;
+    margin-left: 2%;
+  }
+  .input-token-button{
+    margin-top: 80rpx;
+    margin-left: 2%;
+    background: #25C6FC;
+    color: white;
+    width: 96%;
+    height: 100rpx;
+    font-size: 40rpx;
+  }
+</style>
+<template>
+  	<view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view wx:if="{{isManualInput == false}}">
+      <view style="padding-top:calc(40px + {{barHeight}}px);" class="add-account-tips">
+        <text class="tips">小提示：</text>如果您没有网络，您也可以手工输入！
+      </view>
+      <button bindtap="ScanCode" class="ScanCode-button">扫码录入</button>
+      <view class="input-token">
+        <text bindtap="InputToken">手工录入</text>
+      </view>
+    </view>
+    <view wx:elif>
+        <view style="padding-top:calc(40px + {{barHeight}}px);" class="input-token-tips">
+           <text style="font-size:35rpx;">请输入Token</text>
+           <input class="input-token-input" bindinput="bindInput"  maxlength="20" auto-focus/>
+           <button bindtap="ConfirmToken" class="input-token-button">确定</button>
+        </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '添加2FA账号',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      isManualInput:false,
+      Token:''
+    };
+    onLoad() {
+    };
+    methods = {
+      ScanCode()
+      {
+        // 只允许从相机扫码
+        var that = this;
+        wx.scanCode({
+          onlyFromCamera: true,
+          success(res) {
+            //TODO 剪切结果
+            that.token = res.result;
+            that.$apply(); 
+            console.log(res.result);
+          },
+          fail()
+          {
+            wx.showModal({
+              title: '提示',
+              content: '出错了',
+              confirmText: '重新扫描',
+              success(res) {
+              }
+            })
+          }
+        })
+      },
+      InputToken()
+      {
+        this.isManualInput=true;
+        this.$apply();
+      },
+      bindInput(e) {
+         this.token = e.detail.value;
+         this.$apply();
+      },
+      ConfirmToken()
+      {
+        var that = this;
+        wx.showModal({
+              title: '请再次确认Token',
+              content: '['+that.token+']',
+              success(res) {
+                if (res.confirm) {
+                  //TODO 剪切结果
+                  console.log('用户点击确定')
+                  wx.redirectTo({
+                    url: '/pages/twofa/addsuccess'
+                  })
+                } 
+                // else if (res.cancel) {
+                //   console.log('用户点击取消')
+                // }
+              }
+            })
+      },
+    };
+  }
+</script>

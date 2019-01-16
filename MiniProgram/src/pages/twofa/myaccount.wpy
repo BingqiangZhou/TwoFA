@@ -1,0 +1,68 @@
+<style lang="less">
+  page{
+    background-color: whitesmoke;
+    //border: solid 1rpx red;
+    height: 100%;
+  }
+  .account-area{
+    margin-top: 2%;
+  }
+  .show-account{
+    background-color: white;
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+  .show-account-info{
+    height: 120rpx;
+    //background: gray;
+  }
+  .account-info{
+    font-size: 50rpx;
+  }
+  .manufacturer-info{
+    font-size: 25rpx;
+  }
+  .line{
+    background-color: whitesmoke;
+    height: 7rpx;
+    width: 100%;
+  }
+</style>
+<template>
+  <view class="title" style="padding-top: {{barHeight}}px;">
+      <text>{{title}}</text>
+    </view>
+    <view style="padding-top:calc(40px + {{barHeight}}px);">
+      <view class="account-area">
+        <view wx:if="{{accountList != []}}">
+          <view scroll-y="true" class="show-account">
+            <view wx:for="{{accountList}}" wx:key="unique">
+                <view class="show-account-info">
+                  <view class="account-info">{{item.account}}</view>
+                  <view class="manufacturer-info">{{item.manufacturer}}</view>
+                </view>
+                <view class="line"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    data = {
+      title: '我的账号',
+      barHeight: wepy.$instance.globalData.statusBarHeight,
+      accountList: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
+    };
+    onLoad() {
+      this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
+      this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
+      //console.log(this.account_list)
+      this.$apply();
+    };
+    methods = {
+    };
+  }
+</script>
