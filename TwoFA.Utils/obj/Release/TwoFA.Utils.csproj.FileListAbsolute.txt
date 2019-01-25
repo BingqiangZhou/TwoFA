@@ -1,0 +1,14 @@
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\TwoFA.Utils.exe.config
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\TwoFA.Utils.exe
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\TwoFA.Utils.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.presentation.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.presentation.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Release\zxing.presentation.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Release\TwoFA.Utils.csprojAssemblyReference.cache
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Release\TwoFA.Utils.csproj.CoreCompileInputs.cache
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Release\TwoFA.Utils.csproj.CopyComplete
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Release\TwoFA.Utils.exe
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Release\TwoFA.Utils.pdb

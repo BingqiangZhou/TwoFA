@@ -1,36 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TwoFA.Model.Entity;
+using TwoFA.Model.Model;
 
 namespace TwoFA.Model.Context
 {
-    public class TwoFaDbContext : DbContext
+    public class DbInit : DropCreateDatabaseIfModelChanges<IdentityDbContext>
     {
-        public DbSet<Custom_User> CustomUsers { get; set; }
-        public DbSet<Manufacturer_User> ManufacturerUsers { get; set; }
-        public DbSet<CustomWithManufacturer> CustomWithManufacturers { get; set; }
-
-
-        //如果Model改变了将删除数据库重新创建数据库
-        public TwoFaDbContext():base("name=SqlServerConnectionString")
+        protected override void Seed(IdentityDbContext context)
         {
-            Database.SetInitializer<TwoFaDbContext>(new DropCreateDatabaseIfModelChanges<TwoFaDbContext>());
+            PerformInitialSetup(context);
+            base.Seed(context);
         }
 
-        //创建模型
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        public void PerformInitialSetup(IdentityDbContext context)
         {
-            base.OnModelCreating(modelBuilder);
+            // 初始化配置将放在这儿 
+        }
+    }
 
-            Custom_User.MapToDbContext(modelBuilder);
+    class TwoFADbContext : IdentityDbContext<User>
+    {
+        public TwoFADbContext() : base("TwoDb") { }
 
-            Manufacturer_User.MapToDbContext(modelBuilder);
+        static TwoFADbContext()
+        {
+            Database.SetInitializer(new DbInit());
+        }
 
-            CustomWithManufacturer.MapToDbContext(modelBuilder);
+        public static TwoFADbContext Create()
+        {
+            return new TwoFADbContext();
         }
     }
 }

@@ -1,0 +1,49 @@
+﻿@model ModifyPasswordModel
+@{
+    ViewBag.Title = "修改密码";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+<style>
+    .login-info {
+        margin: 20px 0;
+    }
+</style>
+@using (Html.BeginForm("Modify", "Password"))
+{
+    @Html.AntiForgeryToken()//避免CSRF攻击
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">修改密码</h1>
+        <p>填写相关信息</p>
+    </div>
+    <div class="col-lg-4 offset-lg-4">
+        @Html.HiddenFor(m=>m.Name)
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.OldPassword)
+                @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.OldPassword)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.NewPassword)
+                @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NewPassword)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
+        </div>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">修改密码</button>
+        <div class="text-center">
+            @Html.ActionLink("返回首页", "Index", "Home")
+        </div>
+    </div>
+}
+
+

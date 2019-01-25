@@ -1,0 +1,24 @@
+﻿@model ForgetPasswordModel
+@{
+    ViewBag.Title = "重置密码成功";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+<style>
+    .login-info {
+        margin: 20px 0;
+    }
+</style>
+<div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">重置密码</h1>
+</div>
+<div class="col-lg-4 offset-lg-4 text-center">
+    <div class="login-info">
+        <div class="text-center">
+            密码重置成功！
+        </div>
+    </div>
+    <div class="login-info">
+        @Html.ActionLink("立即登录", "Login", "Login", null, new { @class = "btn btn-lg  btn-primary" })
+    </div>
+</div>

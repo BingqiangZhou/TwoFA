@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    ViewBag.Title = "首页";
+}
+
+
+<div class="jumbotron">
+    <h1 class="display-4">两步验证</h1>
+    <p class="lead">增强帐户的安全性</p>
+    <hr class="my-4">
+    <p>借助两步验证，您可以通过密码和手机为帐户提供双重保护</p>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Step1","Register")" role="button">为用户开通服务</a>
+    <a class="btn-link" href="@Url.Action("Detail","Home")" role="button">了解一下</a>
+</div>

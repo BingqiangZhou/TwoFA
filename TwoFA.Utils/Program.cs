@@ -12,10 +12,12 @@ namespace TwoFA.Utils
     {
         static void Main(string[] args)
         {
-            Bitmap bitmap = GenerateQRCodeByZxing.GenerateQRCodeToBitmap("hello,world", 128, 128, 1);
-            string base64String = BitmapAndBase64MutualTransformation.BitmapToBase64String(bitmap);
-            Console.WriteLine(base64String);
-            bitmap.Dispose();
+            //Bitmap bitmap = GenerateQRCodeByZxing.GenerateQRCodeToBitmap("hello,world", 128, 128, 1);
+            //string base64String = BitmapAndBase64MutualTransformation.BitmapToBase64String(bitmap);
+            //Console.WriteLine(base64String);
+            //bitmap.Dispose();
+
+            SendCodeToEmail.SendCode("1299050656@qq.com", "123456");
         }
     }
 }

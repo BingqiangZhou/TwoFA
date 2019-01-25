@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TwoFA.Model")]
+[assembly: AssemblyTitle("TwoFa.Model")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TwoFA.Model")]
+[assembly: AssemblyProduct("TwoFa.Model")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d92efd50-72cd-4b14-9c2f-d128f58628b1")]
+[assembly: Guid("dbe1dd18-3d1b-4eaa-bbb5-fca8d2215d22")]
 
 // Version information for an assembly consists of the following four values:
 //
