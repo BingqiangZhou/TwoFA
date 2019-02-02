@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "开通两步验证";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+<style>
+    .login-info {
+        margin: 20px 0;
+    }
+</style>
+<div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">开通两步验证</h1>
+    <p>请扫描以下二维码</p>
+</div>
+<div class="col-lg-4 offset-lg-4 text-center">
+    <div class="login-info">
+        <div class="text-center">
+            <img id="QRCode" src=""/>
+        </div>
+    </div>
+    <div class="login-info">
+        @Html.ActionLink("已成功扫描二维码", "Index", "Home", null, new { @class = "btn btn-lg  btn-primary" })
+    </div>
+</div>
+<script type="text/javascript">
+    $.ajax({
+        url: "http://localhost:62225/api/TwoFA/CreateAccount?userName=12345699&mid=868ccbc9-eb5a-4b9f-947d-b60209b45cf2&token=f4070ec4-a944-4a77-974f-76b69944309a",
+        success: function (result) {
+            console.log(result.Base64String);
+            $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
+        }
+    });
+</script>

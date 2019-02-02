@@ -201,11 +201,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OpenTwoFAServiceController.cs" />
     <Compile Include="Controllers\PasswordController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\TwoFAValidationServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901300418497_InitialCreate.cs" />
+    <Compile Include="Migrations\201901300418497_InitialCreate.Designer.cs">
+      <DependentUpon>201901300418497_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901300455233_Key.cs" />
+    <Compile Include="Migrations\201901300455233_Key.Designer.cs">
+      <DependentUpon>201901300455233_Key.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Context\TwoFADbContext.cs" />
     <Compile Include="Models\Context\TwoFARoleManager.cs" />
     <Compile Include="Models\Context\TwoFAUserManager.cs" />
@@ -219,6 +230,7 @@
     <Compile Include="ViewModel\ModifyPasswordModel.cs" />
     <Compile Include="ViewModel\RegisterModel.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
+    <Compile Include="ViewModel\VerifyModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -249,6 +261,8 @@
     <Content Include="Views\Password\Forget3.cshtml" />
     <Content Include="Views\Password\Forget4.cshtml" />
     <Content Include="Views\Password\Modify2.cshtml" />
+    <Content Include="Views\OpenTwoFAService\Index.cshtml" />
+    <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -271,6 +285,14 @@
       <Project>{18D0AD8D-E9F3-4174-AF70-1557BAA692D6}</Project>
       <Name>TwoFA.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201901300418497_InitialCreate.resx">
+      <DependentUpon>201901300418497_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901300455233_Key.resx">
+      <DependentUpon>201901300455233_Key.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

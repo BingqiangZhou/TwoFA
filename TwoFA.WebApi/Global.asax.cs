@@ -12,6 +12,9 @@ namespace TwoFA.WebApi
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            //去掉返回xml格式支持，即只支持json返回格式
+            GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
         }
     }
 }

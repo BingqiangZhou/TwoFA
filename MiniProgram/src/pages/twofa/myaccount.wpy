@@ -27,6 +27,24 @@
     height: 7rpx;
     width: 100%;
   }
+  .none-account-tips{
+    font-size: 35rpx;
+    color: #25C6FC;
+    margin-top: 50%;
+    text-align: center;
+  }
+  .tips{
+    color: red;
+  }
+  .add-account-button{
+    margin-top: 5%;
+    margin-left: 2%;
+    background: #25C6FC;
+    color: white;
+    width: 96%;
+    height: 100rpx;
+    font-size: 40rpx;
+  }
 </style>
 <template>
   <view class="title" style="padding-top: {{barHeight}}px;">
@@ -34,7 +52,7 @@
     </view>
     <view style="padding-top:calc(40px + {{barHeight}}px);">
       <view class="account-area">
-        <view wx:if="{{accountList != []}}">
+        <view wx:if="{{accountList.length != 0}}">
           <view scroll-y="true" class="show-account">
             <view wx:for="{{accountList}}" wx:key="unique">
                 <view class="show-account-info">
@@ -43,6 +61,13 @@
                 </view>
                 <view class="line"></view>
             </view>
+          </view>
+        </view>
+        <view wx:elif>
+          <view class="none-account-tips">
+            <text class="tips">提示:</text>
+            您还没有添加两步验证账号信息
+            <button bindtap="AddAccount" class="add-account-button">添加账号</button>
           </view>
         </view>
       </view>
@@ -57,12 +82,18 @@
       accountList: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
     };
     onLoad() {
-      this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
-      this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
-      //console.log(this.account_list)
+      // this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
+      // this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
+      // //console.log(this.account_list)
+      this.accountList = wx.getStorageSync('accountList');
       this.$apply();
     };
     methods = {
+      AddAccount(){
+        wx.navigateTo({
+          url: '/pages/twofa/addaccount'
+        })
+      }
     };
   }
 </script>

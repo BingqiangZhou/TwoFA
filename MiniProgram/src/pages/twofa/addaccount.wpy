@@ -2,14 +2,14 @@
   .add-account-tips{
     font-size: 35rpx;
     color: #25C6FC;
-    margin-top: 30%;
+    margin-top: 50%;
     text-align: center;
   }
   .tips{
     color: red;
   }
   .ScanCode-button{
-    margin-top: 30%;
+    margin-top: 5%;
     margin-left: 2%;
     background: #25C6FC;
     color: white;
@@ -54,12 +54,12 @@
     </view>
     <view wx:if="{{isManualInput == false}}">
       <view style="padding-top:calc(40px + {{barHeight}}px);" class="add-account-tips">
-        <text class="tips">小提示：</text>如果您没有网络，您也可以手工输入！
+        <text class="tips">提示：</text>请您打开网络
       </view>
       <button bindtap="ScanCode" class="ScanCode-button">扫码录入</button>
-      <view class="input-token">
+      <!-- <view class="input-token">
         <text bindtap="InputToken">手工录入</text>
-      </view>
+      </view> -->
     </view>
     <view wx:elif>
         <view style="padding-top:calc(40px + {{barHeight}}px);" class="input-token-tips">
@@ -76,7 +76,7 @@
       title: '添加2FA账号',
       barHeight: wepy.$instance.globalData.statusBarHeight,
       isManualInput:false,
-      Token:''
+      accountList: []
     };
     onLoad() {
     };
@@ -89,9 +89,76 @@
           onlyFromCamera: true,
           success(res) {
             //TODO 剪切结果
-            that.token = res.result;
+            var info = res.result.split('_');
+            //console.log(str);
+            if (info.length != 3) {
+              wx.showModal({
+                title: '提示',
+                content: '不正确的验证码',
+                confirmText: '重新扫描',
+                success(res) {
+                }
+              })
+            }
+            that.accountList.push({key:info[0],account:info[1],manufacturer:info[2]});
+            //console.log("hello");
+            //console.log(that.accountList);
+            console.log(that.accountList);
+            wx.setStorageSync('accountList', that.accountList)
             that.$apply(); 
-            console.log(res.result);
+            // wx.switchTab({
+            //   url: '/pages/twofa/twofa'
+            // })
+            //TODO 发送消息指后台
+            var openId = wx.getStorageSync('openId');
+            if (openId == null) {
+                wx.login({
+                  success(res) {
+                    if (res.code) {
+                      // 发起网络请求
+                      wx.request({
+                        url: 'http://localhost:62225/Api/MiniProgram/GetUserInfo',
+                        data: {
+                          code: res.code
+                        },
+                        success(res){
+                          var info = JSON.parse(res.data);
+                          wx.setStorageSync('openId', info.openid)
+                          openId = info.openid;
+                          console.log(info.openid)
+                        }
+                      })
+                    } else {
+                      console.log('登录失败！' + res.errMsg)
+                    }
+                  }
+                })
+            }
+            wx.request({
+              url: 'http://localhost:62225/Api/MiniProgram/ComfirmAccount',
+              data: {
+                userName: info[1],
+                key:info[0],
+                mName:info[2],
+                openId:openId
+              },
+              success(res){
+                if(res.data.Result == false){
+                  wx.showModal({
+                    title: '提示',
+                    content: res.data.ErrorMsg,
+                    confirmText: '重新扫描',
+                    success(res) {
+                    }
+                  })
+                }
+                else{
+                  wx.redirectTo({
+                    url: '/pages/twofa/addsuccess'
+                  })
+                }
+              }
+            })
           },
           fail()
           {

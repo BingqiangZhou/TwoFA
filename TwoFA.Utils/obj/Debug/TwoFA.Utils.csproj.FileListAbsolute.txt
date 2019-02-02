@@ -12,3 +12,5 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.csproj.Co
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.csproj.CopyComplete
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.exe
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Algorithms.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Primitives.dll

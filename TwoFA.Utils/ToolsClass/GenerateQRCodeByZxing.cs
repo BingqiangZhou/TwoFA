@@ -11,7 +11,7 @@ using ZXing.QrCode;
 namespace TwoFA.Utils.ToolsClass
 {
     //https://blog.csdn.net/xwnxwn/article/details/72636417
-    class GenerateQRCodeByZxing
+    public class GenerateQRCodeByZxing
     {
         //生成二维码并返回System.Drawing.Bitmap对象
         public static Bitmap GenerateQRCodeToBitmap(string text,int height,int width,int margin)

@@ -57,8 +57,8 @@ namespace TwoFA.WebMVC.Controllers
                 registerModel.Password);
             if (result.Succeeded)
             {
-                //var user = UserManager.FindByEmail(registerModel.Email);
-                //UserManager.AddToRole(user.Id, "Manufacturuer");
+                var user = UserManager.FindByEmail(registerModel.Email);
+                UserManager.AddToRole(user.Id, "M");
                 return View("register3");
             }
             else

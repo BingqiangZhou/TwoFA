@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace TwoFA.Utils.ToolsClass
 {
     //https://blog.csdn.net/weixin_43260645/article/details/82812127
-    class BitmapAndBase64MutualTransformation
+    public class BitmapAndBase64MutualTransformation
     {
         //图片转为base64编码的字符串 
         public static string BitmapToBase64String(Bitmap bmp)

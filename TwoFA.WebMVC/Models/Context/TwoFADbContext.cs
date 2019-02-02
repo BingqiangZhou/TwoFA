@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TwoFA.WebMVC.Models.Model;
+using Microsoft.AspNet.Identity;
 
 namespace TwoFA.WebMVC.Models.Context
 {
@@ -20,17 +21,17 @@ namespace TwoFA.WebMVC.Models.Context
         public void PerformInitialSetup(IdentityDbContext context)
         {
             // 初始化配置将放在这儿 
-            TwoFAUserManager userMgr = new TwoFAUserManager(new UserStore<User>(context));
+            //TwoFAUserManager userMgr = new TwoFAUserManager(new UserStore<User>(context));
             TwoFARoleManager roleMgr = new TwoFARoleManager(new RoleStore<Role>(context));
 
-            userMgr.CreateAsync(new User { UserName = "miniProgram" });
-            userMgr.CreateAsync(new User { UserName = "manufacturuer" });
+            //userMgr.CreateAsync(new User { UserName = "miniProgram" });
+            //userMgr.CreateAsync(new User { UserName = "manufacturuer" });
 
-            roleMgr.CreateAsync(new Role("Manufacturuer"));
-            roleMgr.CreateAsync(new Role("CustomerUser"));
+            roleMgr.Create(new Role("M"));
+            roleMgr.Create(new Role("U"));
 
-            userMgr.AddToRoleAsync(userMgr.FindByNameAsync("miniProgram").Result.Id, "CustomerUser");
-            userMgr.AddToRoleAsync(userMgr.FindByNameAsync("manufacturuer").Result.Id, "Manufacturuer");
+            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("miniProgram").Result.Id, "CustomerUser");
+            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("manufacturuer").Result.Id, "Manufacturuer");
 
         }
     }
