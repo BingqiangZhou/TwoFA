@@ -12,7 +12,7 @@ namespace TwoFA.WebApi.ViewModels
         /// </summary>
         public bool Result { get; set; }
         /// <summary>
-        /// 错误信息
+        /// 错误信息，验证成功时为null
         /// </summary>
         public string ErrorMsg { get; set; }
     }

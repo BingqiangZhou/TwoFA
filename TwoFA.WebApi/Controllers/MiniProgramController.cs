@@ -6,12 +6,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using TwoFA.Utils.ToolsClass;
 using TwoFA.WebApi.ViewModels;
 using TwoFA.WebMVC.Models.Infrastructure;
 
 namespace TwoFA.WebApi.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class MiniProgramController : TwoFAApiController
     {
         public string GetUserInfo(string code)

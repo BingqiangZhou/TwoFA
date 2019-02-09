@@ -1,0 +1,139 @@
+﻿@model ConfigModel
+@{
+    ViewBag.Title = "相关配置";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+@section Script{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#getToken").click(function () {
+            //alert("heli");
+            $.ajax({
+                url: '@Url.Action("GetToken", "Config")',
+                method: "post",
+                success: function (res) {
+                    if (res != "Error") {
+                        $("#myToken").text(res);
+                        $("#getToken").hide();
+                    }
+                    else {
+                        $("#myToken").text("出错了，请重试");
+                    }
+                }
+            });
+        })
+        $("#inputUrl").change(function () {
+            var inputUrl = $("#inputUrl").val();
+            var strRegex = '^((https|http)?://)?'
+                + '(([0-9]{1,3}.){3}[0-9]{1,3}|'// IP形式的URL- 199.194.52.184 
+                + '([0-9a-z_!~*()-]+.)*'// 域名- www. 
+                + '[a-z]{2,6})'//域名的扩展名 
+                + '(:[0-9]{1,4})?'// 端口- :80 
+                + '((/?)|(/[0-9a-z_!~*().;?:@@&=+$,%#-]+)+/?)$';
+            var result = RegExp(strRegex).test(inputUrl);
+            if (result == true) {
+                $("#updateUrl").removeAttr("hidden");
+            }
+            else {
+                $("#updateUrl").attr("hidden","hidden");
+            }
+        })
+        $("#updateUrl").click(function(){
+            var inputUrl = encodeURI($("#inputUrl").val());
+             $.ajax({
+                 url: '@Url.Action("SetReturnURL", "Config")',
+                 data: {
+                     'url': inputUrl
+                 },
+                 method: "post",
+                 success: function (res) {
+                    if (res != "Error") {
+                        $("#updateTip").text("链接已更新");
+                        $("#updateUrl").attr("hidden", "hidden");
+                    }
+                    else {
+                        $("#updateUrl").text("出错了，请重试");
+                        $("#updateUrl").removeAttr("hidden");
+                    }
+                 },
+                 error: function () {
+                     alert(inputUrl);
+                     $("#updateTip").text("出现错误，请联系技术人员");
+                     $("#updateUrl").attr("hidden", "hidden");
+                 }
+             });
+        })
+    })
+    </script>
+}
+    <div class="jumbotron">
+        <h3 class="display-4">两步验证相关配置</h3>
+        <hr class="my-4">
+        <h3>我的ID以及Token</h3>
+        <p class="lead">用于调用API传参，其中token会随密码修改等个人敏感信息的改变而改变</p>
+        <table class="table">
+            <tbody>
+                <tr><th class="col-4">ID</th><td id="myId">@Model.mId</td></tr>
+                <tr><th class="col-4">Token(如有个人信息的更改请及时更新)</th><td><span id="myToken"></span>
+                    <a class="btn-link" id="getToken" href="#">获取token</a></td></tr>
+            </tbody>
+        </table>
+        <hr class="my-4">
+        <h3>验证成功回置链接（控制器）</h3>
+        <p class="lead">当用户两步验证成功时，将会相关数据返回到该链接（控制器）</p>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th class="col-1">回置链接</th>
+                    <td class="col-6">
+                        <input class="w-100 form-control" id="inputUrl" type="url" value="@Model.mUrl"
+                               placeholder="请输入正确的URL，如：https://bingqiangzhou.cn" />
+                    </td>
+                    <td class="col-4">
+                        <a class="btn-link" id="updateUrl" hidden href="#">更新链接</a>
+                        <span id="updateTip" class="text-primary"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr class="my-4">
+        @{
+            if (Model.serviceIsOpen == true)
+            {
+                <h3>两步验证重置秘钥</h3>
+                @:<text class="lead">如果您的设备丢失导致无法登录，您可以使用此密码重置两步验证</text>
+                <a class="btn-link" href="#">获取秘钥</a>
+                <hr class="my-4">
+            }
+        }
+        <h3>开启/关闭两步验证</h3>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th class="col-4">
+                        <p class="lead">
+                            两步验证服务当前状态为
+                            @{
+                                if (Model.serviceIsOpen == false)
+                                {
+                                    @:<text class="text-primary">关闭</text>，您可以打开两步验证服务
+                                    <a class="btn-link" href="#">开启服务</a>
+                                }
+                                else
+                                {
+                                    @:<text class="text-primary">开启</text> ，您可以关闭两步验证服务
+                                    <a class="btn-link" href="#">关闭服务</a>
+                                }
+                            }
+                        </p>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+        @*<div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1">打开两步验证</label>
+        </div>*@
+        <hr class="my-4">
+    </div>

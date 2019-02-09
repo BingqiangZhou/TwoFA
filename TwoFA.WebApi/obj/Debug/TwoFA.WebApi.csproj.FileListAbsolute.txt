@@ -113,3 +113,6 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\Antlr3.Runtime.pdb
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Cors.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Http.Cors.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Http.Cors.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Helpers.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Helpers.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\XmlDocument.xml
