@@ -10,6 +10,7 @@ using System.Web.Http.Description;
 using TwoFA.Utils.ToolsClass;
 using TwoFA.WebApi.ViewModels;
 using TwoFA.WebMVC.Models.Infrastructure;
+using TwoFA.WebMVC.Models.Model;
 
 namespace TwoFA.WebApi.Controllers
 {
@@ -27,18 +28,30 @@ namespace TwoFA.WebApi.Controllers
         {
             //TODO 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
             //TODO openid存到phonenumber字段
-            //验证
-            var mUser = await UserManager.FindByNameAsync(mName);
-            if (mUser == null)
+            User user;
+            if (mName == "TwoFA")
             {
-                return new VerifyResultViewModel { Result = false ,ErrorMsg="厂商不存在"};
+                user = await UserManager.FindByNameAsync(userName);
+                if (user == null)
+                {
+                    return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
+                }
             }
-            //验证
-            var uName = mUser.Id.Replace('-', '_')+userName;
-            var user = await UserManager.FindByNameAsync(uName);
-            if (user == null)
+            else
             {
-                return new VerifyResultViewModel { Result = false ,ErrorMsg="用户不存在"};
+                //验证
+                var mUser = await UserManager.FindByNameAsync(mName);
+                if (mUser == null)
+                {
+                    return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
+                }
+                //验证
+                var uName = mUser.Id.Replace('-', '_') + userName;
+                user = await UserManager.FindByNameAsync(uName);
+                if (user == null)
+                {
+                    return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
+                }
             }
             //验证 key是否有效添加
             var loginInfos = await UserManager.GetLoginsAsync(user.Id);

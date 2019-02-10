@@ -230,6 +230,7 @@
     <Compile Include="ViewModel\ConfigModel.cs" />
     <Compile Include="ViewModel\ForgetPasswordModel.cs" />
     <Compile Include="ViewModel\ModifyPasswordModel.cs" />
+    <Compile Include="ViewModel\OpenTwoFAServiceModel.cs" />
     <Compile Include="ViewModel\RegisterModel.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
     <Compile Include="ViewModel\VerifyModel.cs" />

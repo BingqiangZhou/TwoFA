@@ -42,7 +42,7 @@ namespace TwoFA.WebMVC.Controllers
                 }
             }
             return View("Index",new ConfigModel {
-                userName =user.UserName,mId=user.Id,serviceIsOpen=user.OpenID == null?false:true,mUrl = url });
+                userName =user.UserName,mId=user.Id,serviceIsOpen=user.OpenID.Length == 0?false:true,mUrl = url });
         }
         [HttpPost]
         public async Task<ActionResult> GetToken()

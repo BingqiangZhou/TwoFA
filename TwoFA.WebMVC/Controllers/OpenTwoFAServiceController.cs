@@ -4,15 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TwoFA.WebMVC.Models.Infrastructure;
+using TwoFA.WebMVC.ViewModel;
 
 namespace TwoFA.WebMVC.Controllers
 {
     public class OpenTwoFAServiceController : TwoFAMVCController
     {
-        // GET: OpenTwoFAService
-        public ActionResult Index()
+        [HttpPost]
+        public ActionResult Index(OpenTwoFAServiceModel model)
         {
-            return View();
+            return View("Index",model);
         }
+        //public ActionResult Index(OpenTwoFAServiceModel model)
+        //{
+        //    return View("Index",model);
+        //}
     }
 }

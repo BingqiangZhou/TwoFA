@@ -486,12 +486,19 @@
             两步验证开放API
             </summary>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CreateAccount(TwoFA.WebApi.Models.CreateAccountModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CreateAccount(TwoFA.WebApi.Models.AccountModel)">
             <summary>
             开通TwoFA账号
             </summary>
             <param name="model">创建用户参数模型</param>
             <returns>返回二维码图片base64字符串，以及手动添加账号需输入的Token</returns>
+        </member>
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccountIsVaild(TwoFA.WebApi.Models.VerifyAccountIsVaildModel)">
+            <summary>
+            验证账号是否正确添加
+            </summary>
+            <param name="model">参数模式</param>
+            <returns>返回验证结果</returns>
         </member>
         <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccount(TwoFA.WebApi.Models.VerifyAccountModel)">
             <summary>
@@ -500,24 +507,51 @@
             <param name="model">验证用户参数模型</param>
             <returns>返回验证结果</returns>
         </member>
-        <member name="T:TwoFA.WebApi.Models.CreateAccountModel">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CancelAccount(TwoFA.WebApi.Models.AccountModel)">
+            <summary>
+            注销TwoFA账号
+            </summary>
+            <param name="model">注销用户参数模型</param>
+            <returns>返回注销结果</returns>
+        </member>
+        <member name="T:TwoFA.WebApi.Models.AccountModel">
             <summary>
             创建用户数据模型
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.CreateAccountModel.userName">
+        <member name="P:TwoFA.WebApi.Models.AccountModel.userName">
             <summary>
             厂商提供该用户唯一标识
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.CreateAccountModel.mid">
+        <member name="P:TwoFA.WebApi.Models.AccountModel.mid">
             <summary>
             厂商id
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.CreateAccountModel.token">
+        <member name="P:TwoFA.WebApi.Models.AccountModel.token">
             <summary>
             厂商token
+            </summary>
+        </member>
+        <member name="T:TwoFA.WebApi.Models.VerifyAccountIsVaildModel">
+            <summary>
+            验证账号是否成功添加模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.userName">
+            <summary>
+            用户唯一标识
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.mName">
+            <summary>
+            厂商名
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.key">
+            <summary>
+            秘钥
             </summary>
         </member>
         <member name="T:TwoFA.WebApi.Models.VerifyAccountModel">

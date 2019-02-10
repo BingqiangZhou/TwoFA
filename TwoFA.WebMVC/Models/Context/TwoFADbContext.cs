@@ -21,16 +21,16 @@ namespace TwoFA.WebMVC.Models.Context
         public void PerformInitialSetup(IdentityDbContext context)
         {
             // 初始化配置将放在这儿 
-            //TwoFAUserManager userMgr = new TwoFAUserManager(new UserStore<User>(context));
+            TwoFAUserManager userMgr = new TwoFAUserManager(new UserStore<User>(context));
             TwoFARoleManager roleMgr = new TwoFARoleManager(new RoleStore<Role>(context));
 
-            //userMgr.CreateAsync(new User { UserName = "miniProgram" });
+            //userMgr.CreateAsync(new User { UserName = "TwoFA" });
             //userMgr.CreateAsync(new User { UserName = "manufacturuer" });
 
             roleMgr.Create(new Role("M"));
             roleMgr.Create(new Role("U"));
 
-            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("miniProgram").Result.Id, "CustomerUser");
+            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("TwoFA").Result.Id, "M");
             //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("manufacturuer").Result.Id, "Manufacturuer");
 
         }

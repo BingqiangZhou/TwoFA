@@ -1,4 +1,4 @@
-﻿
+﻿@model OpenTwoFAServiceModel
 @{
     ViewBag.Title = "开通两步验证";
     Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
@@ -16,19 +16,59 @@
 <div class="col-lg-4 offset-lg-4 text-center">
     <div class="login-info">
         <div class="text-center">
-            <img id="QRCode" src=""/>
+            <img id="QRCode" src="" alt="正在加载中..."/>
         </div>
     </div>
     <div class="login-info">
-        @Html.ActionLink("已成功扫描二维码", "Index", "Home", null, new { @class = "btn btn-lg  btn-primary" })
+        <a class="btn btn-lg  btn-primary" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
+        <a class="btn btn-lg  btn-primary" id="Verification" href="#">验证是否添加成功</a>
     </div>
 </div>
 <script type="text/javascript">
-    $.ajax({
-        url: "http://localhost:62225/api/TwoFA/CreateAccount?userName=12345699&mid=868ccbc9-eb5a-4b9f-947d-b60209b45cf2&token=f4070ec4-a944-4a77-974f-76b69944309a",
-        success: function (result) {
-            console.log(result.Base64String);
-            $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
-        }
-    });
+    var loaclResult;
+        $.ajax({
+            url: "http://localhost:62225/api/TwoFA/CreateAccount",
+            data: {
+                'userName': '@Model.userName',
+                'mid': '@Model.mid',
+                'token': '@Model.token'
+            },
+            method: 'post',
+            success: function (result) {
+                loaclResult = result;
+                console.log(result.Base64String);
+                $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
+            },
+            error: function () {
+                $("#QRCode").attr('alt', "二维码加载失败，请刷新页面！");
+            }
+        });
+    $(document).ready(function () {
+        $("#Verification").click(function ()
+        {
+            //alert(loaclResult);
+            $.ajax({
+                url: "http://localhost:62225/api/TwoFA/VerifyAccountIsVaild",
+                data: {
+                    'userName': loaclResult.uName,
+                    'mName': loaclResult.mName,
+                    'key': loaclResult.Key
+                },
+                method: 'post',
+                success: function (res) {
+                    if (res.Result == true) {
+                        $("#Verification").hide()
+                        $("#Back").removeAttr("hidden")
+                    }
+                    else {
+                        $("#Verification").text("您还没有正确添加,刷新")
+                        $("#Back").attr("hidden", "hidden")
+                    }
+                },
+                error: function () {
+                    $("#Verification").text("出现错误，请与技术人员联系")
+                }
+            });
+        })
+    })
 </script>
