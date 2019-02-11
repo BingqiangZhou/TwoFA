@@ -9,7 +9,7 @@ namespace TwoFA.WebMVC.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(TwoFA.WebMVC.Models.Context.TwoFADbContext context)

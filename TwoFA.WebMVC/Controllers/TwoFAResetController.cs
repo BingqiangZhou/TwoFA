@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TwoFA.WebMVC.Models.Infrastructure;
 using TwoFA.WebMVC.ViewModel;
 
 namespace TwoFA.WebMVC.Controllers
 {
-    public class TwoFAValidationServiceController : TwoFAMVCController
+    public class TwoFAResetController : Controller
     {
-        // GET: TwoFAValidationService
+        // GET: TwoFAReset
         public ActionResult Index(VerifyModel model)
         {
             TempData["Model"] = model;
-            return RedirectToAction("Verify");
+            return RedirectToAction("Reset");
         }
-        public ActionResult Verify()
+        public ActionResult Reset()
         {
             VerifyModel model = (VerifyModel)TempData["Model"];
             return View("Index", model);

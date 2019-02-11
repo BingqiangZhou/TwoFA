@@ -507,6 +507,13 @@
             <param name="model">验证用户参数模型</param>
             <returns>返回验证结果</returns>
         </member>
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyResetKey(TwoFA.WebApi.Models.VerifResetKey)">
+            <summary>
+            验证TwoFA重置秘钥
+            </summary>
+            <param name="model">验证用户参数模型</param>
+            <returns>返回验证结果</returns>
+        </member>
         <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CancelAccount(TwoFA.WebApi.Models.AccountModel)">
             <summary>
             注销TwoFA账号
@@ -532,6 +539,31 @@
         <member name="P:TwoFA.WebApi.Models.AccountModel.token">
             <summary>
             厂商token
+            </summary>
+        </member>
+        <member name="T:TwoFA.WebApi.Models.VerifResetKey">
+            <summary>
+            验证重置秘钥模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifResetKey.userName">
+            <summary>
+            厂商提供该用户唯一标识
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifResetKey.mId">
+            <summary>
+            厂商id
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifResetKey.token">
+            <summary>
+            厂商token
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifResetKey.resetKey">
+            <summary>
+            验证码
             </summary>
         </member>
         <member name="T:TwoFA.WebApi.Models.VerifyAccountIsVaildModel">
@@ -597,6 +629,11 @@
         <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.Key">
             <summary>
             生成TwoFA验证码的秘钥
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.resetKey">
+            <summary>
+            重置TwoFA的秘钥
             </summary>
         </member>
         <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.Result">

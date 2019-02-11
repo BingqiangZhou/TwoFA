@@ -205,6 +205,7 @@
     <Compile Include="Controllers\OpenTwoFAServiceController.cs" />
     <Compile Include="Controllers\PasswordController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\TwoFAResetController.cs" />
     <Compile Include="Controllers\TwoFAValidationServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -267,6 +268,7 @@
     <Content Include="Views\OpenTwoFAService\Index.cshtml" />
     <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <Content Include="Views\Config\Index.cshtml" />
+    <Content Include="Views\TwoFAReset\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

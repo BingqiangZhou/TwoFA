@@ -88,9 +88,10 @@
         wx.scanCode({
           onlyFromCamera: true,
           success(res) {
-            //TODO 剪切结果
+            that.accountList = wx.getStorageSync('accountList');
+            // 剪切结果
             var info = res.result.split('_');
-            //console.log(str);
+//            console.log(info);
             if (info.length != 3) {
               wx.showModal({
                 title: '提示',
@@ -100,10 +101,19 @@
                 }
               })
             }
+            for (var i = that.accountList.length - 1; i >= 0; i--) {
+              if (that.accountList[i].account==info[1] && that.accountList[i].manufacturer==info[2]) {
+                  wx.showModal({
+                  title: '提示',
+                  content: '账号已添加请勿重新添加'
+                  })
+                return;
+              }
+            }
             that.accountList.push({key:info[0],account:info[1],manufacturer:info[2]});
             //console.log("hello");
             //console.log(that.accountList);
-            console.log(that.accountList);
+            //console.log(that.accountList);
             wx.setStorageSync('accountList', that.accountList)
             that.$apply(); 
             // wx.switchTab({

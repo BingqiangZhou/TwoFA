@@ -15,7 +15,7 @@
                 <th class="col-4">Token(如有个人信息的更改请及时更新)</th>
                 <td>
                     <span id="myToken"></span>
-                    <a class="btn-link" id="getToken" href="#">获取token</a>
+                    <a class="btn-link" id="getToken" href="JavaScript::void(0);">获取token</a>
                 </td>
             </tr>
         </tbody>
@@ -32,7 +32,7 @@
                            placeholder="请输入正确的URL，如：https://bingqiangzhou.cn" />
                 </td>
                 <td class="col-4">
-                    <a class="btn-link" id="updateUrl" hidden href="#">更新链接</a>
+                    <a class="btn-link" id="updateUrl" hidden href="JavaScript::void(0);">更新链接</a>
                     <span id="updateTip" class="text-primary"></span>
                 </td>
             </tr>
@@ -44,7 +44,17 @@
         {
             <h3>两步验证重置秘钥</h3>
             @:<text class="lead">如果您的设备丢失导致无法登录，您可以使用此密码重置两步验证</text>
-            <a class="btn-link" href="#">获取秘钥</a>
+            <table class="table">
+            <tbody>
+                <tr>
+                    <th class="col-4">重置码</th>
+                    <td>
+                        <a class="btn-link" id="getResetKey" href="JavaScript::void(0);">获取秘钥</a>
+                        <span id="myResetKey" class="text-primary"></span>
+                    </td>
+                </tr>
+            </tbody>
+            </table>
             <hr class="my-4">
         }
     }
@@ -104,6 +114,32 @@
                     else {
                         $("#myToken").text("出错了，请重试");
                     }
+                },
+                error: function () {
+                    //alert(inputUrl);
+                    $("#myToken").text("出现错误，请联系技术人员");
+                    $("#getToken").attr("hidden", "hidden");
+                }
+            });
+        })
+        $("#getResetKey").click(function () {
+            $("#myResetKey").text("正在获取中...");
+            $.ajax({
+                url: '@Url.Action("GetResetKey", "Config")',
+                method: "post",
+                success: function (res) {
+                    if (res != "Error") {
+                        $("#myResetKey").text(res);
+                        $("#getResetKey").hide();
+                    }
+                    else {
+                        $("#getResetKey").text("出错了，请重试");
+                    }
+                },
+                error: function () {
+                    //alert(inputUrl);
+                    $("#myResetKey").text("出现错误，请联系技术人员");
+                    $("#getResetKey").attr("hidden", "hidden");
                 }
             });
         })

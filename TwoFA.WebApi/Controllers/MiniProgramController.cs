@@ -26,8 +26,7 @@ namespace TwoFA.WebApi.Controllers
         [HttpGet]
         public async Task<VerifyResultViewModel> ComfirmAccount(string userName, string key, string openId, string mName)
         {
-            //TODO 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
-            //TODO openid存到phonenumber字段
+            // 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
             User user;
             if (mName == "TwoFA")
             {

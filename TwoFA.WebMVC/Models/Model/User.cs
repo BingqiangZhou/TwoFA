@@ -10,6 +10,6 @@ namespace TwoFA.WebMVC.Models.Model
     public class User : IdentityUser
     {
         public string OpenID { get; set; }
-        //public string Key { get; set; }
+        public string ResetKey { get; set; }
     }
 }

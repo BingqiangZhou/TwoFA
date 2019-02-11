@@ -81,15 +81,23 @@ namespace TwoFA.WebApi.Controllers
                 mName = mUser.UserName;
             }
             string twoFAToken = UserManager.GenerateUserToken("TwoFA KEY", user.Id);
-            var key = GenerateCode.GenerateTwoFAKey(model.mid, twoFAToken);
-            IdentityResult res = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(mName, key));
-            if (res.Succeeded == false)
+            var key = GenerateCode.GenerateSHA1(model.mid+twoFAToken);
+            //将生成的sha-1值的前十位作为重置key
+            user.ResetKey = GenerateCode.GenerateSHA1(user.SecurityStamp + twoFAToken).Substring(0,10);
+            IdentityResult updateRes = await UserManager.UpdateAsync(user);
+            if (updateRes.Succeeded == false)
             {
                 return new CreateAccountViewModel { Result = false, ErrorMsg = "数据存储失败" };
             }
+            IdentityResult res = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(mName, key));
+            if (res.Succeeded == false)
+            {
+                return new CreateAccountViewModel { Result = false, ErrorMsg = "login数据存储失败" };
+            }
             string base64String = BitmapAndBase64MutualTransformation.BitmapToBase64String(
                 GenerateQRCodeByZxing.GenerateQRCodeToBitmap(key + "_"+ model.userName +"_" + mName, 256, 256, 0));
-            return new CreateAccountViewModel {  Base64String=base64String,uName=uName,Key=key,mName=mName,Result=true };
+            return new CreateAccountViewModel {
+                Base64String =base64String,uName=uName,Key=key,resetKey=user.ResetKey,mName=mName,Result=true };
         }
         /// <summary>
         /// 验证账号是否正确添加
@@ -129,22 +137,32 @@ namespace TwoFA.WebApi.Controllers
         [HttpPost]
         public async Task<VerifyResultViewModel> VerifyAccount(VerifyAccountModel model)
         {
-            var uName = model.userName + "_" + model.mId.Replace('-', '_');
+            var uName = model.userName;
+            User mUser = null;
+            if (model.mId.Equals("TwoFA") == false)
+            {
+                uName = model.userName + "_" + model.mId.Replace('-', '_');
+                mUser = await UserManager.FindByIdAsync(model.mId);
+                if (mUser == null || mUser.SecurityStamp.Equals(model.token) == false)
+                {
+                    return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
+                }
+            }
             var user = await UserManager.FindByNameAsync(uName);
             if (user == null)
             {
                 return new VerifyResultViewModel { Result = false ,ErrorMsg="用户不存在"};
             }
-            var mUser = await UserManager.FindByIdAsync(model.mId);
-            if (mUser == null || mUser.SecurityStamp.Equals(model.token) == false)
+            var mName = "TwoFA";
+            if (mUser != null)
             {
-                return new VerifyResultViewModel { Result = false ,ErrorMsg="厂商不存在"};
+                mName = mUser.UserName;
             }
             var loginInfoList = await UserManager.GetLoginsAsync(user.Id);
             string key="none";
             foreach (var item in loginInfoList)
             {
-                if (item.LoginProvider.Equals(mUser.UserName))
+                if (item.LoginProvider.Equals(mName))
                 {
                     key = item.ProviderKey;
                 }
@@ -168,6 +186,36 @@ namespace TwoFA.WebApi.Controllers
                 }
             }
             return new VerifyResultViewModel { Result = false ,ErrorMsg="验证失败"};
+        }
+        /// <summary>
+        /// 验证TwoFA重置秘钥
+        /// </summary>
+        /// <param name="model">验证用户参数模型</param>
+        /// <returns>返回验证结果</returns>
+        [HttpPost]
+        public async Task<VerifyResultViewModel> VerifyResetKey(VerifResetKey model)
+        {
+            var uName = model.userName;
+            User mUser = null;
+            if (model.mId.Equals("TwoFA") == false)
+            {
+                uName = model.userName + "_" + model.mId.Replace('-', '_');
+                mUser = await UserManager.FindByIdAsync(model.mId);
+                if (mUser == null || mUser.SecurityStamp.Equals(model.token) == false)
+                {
+                    return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
+                }
+            }
+            var user = await UserManager.FindByNameAsync(uName);
+            if (user == null)
+            {
+                return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
+            }
+            if (user.ResetKey.Equals(model.resetKey))
+            {
+                return new VerifyResultViewModel { Result = true};
+            }
+            return new VerifyResultViewModel { Result = false, ErrorMsg = "验证失败" };
         }
         /// <summary>
         /// 注销TwoFA账号

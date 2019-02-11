@@ -24,6 +24,10 @@ namespace TwoFA.WebApi.ViewModels
         /// </summary>
         public string Key { get; set; }
         /// <summary>
+        /// 重置TwoFA的秘钥
+        /// </summary>
+        public string resetKey { get; set; }
+        /// <summary>
         /// 结果状态码，true表示返回正确的信息
         /// </summary>
         public bool Result { get; set; }

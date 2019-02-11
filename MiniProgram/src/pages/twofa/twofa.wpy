@@ -224,12 +224,6 @@
       if (this.accountList.length == 0) {
           return;
       }
-      this.accountInfo=[];
-        for (var i = 0; i < this.accountList.length; i++) {
-          this.accountInfo.push(
-            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
-        }
-      this.$apply();
     };
     onShow()
     {
@@ -238,6 +232,12 @@
       if (this.accountList.length == 0) {
           return;
       }
+      this.accountInfo=[];
+        for (var i = 0; i < this.accountList.length; i++) {
+          this.accountInfo.push(
+            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
+        }
+      this.$apply();
       var date = new Date();
       this.counter = Math.floor(date.getTime() / (30*1000));
       this.countdown = Math.ceil(date.getSeconds()%30 * (100/30));
@@ -398,13 +398,13 @@
       },
       ClickPicker()
       {
-        this.accountInfo=[];
-        for (var i = 0; i < this.accountList.length; i++) {
-          this.accountInfo.push(
-            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
-        }
-        //this.accountInfo.push("hello");
-        this.$apply();
+        // this.accountInfo=[];
+        // for (var i = 0; i < this.accountList.length; i++) {
+        //   this.accountInfo.push(
+        //     this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
+        // }
+        // //this.accountInfo.push("hello");
+        // this.$apply();
       },
       PickerChange(e)
       {

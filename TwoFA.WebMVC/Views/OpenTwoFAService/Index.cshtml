@@ -20,8 +20,16 @@
         </div>
     </div>
     <div class="login-info">
+        <div class="text-center" hidden id="Result">
+            <p class="text-primary">
+                重置码:<span id="ResetKey"></span>
+            </p>
+            <h5 class="text-danger">注意记住上面的重置码，在无法验证时会用得上</h5>
+        </div>
+    </div>
+    <div class="login-info">
         <a class="btn btn-lg  btn-primary" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
-        <a class="btn btn-lg  btn-primary" id="Verification" href="#">验证是否添加成功</a>
+        <a class="btn btn-lg  btn-primary" id="Verification" href="JavaScript::void(0);">验证是否添加成功</a>
     </div>
 </div>
 <script type="text/javascript">
@@ -36,8 +44,10 @@
             method: 'post',
             success: function (result) {
                 loaclResult = result;
-                console.log(result.Base64String);
+                //console.log(result.Base64String);
                 $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
+                $("#Result").removeAttr("hidden");
+                $("#ResetKey").text(result.resetKey);
             },
             error: function () {
                 $("#QRCode").attr('alt', "二维码加载失败，请刷新页面！");

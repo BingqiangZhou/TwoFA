@@ -7,7 +7,7 @@ namespace TwoFA.WebMVC.Migrations
     {
         public override void Up()
         {
-            DropColumn("dbo.AspNetUsers", "Key");
+            //DropColumn("dbo.AspNetUsers", "Key");
         }
         
         public override void Down()

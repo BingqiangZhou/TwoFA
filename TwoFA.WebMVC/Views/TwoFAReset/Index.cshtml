@@ -1,0 +1,85 @@
+﻿@model VerifyModel
+@{
+    ViewBag.Title = "验证";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+@section Script{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("button").click(function () {
+            //alert("hello")
+            var code = $(".form-control").val();
+            //alert(code)
+            if (code.length != 10) {
+                $("#errorMsg").text("请输入正确位数的重置码");
+                return;
+            }
+            //console.log(code);
+            $.ajax({
+                url: "http://localhost:62225/api/TwoFA/VerifyResetKey",
+                data: {
+                    'resetKey': code,
+                    'userName': '@Model.userName',
+                    'mId': '@Model.mId',
+                    'token': '@Model.token',
+                },
+                method: "post",
+                success: function (res) {
+                    if (res.Result == false) {
+                        $("#errorMsg").text(res.ErrorMsg);
+                    }
+                    else {
+                        //TODO 转到页面
+                        $("#errorMsg").text("验证成功");
+                        $.ajax({
+                            url: 'http://localhost:62225/api/TwoFA/CancelAccount',
+                             data: {
+                                'userName': '@Model.userName',
+                                'mId': '@Model.mId',
+                                'token': '@Model.token',
+                             },
+                             method: "post",
+                            success: function (res) {
+                                if (res.Result == false) {
+                                    $("#errorMsg").text(res.ErrorMsg);
+                                }
+                                else {
+                                    //跳转页面
+                                    //window.location.href = '@Url.Action("Index", "Config")';
+                                }
+                             },
+                             error: function () {
+                                 //alert(inputUrl);
+                                 $("#errorMsg").text("出错了，请联系相关技术人员！");
+                             }
+                         });
+                    }
+                },
+                error: function () {
+                    $("#errorMsg").text("出错了，请联系相关技术人员！");
+                }
+            });
+        })
+    })
+    </script>
+}
+@using (Html.BeginForm()) { 
+    @Html.AntiForgeryToken()//避免CSRF攻击
+<div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">重置两步验证</h1>
+    <p>请输入重置码</p>
+</div>
+<div class="col-lg-4 offset-lg-4">
+    @Html.HiddenFor(m => m.mId)
+    @Html.HiddenFor(m => m.userName)
+    @Html.HiddenFor(m => m.token)
+    <div class="login-info">
+        <div class="form-label-group">
+            重置码<text id="errorMsg" style="float:right;color:red;"></text>
+            @Html.TextBox("ResetKey",null, new { @class = "form-control" })
+        </div>
+    </div>
+    <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="button">重置</button>
+</div>
+}

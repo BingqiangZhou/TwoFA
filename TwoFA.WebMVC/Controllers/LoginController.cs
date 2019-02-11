@@ -33,6 +33,11 @@ namespace TwoFA.WebMVC.Controllers
                     var u = UserManager.Find(user.UserName, loginModel.Password);
                     if (u != null)
                     {
+                        if (u.OpenID != null&&u.OpenID.Length != 0)
+                        {
+                            return RedirectToAction("Index", "TwoFAValidationService",
+                                new VerifyModel { userName=u.UserName ,mId="TwoFA",token="Default"});
+                        }
                         ClaimsIdentity ident = await UserManager.CreateIdentityAsync(u, DefaultAuthenticationTypes.ApplicationCookie);
                         AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                         AuthManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);

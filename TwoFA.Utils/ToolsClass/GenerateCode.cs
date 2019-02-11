@@ -15,12 +15,29 @@ namespace TwoFA.Utils.ToolsClass
             return new Random().Next(minValue, maxValue);
         }
 
-        public static string GenerateTwoFAKey(string mid, string token)
+        //public static string GenerateTwoFAKey(string mid, string token)
+        //{
+        //    string str;
+        //    using (var sha = new SHA1Managed())
+        //    {
+        //        byte[] textData = Encoding.UTF8.GetBytes(mid+token);
+        //        byte[] hash = sha.ComputeHash(textData);
+        //        StringBuilder displayString = new StringBuilder();
+        //        for (int i = 0; i < hash.Length; i++)
+        //        {
+        //            displayString.Append(hash[i].ToString("X2"));
+        //        }
+        //        str = displayString.ToString();
+        //    };
+            
+        //    return str;
+        //}
+        public static string GenerateSHA1(string text)
         {
             string str;
             using (var sha = new SHA1Managed())
             {
-                byte[] textData = Encoding.UTF8.GetBytes(token);
+                byte[] textData = Encoding.UTF8.GetBytes(text);
                 byte[] hash = sha.ComputeHash(textData);
                 StringBuilder displayString = new StringBuilder();
                 for (int i = 0; i < hash.Length; i++)
@@ -29,9 +46,10 @@ namespace TwoFA.Utils.ToolsClass
                 }
                 str = displayString.ToString();
             };
-            
+
             return str;
         }
+
 
         public static int GenerateTwoFACode(string key,int counter)
         {

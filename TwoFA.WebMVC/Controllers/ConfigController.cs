@@ -60,6 +60,21 @@ namespace TwoFA.WebMVC.Controllers
             return Json(result);
         }
         [HttpPost]
+        public async Task<ActionResult> GetResetKey()
+        {
+            var result = "Error";
+            var userName = HttpContext.User.Identity.Name;
+            if (userName != null)
+            {
+                var user = await UserManager.FindByNameAsync(userName);
+                if (user != null)
+                {
+                    result = user.ResetKey;
+                }
+            }
+            return Json(result);
+        }
+        [HttpPost]
         public async Task<ActionResult> SetReturnURL(string url)
         {
             var result = "Error";
