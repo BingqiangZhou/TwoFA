@@ -28,8 +28,9 @@
                         $("#errorMsg").text(res.ErrorMsg);
                     }
                     else {
-                        //TODO 转到页面
-                        $("#errorMsg").text("验证成功");
+                        //转到页面
+                        //$("#errorMsg").text("验证成功");
+                        window.location.href = @Url.Action("VerifySuccess", "TwoFAValidationService",Model);
                     }
                 },
                 error: function () {

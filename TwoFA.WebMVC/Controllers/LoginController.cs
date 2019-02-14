@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TwoFA.WebMVC.Models.Infrastructure;
+using TwoFA.WebMVC.Models.Model;
 using TwoFA.WebMVC.ViewModel;
 
 namespace TwoFA.WebMVC.Controllers
@@ -32,17 +33,12 @@ namespace TwoFA.WebMVC.Controllers
                 {
                     var u = UserManager.Find(user.UserName, loginModel.Password);
                     if (u != null)
-                    {
-                        if (u.OpenID != null&&u.OpenID.Length != 0)
-                        {
-                            return RedirectToAction("Index", "TwoFAValidationService",
-                                new VerifyModel { userName=u.UserName ,mId="TwoFA",token="Default"});
-                        }
-                        ClaimsIdentity ident = await UserManager.CreateIdentityAsync(u, DefaultAuthenticationTypes.ApplicationCookie);
-                        AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                        AuthManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
-                        //HttpContext.Response.Cookies.Add(new HttpCookie("UserName",u.UserName));
-                        return RedirectToAction("Index","Home");
+                    {   
+                        var accessToken= await UserManager.GenerateEmailConfirmationTokenAsync(u.Id);
+                        TempData["accessToken"] = accessToken;
+                        TempData["user"] = u;
+                        return RedirectToAction("Index", "TwoFAValidationService",
+                            new VerifyModel { userName=u.UserName ,mId="TwoFA",token="Default",accessToken= accessToken });
                     }
                 }
                 else {
@@ -55,6 +51,20 @@ namespace TwoFA.WebMVC.Controllers
             }
             return View("Login", loginModel);
         }
+        public async Task<ActionResult> LoginSuccess(string accessToken)
+        {
+            if (TempData["accessToken"].Equals(accessToken) == false)
+            {
+                return Content("警告：恶意访问将付法律责任");
+            }
+            User u = (User)TempData["user"];
+            ClaimsIdentity ident = await UserManager.CreateIdentityAsync(u, DefaultAuthenticationTypes.ApplicationCookie);
+            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            AuthManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
+            //HttpContext.Response.Cookies.Add(new HttpCookie("UserName",u.UserName));
+            return RedirectToAction("Index", "Home");
+        }
+
         public ActionResult Logout()
         {
             AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

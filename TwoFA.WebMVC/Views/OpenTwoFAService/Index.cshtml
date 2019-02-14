@@ -9,27 +9,29 @@
         margin: 20px 0;
     }
 </style>
-<div class="text-center mb-4">
-    <h1 class="h3 mb-3 font-weight-normal">开通两步验证</h1>
-    <p>请扫描以下二维码</p>
-</div>
-<div class="col-lg-4 offset-lg-4 text-center">
-    <div class="login-info">
-        <div class="text-center">
-            <img id="QRCode" src="" alt="正在加载中..."/>
-        </div>
+<div id="allDocument">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">开通两步验证</h1>
+        <p>请扫描以下二维码</p>
     </div>
-    <div class="login-info">
-        <div class="text-center" hidden id="Result">
-            <p class="text-primary">
-                重置码:<span id="ResetKey"></span>
-            </p>
-            <h5 class="text-danger">注意记住上面的重置码，在无法验证时会用得上</h5>
+    <div class="col-lg-4 offset-lg-4 text-center">
+        <div class="login-info">
+            <div class="text-center">
+                <img id="QRCode" src="" alt="正在加载中..." />
+            </div>
         </div>
-    </div>
-    <div class="login-info">
-        <a class="btn btn-lg  btn-primary" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
-        <a class="btn btn-lg  btn-primary" id="Verification" href="JavaScript::void(0);">验证是否添加成功</a>
+        <div class="login-info">
+            <div class="text-center" hidden id="Result">
+                <p class="text-primary">
+                    重置码:<span id="ResetKey"></span>
+                </p>
+                <h5 class="text-danger">注意记住上面的重置码，在无法验证时会用得上</h5>
+            </div>
+        </div>
+        <div class="login-info">
+            <a class="btn btn-lg  btn-primary disabled" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
+            <a class="btn btn-lg  btn-primary" id="Verification" href="JavaScript::void(0);">验证是否添加成功</a>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -67,8 +69,13 @@
                 method: 'post',
                 success: function (res) {
                     if (res.Result == true) {
-                        $("#Verification").hide()
-                        $("#Back").removeAttr("hidden")
+                        $("#allDocument").empty();
+                        $("#allDocument").addClass("text-center");
+                        $("#allDocument").text("服务开通成功,页面将在五秒后关闭...");
+                        ref = setInterval(function () {
+                            window.close();
+                        }, 5000);
+                        //$("#Back").removeAttr("hidden")
                     }
                     else {
                         $("#Verification").text("您还没有正确添加,刷新")
