@@ -27,30 +27,17 @@ namespace TwoFA.WebApi.Controllers
         public async Task<VerifyResultViewModel> ComfirmAccount(string userName, string key, string openId, string mName)
         {
             // 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
-            User user;
-            if (mName == "TwoFA")
+            //验证
+            var mUser = await UserManager.FindByNameAsync(mName);
+            if (mUser == null)
             {
-                user = await UserManager.FindByNameAsync(userName);
-                if (user == null)
-                {
-                    return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
-                }
+                return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
             }
-            else
+            //验证
+            var user = await UserManager.FindByNameAsync(userName);
+            if (user == null)
             {
-                //验证
-                var mUser = await UserManager.FindByNameAsync(mName);
-                if (mUser == null)
-                {
-                    return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
-                }
-                //验证
-                var uName = mUser.Id.Replace('-', '_') + userName;
-                user = await UserManager.FindByNameAsync(uName);
-                if (user == null)
-                {
-                    return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
-                }
+                return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
             }
             //验证 key是否有效添加
             var loginInfos = await UserManager.GetLoginsAsync(user.Id);

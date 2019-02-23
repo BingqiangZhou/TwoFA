@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,7 +20,10 @@ namespace TwoFA.WebMVC.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-
+            if (HttpContext.User.Identity.Name != null && HttpContext.User.Identity.Name.Equals("")==false)
+            {
+                return View("Index","Home");
+            }
             return View();
         }
         [HttpPost]
@@ -37,8 +41,11 @@ namespace TwoFA.WebMVC.Controllers
                         var accessToken= await UserManager.GenerateEmailConfirmationTokenAsync(u.Id);
                         TempData["accessToken"] = accessToken;
                         TempData["user"] = u;
+                        string mId = ConfigurationManager.AppSettings["Id"];
+                        string token = ConfigurationManager.AppSettings["Token"];
+                        string userName = u.UserName.Split('_')[0];
                         return RedirectToAction("Index", "TwoFAValidationService",
-                            new VerifyModel { userName=u.UserName ,mId="TwoFA",token="Default",accessToken= accessToken });
+                            new VerifyModel { userName= userName,mId= mId, token= token, accessToken= accessToken });
                     }
                 }
                 else {

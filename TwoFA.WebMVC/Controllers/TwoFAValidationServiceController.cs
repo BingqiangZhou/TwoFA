@@ -20,32 +20,35 @@ namespace TwoFA.WebMVC.Controllers
         public async Task<ActionResult> Verify()
         {
             VerifyModel model = (VerifyModel)TempData["Model"];
-            var userName = model.userName;
-            if (model.mId.Equals("TwoFA") == false)
-            {
-                userName = model.userName + "_" + model.mId.Replace('-', '_');
-            }
+            var userName = model.userName + "_" + model.mId.Replace('-', '_'); ;
             var user = await UserManager.FindByNameAsync(userName);
             if (user != null)
             {
-                var claims = await UserManager.GetClaimsAsync(user.Id);
+                var claims = await UserManager.GetClaimsAsync(model.mId);
                 if (claims != null)
                 {
-                    //找到声明"ReturnUrl"，删除声明
                     foreach (var claim in claims)
                     {
                         if (claim.Type.Equals("ReturnUrl"))
                         {
                             model.ReturnURL = claim.Value;
+                            break;
                         }
                     }
                 }
             }
             else
             {
+                return Content("用户信息不存在！");
+            }
+            if (user.OpenID != null && user.OpenID.Length != 0)
+            {
+                return View("Index", model);
+            }
+            else
+            {
                 return RedirectToAction("VerifySuccess",model);
             }
-            return View("Index", model);
         }
         public ActionResult VerifySuccess(VerifyModel model)
         {
@@ -55,7 +58,7 @@ namespace TwoFA.WebMVC.Controllers
         public ActionResult ReturnUserPage()
         {
             VerifyModel model = (VerifyModel)TempData["Model"];
-            return Redirect(model.ReturnURL + "?accessToken=" + model.accessToken);
+            return Redirect(model.ReturnURL + "?accessToken=" + HttpUtility.UrlEncode(model.accessToken));
         }
     }
 }

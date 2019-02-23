@@ -17,7 +17,7 @@ namespace TwoFA.WebApi.Models
         /// <summary>
         /// 厂商id
         /// </summary>
-        public string mid { get; set; }
+        public string mId { get; set; }
         /// <summary>
         /// 厂商token
         /// </summary>

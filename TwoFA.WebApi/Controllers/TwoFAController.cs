@@ -30,19 +30,22 @@ namespace TwoFA.WebApi.Controllers
         [HttpPost]
         public async Task<CreateAccountViewModel> CreateAccount(AccountModel model)
         {
-            //用户的userName由mid+userName组成
-            var uName = model.userName;
-            if (model.mid.Equals("TwoFA") == false)
+            //查找厂商，验证厂商信息
+            var mUser = await UserManager.FindByIdAsync(model.mId);
+            if (mUser == null)
             {
-                uName = model.userName + "_" + model.mid.Replace('-', '_');
+                return new CreateAccountViewModel { Result = false, ErrorMsg = "厂商不存在" };
             }
+            //验证，SecurityStamp，修改密码后会改变
+            if (mUser.SecurityStamp.Equals(model.token) == false)
+            {
+                return new CreateAccountViewModel { Result = false, ErrorMsg = "token不匹配" };
+            }
+            //用户的userName由mid+userName组成
+            var uName = model.userName.Split('_')[0] + "_" + model.mId.Replace('-', '_');
             var user = await UserManager.FindByNameAsync(uName);
             if (user == null)
             {
-                if (model.mid.Equals("TwoFA"))
-                {
-                    return new CreateAccountViewModel { Result = false,ErrorMsg="厂商不存在" };
-                }
                 //没有找到用户，创建用户
                 IdentityResult result = await UserManager.CreateAsync(new User { UserName = uName });
                 if (result.Succeeded == false)
@@ -53,35 +56,18 @@ namespace TwoFA.WebApi.Controllers
                 var uUser = await UserManager.FindByNameAsync(uName);
                 if (uUser == null)
                 {
-                    return new CreateAccountViewModel { Result = false ,ErrorMsg="用户不存在"};
+                    return new CreateAccountViewModel { Result = false ,ErrorMsg= "用户创建失败" };
                 }
                 user = uUser;
                 //设置用户角色为厂商的用户
-                result = await UserManager.AddToRoleAsync(user.Id, "U");
+                result = await UserManager.AddToRoleAsync(user.Id, "O");
                 if (result.Succeeded == false)
                 {
                     return new CreateAccountViewModel { Result = false ,ErrorMsg="设置角色失败"};
                 }
             }
-            //判断开通账号是否为厂商
-            string mName = model.mid;
-            if (model.mid.Equals("TwoFA") == false)
-            {
-                //验证，厂商用户是否存在
-                User mUser = await UserManager.FindByIdAsync(model.mid);
-                if (mUser == null)
-                {
-                    return new CreateAccountViewModel { Result = false , ErrorMsg = "厂商不存在" };
-                }
-                //验证，SecurityStamp，修改密码后会改变
-                if (mUser.SecurityStamp.Equals(model.token) == false)
-                {
-                    return new CreateAccountViewModel { Result = false , ErrorMsg = "token不匹配" };
-                }
-                mName = mUser.UserName;
-            }
             string twoFAToken = UserManager.GenerateUserToken("TwoFA KEY", user.Id);
-            var key = GenerateCode.GenerateSHA1(model.mid+twoFAToken);
+            var key = GenerateCode.GenerateSHA1(model.mId+twoFAToken);
             //将生成的sha-1值的前十位作为重置key
             user.ResetKey = GenerateCode.GenerateSHA1(user.SecurityStamp + twoFAToken).Substring(0,10);
             IdentityResult updateRes = await UserManager.UpdateAsync(user);
@@ -89,15 +75,16 @@ namespace TwoFA.WebApi.Controllers
             {
                 return new CreateAccountViewModel { Result = false, ErrorMsg = "数据存储失败" };
             }
-            IdentityResult res = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(mName, key));
+            IdentityResult res = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(mUser.UserName, key));
             if (res.Succeeded == false)
             {
                 return new CreateAccountViewModel { Result = false, ErrorMsg = "login数据存储失败" };
             }
             string base64String = BitmapAndBase64MutualTransformation.BitmapToBase64String(
-                GenerateQRCodeByZxing.GenerateQRCodeToBitmap(key + "_"+ model.userName +"_" + mName, 256, 256, 0));
+                GenerateQRCodeByZxing.GenerateQRCodeToBitmap(key + "|"+ uName +"|" + mUser.UserName, 256, 256, 0));
             return new CreateAccountViewModel {
-                Base64String =base64String,uName=uName,Key=key,resetKey=user.ResetKey,mName=mName,Result=true };
+                Base64String =base64String,uName=uName,Key=key,resetKey=user.ResetKey,mName= mUser.UserName,
+                Result=true };
         }
         /// <summary>
         /// 验证账号是否正确添加
@@ -137,34 +124,31 @@ namespace TwoFA.WebApi.Controllers
         [HttpPost]
         public async Task<VerifyResultViewModel> VerifyAccount(VerifyAccountModel model)
         {
-            var uName = model.userName;
-            User mUser = null;
-            if (model.mId.Equals("TwoFA") == false)
+            //查找厂商，验证厂商信息
+            var mUser = await UserManager.FindByIdAsync(model.mId);
+            if (mUser == null)
             {
-                uName = model.userName + "_" + model.mId.Replace('-', '_');
-                mUser = await UserManager.FindByIdAsync(model.mId);
-                if (mUser == null || mUser.SecurityStamp.Equals(model.token) == false)
-                {
-                    return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
-                }
+                return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
             }
+            //验证，SecurityStamp，修改密码后会改变
+            if (mUser.SecurityStamp.Equals(model.token) == false)
+            {
+                return new VerifyResultViewModel { Result = false, ErrorMsg = "token不匹配" };
+            }
+            var uName = model.userName + "_" + model.mId.Replace('-', '_');
             var user = await UserManager.FindByNameAsync(uName);
             if (user == null)
             {
                 return new VerifyResultViewModel { Result = false ,ErrorMsg="用户不存在"};
             }
-            var mName = "TwoFA";
-            if (mUser != null)
-            {
-                mName = mUser.UserName;
-            }
             var loginInfoList = await UserManager.GetLoginsAsync(user.Id);
             string key="none";
             foreach (var item in loginInfoList)
             {
-                if (item.LoginProvider.Equals(mName))
+                if (item.LoginProvider.Equals(mUser.UserName))
                 {
                     key = item.ProviderKey;
+                    break;
                 }
             }
             if(key.Equals("none") == true)
@@ -227,15 +211,15 @@ namespace TwoFA.WebApi.Controllers
         {
             //用户的userName由mid+userName组成
             var uName = model.userName;
-            if (model.mid.Equals("TwoFA") == false)
+            if (model.mId.Equals("TwoFA") == false)
             {
-                uName = model.userName + "_" + model.mid.Replace('-', '_');
+                uName = model.userName + "_" + model.mId.Replace('-', '_');
             }
             //验证信息
-            if (model.mid.Equals("TwoFA") == false)
+            if (model.mId.Equals("TwoFA") == false)
             {
                 //验证，厂商用户是否存在
-                User mUser = await UserManager.FindByIdAsync(model.mid);
+                User mUser = await UserManager.FindByIdAsync(model.mId);
                 if (mUser == null)
                 {
                     return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };

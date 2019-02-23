@@ -25,7 +25,7 @@ namespace TwoFA.WebMVC.Controllers
         public async Task<ActionResult> Forget(ForgetPasswordModel forgetPassowrdModel)
         {
             var user = await UserManager.FindByEmailAsync(forgetPassowrdModel.Email);
-            if (user == null || false == user.UserName.Equals(forgetPassowrdModel.Name))
+            if (user == null || false == user.UserName.Split('_')[0].Equals(forgetPassowrdModel.Name))
             {
                 ModelState.AddModelError("Email", "信息不匹配，无法进行下一步操作");
                 return View("Forget1",forgetPassowrdModel);
@@ -33,7 +33,7 @@ namespace TwoFA.WebMVC.Controllers
             string token = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
             string url = ConfigurationManager.AppSettings["SiteURL"];
             token = HttpUtility.UrlEncode(token);
-            url = url + "Password/ForgetPassword?name=" + forgetPassowrdModel.Name + "&token=" + token;
+            url = url + "Password/ForgetPassword?name=" + user.UserName + "&token=" + token;
             bool res = SendCodeToEmail.ModifyPassword(forgetPassowrdModel.Email,url);
             if (res == false)
             {
@@ -97,9 +97,9 @@ namespace TwoFA.WebMVC.Controllers
         }
         [HttpGet]
         [Authorize]
-        public ActionResult Modify(string name)
+        public ActionResult Modify()
         {
-            return View("Modify1",new ModifyPasswordModel { Name = name});
+            return View("Modify1",new ModifyPasswordModel { Name=HttpContext.User.Identity.Name });
         }
         [HttpPost]
         [Authorize]
@@ -119,9 +119,9 @@ namespace TwoFA.WebMVC.Controllers
                 return View("Modify1", modifyPasswordModel);
             }
             AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            var cookie = Request.Cookies["UserName"];
-            cookie.Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies.Add(cookie);
+            //var cookie = Request.Cookies["UserName"];
+            //cookie.Expires = DateTime.Now.AddDays(-1);
+            //Response.Cookies.Add(cookie);
             return View("Modify2", modifyPasswordModel);
         }
     }

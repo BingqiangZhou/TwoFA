@@ -27,6 +27,7 @@
     	<image src='/img/check_blud.png' mode='aspectFit' class="add-success"></image>
     	<button bindtap="RedirectToTwoFA" class="redirect-button">完成</button>
     </view>
+    <view class="statement">仅用于毕业设计展示</view>
 </template>
 <script>
 	import wepy from 'wepy'

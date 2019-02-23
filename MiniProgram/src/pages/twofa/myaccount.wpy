@@ -52,9 +52,9 @@
     </view>
     <view style="padding-top:calc(40px + {{barHeight}}px);">
       <view class="account-area">
-        <view wx:if="{{accountList.length != 0}}">
+        <view wx:if="{{showAccountList.length != 0}}">
           <view scroll-y="true" class="show-account">
-            <view wx:for="{{accountList}}" wx:key="unique">
+            <view wx:for="{{showAccountList}}" wx:key="unique">
                 <view class="show-account-info">
                   <view class="account-info">{{item.account}}</view>
                   <view class="manufacturer-info">{{item.manufacturer}}</view>
@@ -72,6 +72,7 @@
         </view>
       </view>
     </view>
+    <view class="statement">仅用于毕业设计展示</view>
 </template>
 <script>
   import wepy from 'wepy'
@@ -79,13 +80,18 @@
     data = {
       title: '我的账号',
       barHeight: wepy.$instance.globalData.statusBarHeight,
-      accountList: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
+      showAccountList: [],//格式：{key:"hello",account:"hello",manufacturer:"GitHub"}
     };
     onLoad() {
       // this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
       // this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
       // //console.log(this.account_list)
-      this.accountList = wx.getStorageSync('accountList');
+      var accountList = wx.getStorageSync('accountList');
+      for (var i = accountList.length - 1; i >= 0; i--) {
+        accountList[i].account = accountList[i].account.split('_')[0];
+        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
+      }
+      this.showAccountList = accountList;
       this.$apply();
     };
     methods = {

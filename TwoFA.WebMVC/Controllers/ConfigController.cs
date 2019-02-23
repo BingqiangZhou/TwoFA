@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,21 +17,22 @@ namespace TwoFA.WebMVC.Controllers
         
         public async Task<ActionResult> Index()
         {
+            ViewBag.Id = ConfigurationManager.AppSettings["Id"];
+            ViewBag.Token = ConfigurationManager.AppSettings["Token"];
             var userName = HttpContext.User.Identity.Name;
             if (userName == null)
             {
                 return Content("你还没有登录");
             }
-            ViewBag.userName = userName;
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return Content("你还没有登录");
+                return Content("用户不存在");
             }
             var claims = await UserManager.GetClaimsAsync(user.Id);
             if (claims == null)
             {
-                return Content("你还没有登录");
+                return Content("用户声明不存在");
             }
             var url = "";
             foreach (var claim in claims)
@@ -41,8 +43,8 @@ namespace TwoFA.WebMVC.Controllers
                     break;
                 }
             }
-            return View("Index",new ConfigModel {
-                userName =user.UserName,mId=user.Id,serviceIsOpen=user.OpenID.Length == 0?false:true,mUrl = url });
+            return View("Index",new ConfigModel {userName =user.UserName,mId=user.Id,
+                serviceIsOpen =(user.OpenID!=null&&user.OpenID.Length != 0?true:false),mUrl = url });
         }
         [HttpPost]
         public async Task<ActionResult> GetToken()

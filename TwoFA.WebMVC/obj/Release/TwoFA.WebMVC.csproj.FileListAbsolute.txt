@@ -96,3 +96,16 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.cspro
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.csproj.CopyComplete
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\Antlr3.Runtime.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\System.Web.Optimization.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\TwoFA.Utils.exe
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\WebGrease.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\TwoFA.Utils.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\TwoFA.Utils.exe.config
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\Antlr3.Runtime.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\System.Web.Optimization.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.InitialCreate.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.csproj.GenerateResource.cache

@@ -68,6 +68,7 @@
            <button bindtap="ConfirmToken" class="input-token-button">确定</button>
         </view>
     </view>
+    <view class="statement">仅用于毕业设计展示</view>
 </template>
 <script>
   import wepy from 'wepy'
@@ -76,9 +77,51 @@
       title: '添加2FA账号',
       barHeight: wepy.$instance.globalData.statusBarHeight,
       isManualInput:false,
-      accountList: []
+      accountList: [],
+      showAccountList:[],
+      openId:''
     };
     onLoad() {
+      // 发送消息指后台
+            var openId = wx.getStorageSync('openId');
+            if (openId == null || openId.length == 0) {
+                wx.login({
+                  success(res) {
+                    if (res.code) {
+                      // 发起网络请求
+                      wx.request({
+                        url: wepy.$instance.globalData.url+'/Api/MiniProgram/GetUserInfo',
+                        data: {
+                          code: res.code
+                        },
+                        success(res){
+                          var info = JSON.parse(res.data);
+                          wx.setStorageSync('openId', info.openid);
+                          this.openId = info.openid;
+                          console.log(this.openId)
+                          this.$apply();
+                        }
+                      })
+                    } else {
+                      console.log('登录失败！' + res.errMsg)
+                    }
+                  },
+                  fail()
+                  {
+                    wx.showModal({
+                      title: '提示',
+                      content: '出错了',
+                      confirmText: '重新扫描',
+                      success(res) {
+                      }
+                    })
+                  }
+                })
+            }
+            else{
+              this.openId = openId;
+              this.$apply();
+            }
     };
     methods = {
       ScanCode()
@@ -88,10 +131,11 @@
         wx.scanCode({
           onlyFromCamera: true,
           success(res) {
+            //console.log(res)
             that.accountList = wx.getStorageSync('accountList');
             // 剪切结果
-            var info = res.result.split('_');
-//            console.log(info);
+            var info = res.result.split('|');
+            console.log(info);
             if (info.length != 3) {
               wx.showModal({
                 title: '提示',
@@ -101,58 +145,20 @@
                 }
               })
             }
-            for (var i = that.accountList.length - 1; i >= 0; i--) {
-              if (that.accountList[i].account==info[1] && that.accountList[i].manufacturer==info[2]) {
-                  wx.showModal({
-                  title: '提示',
-                  content: '账号已添加请勿重新添加'
-                  })
-                return;
-              }
-            }
-            that.accountList.push({key:info[0],account:info[1],manufacturer:info[2]});
-            //console.log("hello");
-            //console.log(that.accountList);
-            //console.log(that.accountList);
-            wx.setStorageSync('accountList', that.accountList)
-            that.$apply(); 
+            var infoList = {key:info[0],account:info[1],manufacturer:info[2]};
             // wx.switchTab({
             //   url: '/pages/twofa/twofa'
             // })
-            //TODO 发送消息指后台
-            var openId = wx.getStorageSync('openId');
-            if (openId == null) {
-                wx.login({
-                  success(res) {
-                    if (res.code) {
-                      // 发起网络请求
-                      wx.request({
-                        url: 'http://localhost:62225/Api/MiniProgram/GetUserInfo',
-                        data: {
-                          code: res.code
-                        },
-                        success(res){
-                          var info = JSON.parse(res.data);
-                          wx.setStorageSync('openId', info.openid)
-                          openId = info.openid;
-                          console.log(info.openid)
-                        }
-                      })
-                    } else {
-                      console.log('登录失败！' + res.errMsg)
-                    }
-                  }
-                })
-            }
             wx.request({
-              url: 'http://localhost:62225/Api/MiniProgram/ComfirmAccount',
+              url: wepy.$instance.globalData.url+'/Api/MiniProgram/ComfirmAccount',
               data: {
                 userName: info[1],
-                key:info[0],
-                mName:info[2],
-                openId:openId
+                key: info[0],
+                mName: info[2],
+                openId: that.openId,
               },
               success(res){
+                //console.log(res)
                 if(res.data.Result == false){
                   wx.showModal({
                     title: '提示',
@@ -163,6 +169,28 @@
                   })
                 }
                 else{
+                  if (that.accountList.length == 0) {
+                    that.accountList=[infoList];
+                  }
+                  else{
+                      for (var i = that.accountList.length - 1; i >= 0; i--) {
+                        if (that.accountList[i].account==info[1] && that.accountList[i].manufacturer==info[2]) {
+                            wx.showModal({
+                            title: '提示',
+                            content: '账号已添加请勿重新添加'
+                            })
+                            return;
+                        }
+                      }
+                      that.accountList.push(infoList);
+                  }
+                  wx.setStorageSync('accountList', that.accountList)
+                  for (var i = that.accountList.length - 1; i >= 0; i--) {
+                    accountList[i].account = accountList[i].account.split('_')[0];
+                    accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
+                  }
+                  this.showAccountList = accountList;
+                  that.$apply(); 
                   wx.redirectTo({
                     url: '/pages/twofa/addsuccess'
                   })

@@ -10,14 +10,16 @@ namespace TwoFA.WebMVC.Controllers
 {
     public class OpenTwoFAServiceController : TwoFAMVCController
     {
-        [HttpPost]
+        [HttpGet]
         public ActionResult Index(OpenTwoFAServiceModel model)
         {
-            return View("Index",model);
+            TempData["Model"] = model;
+            return RedirectToAction("Open");
         }
-        //public ActionResult Index(OpenTwoFAServiceModel model)
-        //{
-        //    return View("Index",model);
-        //}
+        public ActionResult Open()
+        {
+            OpenTwoFAServiceModel model = (OpenTwoFAServiceModel)TempData["Model"];
+            return View("Index", model);
+        }
     }
 }

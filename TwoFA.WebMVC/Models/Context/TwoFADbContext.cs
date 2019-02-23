@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TwoFA.WebMVC.Models.Model;
 using Microsoft.AspNet.Identity;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
+using System.Configuration;
 
 namespace TwoFA.WebMVC.Models.Context
 {
@@ -18,21 +21,43 @@ namespace TwoFA.WebMVC.Models.Context
             base.Seed(context);
         }
 
-        public void PerformInitialSetup(IdentityDbContext context)
+        public static void PerformInitialSetup(IdentityDbContext context)
         {
             // 初始化配置将放在这儿 
-            TwoFAUserManager userMgr = new TwoFAUserManager(new UserStore<User>(context));
-            TwoFARoleManager roleMgr = new TwoFARoleManager(new RoleStore<Role>(context));
+            //获取用户管理上下文
+            var userMgr = HttpContext.Current.GetOwinContext().GetUserManager<TwoFAUserManager>();
+            //获取角色管理上下文
+            var roleMgr = HttpContext.Current.GetOwinContext().Get<TwoFARoleManager>();
 
-            //userMgr.CreateAsync(new User { UserName = "TwoFA" });
-            //userMgr.CreateAsync(new User { UserName = "manufacturuer" });
+            //厂商角色名
+            const string manufactruerRoleName = "M";
+            //普通用户角色名
+            const string ordinaryUserRoleName = "O";
+            //当前APP名（用于厂商的初始使用）
+            const string appUserName = "TwoFA";
 
-            roleMgr.Create(new Role("M"));
-            roleMgr.Create(new Role("U"));
-
-            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("TwoFA").Result.Id, "M");
-            //userMgr.AddToRoleAsync(userMgr.FindByNameAsync("manufacturuer").Result.Id, "Manufacturuer");
-
+            //厂商用户角色不存在，创建角色
+            var manufactruerRole = roleMgr.FindByName(manufactruerRoleName);
+            if (manufactruerRole == null)
+            {
+                roleMgr.Create(new Role(manufactruerRoleName));
+            }
+            //厂商用户的用户角色不存在，创建角色
+            var ordinaryUserRole = roleMgr.FindByName(ordinaryUserRoleName);
+            if (ordinaryUserRole == null)
+            {
+                roleMgr.Create(new Role(ordinaryUserRoleName));
+            }
+            //不存在则创建用户
+            var appUser = userMgr.FindByName(appUserName);
+            if (appUser == null)
+            {
+                userMgr.Create(new User { UserName = appUserName });
+                appUser = userMgr.FindByName(appUserName);
+            }
+            //将应用信息添加到AppSetting
+            ConfigurationManager.AppSettings["Id"] = appUser.Id;
+            ConfigurationManager.AppSettings["Token"] = appUser.SecurityStamp;
         }
     }
 

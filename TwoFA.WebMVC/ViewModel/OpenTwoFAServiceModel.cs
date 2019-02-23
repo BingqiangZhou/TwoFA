@@ -8,7 +8,7 @@ namespace TwoFA.WebMVC.ViewModel
     public class OpenTwoFAServiceModel
     {
         public string userName { get; set; }
-        public string mid { get; set; }
+        public string mId { get; set; }
         public string token { get; set; }
     }
 }

@@ -1,15 +1,22 @@
-namespace TwoFA.WebMVC.Migrations
+﻿namespace TwoFA.WebMVC.Migrations
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.Owin;
     using System;
+    using System.Configuration;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Web;
+    using TwoFA.WebMVC.Models.Context;
+    using TwoFA.WebMVC.Models.Model;
 
     internal sealed class Configuration : DbMigrationsConfiguration<TwoFA.WebMVC.Models.Context.TwoFADbContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
+            ContextKey = "TwoFA.WebMVC.Models.Context.TwoFADbContext";
         }
 
         protected override void Seed(TwoFA.WebMVC.Models.Context.TwoFADbContext context)

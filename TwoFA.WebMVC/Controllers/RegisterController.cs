@@ -9,6 +9,7 @@ using TwoFA.Utils.ToolsClass;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using TwoFA.WebMVC.Models.Model;
+using System.Configuration;
 
 namespace TwoFA.WebMVC.Controllers
 {
@@ -52,14 +53,22 @@ namespace TwoFA.WebMVC.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Step3(RegisterModel registerModel)
         {
+            //获取Id（厂商ID）
+            string appID = ConfigurationManager.AppSettings["Id"].Replace('-','_');
+            //用户名
+            string userName = registerModel.Name + "_" + appID;
+            //创建用户
             IdentityResult result = await UserManager.CreateAsync(
-                new User { Email = registerModel.Email, UserName = registerModel.Name },
+                new User { Email = registerModel.Email, UserName =  userName },
                 registerModel.Password);
             if (result.Succeeded)
             {
                 var user = UserManager.FindByEmail(registerModel.Email);
+                //设置角色
                 UserManager.AddToRole(user.Id, "M");
-                return View("register3");
+                ViewBag.Id = ConfigurationManager.AppSettings["Id"];
+                ViewBag.Token = ConfigurationManager.AppSettings["Token"];
+                return View("register3",registerModel);
             }
             else
             {

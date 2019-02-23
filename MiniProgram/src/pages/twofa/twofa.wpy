@@ -168,6 +168,7 @@
       </view> 
     </view> 
   <view style="clear: both;"></view>
+  <view class="statement">仅用于毕业设计展示</view>
 </view>
 </template>
 <script>
@@ -183,7 +184,8 @@
       code:0,
       countdown:0,
       havaTimer:false,
-      accountInfo:[]//格式：{account(manufacturer)}
+      accountInfo:[],//格式：{account(manufacturer)}
+      showAccountList:[]
       //account_show:true,
       //function_show:true,
     };
@@ -195,6 +197,14 @@
       //   //console.log(this.account_list)
       //   this.$apply();
       // }
+      this.accountList = wx.getStorageSync('accountList');
+      var accountList = this.accountList;
+      for (var i = accountList.length - 1; i >= 0; i--) {
+        accountList[i].account = accountList[i].account.split('_')[0];
+        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
+      }
+      this.showAccountList = accountList;
+      this.$apply();
       var openId = wx.getStorageSync('openId');
       if (openId == null) {
         wx.login({
@@ -202,7 +212,7 @@
             if (res.code) {
               // 发起网络请求
               wx.request({
-                url: 'http://localhost:62225/Api/MiniProgram/GetUserInfo',
+                url: wepy.$instance.globalData.url+'/Api/MiniProgram/GetUserInfo',
                 data: {
                   code: res.code
                 },
@@ -218,11 +228,8 @@
           }
         })
       }
-      this.accountList = wx.getStorageSync('accountList');
-      //console.log(this.accountList);
-      //wx.clearStorage();
       if (this.accountList.length == 0) {
-          return;
+        this.methods.DataSynchronization();
       }
     };
     onShow()
@@ -232,10 +239,16 @@
       if (this.accountList.length == 0) {
           return;
       }
+      var accountList = this.accountList;
+      for (var i = accountList.length - 1; i >= 0; i--) {
+        accountList[i].account = accountList[i].account.split('_')[0];
+        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
+      }
+      this.showAccountList = accountList;
       this.accountInfo=[];
-        for (var i = 0; i < this.accountList.length; i++) {
+        for (var i = 0; i < this.showAccountList.length; i++) {
           this.accountInfo.push(
-            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
+            this.showAccountList[i].account+"("+this.showAccountList[i].manufacturer+")");
         }
       this.$apply();
       var date = new Date();
@@ -303,7 +316,7 @@
               if (res.code) {
                 // 发起网络请求
                 wx.request({
-                  url: 'http://localhost:62225/Api/MiniProgram/GetUserInfo',
+                  url: wepy.$instance.globalData.url+'/Api/MiniProgram/GetUserInfo',
                   data: {
                     code: res.code
                   },
@@ -347,7 +360,7 @@
         }
         var that = this;
         wx.request({
-              url: 'http://localhost:62225/Api/MiniProgram/DataSynchronization',
+              url: wepy.$instance.globalData.url+'/Api/MiniProgram/DataSynchronization',
               data: {
                 openId: openId
               },
@@ -366,9 +379,11 @@
                 }
                 else{
                   wx.hideLoading();
+                  wx.setStorageSync('accountList', []);
+                  that.accountList = [];
                   wx.showModal({
-                  title: '数据同步请求失败',
-                  content: '请重试或者联系技术人员',
+                  title: '提示',
+                  content: '无相关账号信息',
                   // success(res) {
                   //   if (res.confirm) {
                   //     console.log('用户点击确定')

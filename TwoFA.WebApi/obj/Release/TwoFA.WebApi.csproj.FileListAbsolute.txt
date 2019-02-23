@@ -105,3 +105,13 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\obj\Release\TwoFA.WebApi.cspro
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\obj\Release\TwoFA.WebApi.csproj.CopyComplete
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\obj\Release\TwoFA.WebApi.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\obj\Release\TwoFA.WebApi.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Cors.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Helpers.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Http.Cors.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Optimization.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\WebGrease.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\Antlr3.Runtime.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Helpers.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Http.Cors.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Optimization.xml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\Antlr3.Runtime.pdb

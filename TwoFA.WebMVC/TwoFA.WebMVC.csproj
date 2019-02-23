@@ -151,6 +151,16 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Document\New Document.html" />
+    <Content Include="Document\picture01.png" />
+    <Content Include="Document\picture02.png" />
+    <Content Include="Document\picture03.png" />
+    <Content Include="Document\picture04.png" />
+    <Content Include="Document\picture05.png" />
+    <Content Include="Document\picture06.png" />
+    <Content Include="Document\picture07.png" />
+    <Content Include="Document\picture08.png" />
+    <Content Include="Document\picture09.png" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -174,6 +184,8 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Document\New Document.md" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -207,16 +219,13 @@
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\TwoFAResetController.cs" />
     <Compile Include="Controllers\TwoFAValidationServiceController.cs" />
+    <Compile Include="Controllers\UserManualController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201901300418497_InitialCreate.cs" />
-    <Compile Include="Migrations\201901300418497_InitialCreate.Designer.cs">
-      <DependentUpon>201901300418497_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901300455233_Key.cs" />
-    <Compile Include="Migrations\201901300455233_Key.Designer.cs">
-      <DependentUpon>201901300455233_Key.cs</DependentUpon>
+    <Compile Include="Migrations\201902170500244_InitialCreate.cs" />
+    <Compile Include="Migrations\201902170500244_InitialCreate.Designer.cs">
+      <DependentUpon>201902170500244_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Context\TwoFADbContext.cs" />
@@ -269,6 +278,7 @@
     <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <Content Include="Views\Config\Index.cshtml" />
     <Content Include="Views\TwoFAReset\Index.cshtml" />
+    <Content Include="Views\UserManual\Home.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -278,7 +288,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Service\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
@@ -293,11 +302,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201901300418497_InitialCreate.resx">
-      <DependentUpon>201901300418497_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901300455233_Key.resx">
-      <DependentUpon>201901300455233_Key.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902170500244_InitialCreate.resx">
+      <DependentUpon>201902170500244_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -317,6 +323,8 @@
           <DevelopmentServerPort>62233</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:62233/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:62233/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

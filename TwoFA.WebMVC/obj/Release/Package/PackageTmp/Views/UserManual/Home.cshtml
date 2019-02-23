@@ -1,0 +1,130 @@
+﻿@{
+    //ViewBag.Title = "使用手册";
+    //Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>使用手册</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/js")
+    <style>
+        .content-body {
+            position: relative;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target="#navbarSupportedContent" data-offset="0" class="scrollspy-example content-body container-fluid">
+    <div class="row">
+        <div id="navbarSupportedContent" class="list-group visible-lg-block col-lg-3 position-fixed  text-center">
+            <a class="list-group-item list-group-item-action bg-light border-0 disabled" href="#">使用手册</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-1">第一步：注册与登录</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-2">第二步：配置</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-3">第三步：调用</a>
+        </div>
+        <div class="offset-lg-3 col-lg-9 col-sm-12 bg-white">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand float-right" href="@Url.Action("Index","Home")">两步验证</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupported" aria-controls="navbarSupported" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <text class="d-none d-lg-block">如发现文档中的错误，请联系作者！（bingqiang_zhou@qq.com）</text>
+            </nav>
+            <div class="collapse navbar-collapse text-center" id="navbarSupported">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action bg-light border-0 disabled" href="#">使用手册</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-1">注册与登录</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-2">配置</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-3">调用</a>
+                </div>
+            </div>
+            <h2 id="list-item-1"><strong><em>第一步：<a href="https://bingqiangzhou.cn/Register/Step1">注册</a>与<a href="https://bingqiangzhou.cn/Login/Login">登录</a></em></strong></h2>
+            <hr />
+            <h3>1.1. 填写相关信息</h3>
+            <p>根据要求填写您的邮箱，企业名称，密码（两次输入确认密码），页面如图一所示。</p>
+            <div align=center>
+                <img src="~//picture01.png" alt="填写相关信息页面" />
+            </div>
+            <div align=center>图一、填写相关信息页面</div>
+            <h3>1.2. 验证邮箱</h3>
+            <p>当您完成第一步时，我们会将验证码输入到您的邮箱，您可以邮箱查看验证码并输入如下图二所示页面完成验证。</p>
+            <div align=center>
+                <img src="~/Document/picture02.png" alt="验证邮箱" />
+            </div>
+            <div align=center>图二、验证邮箱</div>
+            <h3>1.3. 完成注册</h3>
+            <p>当您看到一下页面（如图三所示）时，代表您已经注册成功了。</p>
+            <div align=center>
+                <img src="~/Document/picture03.png" alt="完成注册" />
+            </div>
+            <div align=center>图三、完成注册</div>
+            <h3>1.4. 登录账号</h3>
+            <p>当您完成注册之后，您可以输入您的邮箱以及密码进行登录（如图四所示）。</p>
+            <div align=center>
+                <img src="~/Document/picture04.png" alt="登录账号" />
+            </div>
+            <div align=center>图四、登录账号</div>
+            <p>当您在首页看到您企业的名称之后，这时说明您已经登录成功了。（如图所示）</p>
+            <div align=center>
+                <img src="~/Document/picture05.png" alt="登录成功" />
+            </div>
+            <div align=center>图五、登录成功</div>
+            <p><strong>恭喜您完成注册并登录，接下来我们进行第二步--配置。</strong></p>
+            <h2 id="list-item-2"><strong><em>第二步：<a href="http://bingqiangzhou.cn/Config">配置</a></em></strong></h2>
+            <hr />
+            <h3>2.1. 配置回置链接</h3>
+            <p>
+                我们紧接着完成第二步，配置回置链接，这里的回置链接是您后台服务器对应验证成功后登录的控制器。
+                配置如：http://bingqiangzhou.cn/Login/LoginSuccess（<strong>注意最后这里没有斜杠</strong>）
+            </p>
+            <div align=center>
+                <img src="~/Document/picture06.png" alt="设置回置链接" />
+            </div>
+            <div align=center>图六、设置回置链接</div>
+            <p><strong>当出现链接已更新的时候，说明配置成功。</strong></p>
+            <h2><strong><em>第三步：调用</em></strong></h2>
+            <hr />
+            <p><strong>最后一步，也是最重要的一步---调用页面。</strong>其中这一步又分为为用户开启服务以及开启服务之后登录时进行的验证服务。</p>
+            <h3 id="list-item-3">3.1. 获取Token</h3>
+            <p>我们可以在配置页面获取到您的openId和token,获取到这些信息之后我们可以进行下一步。</p>
+            <div align=center>
+                <img src="~/Document/picture07.png" alt="设置回置链接" />
+            </div>
+            <div align=center>图七、获取token</div>
+            <h3>3.2. 为用户开启服务</h3>
+            <p>
+                我们获取到相关信息之后，我们只需要访问https://bingqiangzhou.cn/OpenTwoFAService,并传入用户的唯一标识、您的openId以及token，您就可以为用户打开两步验证服务。（建议您在您的网页设置开关，随后引入到该页面）。
+                用户可以使用小程序WeDevelopTogether来记录这些信息，并生成秘钥，用于下次登录时的验证。
+                当您传入的参数正确时，您将看到下面的页面（如图八所示）。
+            </p>
+            <div align=center>
+                <img src="~/Document/picture08.png" alt="开启服务页面" />
+            </div>
+            <div align=center>图八、开启服务页面</div>
+            <h3>3.3. 为用户开启服务</h3>
+            <p>
+                当您的用户进行登录操作时，您需要传入用户的唯一标识、您的openId以及token以及您的accessToken(可以省略)转到https://bingqiangzhou.cn/TwoFAValidationService,如果您的用户开启了两步验证服务，我们将要求您的用户进行两步验证，如果您的用户没有开启两步验证服务，我们将不会去要求他进行验证操作，而是直接将accessToken返回到之前您配置的回置链接，您可以验证accessToken来辨别登录用户和登录的安全性，如果您不设置accesstoken,您可以设置https://bingqiangzhou.cn为唯一可访问的服务器。
+                当您传入的参数正确时，您将看到下面的页面（如图九所示），用户通过输入小程序生成的验证码，而完成登录。
+            </p>
+            <div align=center>
+                <img src="~/Document/picture09.png" alt="两步验证服务页面" />
+            </div>
+            <div align=center>图九、两步验证服务页面</div>
+            <h3>3.4. 其他服务</h3>
+            <p>
+                其他关闭两步验证服务以及重置服务等，请您具体查看<a href="https://bingqiangzhou.cn/Graduation/Help">API说明</a>。
+                <strong><em>感谢您的使用！</em></strong>
+            </p>
+            <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
+        </div>
+    </div>
+<div style="clear:both;"></div>
+@Html.Partial("_PartialPageFooter")
+</body>
+</html>
+
+
+

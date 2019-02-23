@@ -109,4 +109,3 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.pdb
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.xml
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Debug\TwoFA.WebMVC.Migrations.InitialCreate.resources
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Debug\TwoFA.WebMVC.csproj.GenerateResource.cache
-E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Debug\TwoFA.WebMVC.Migrations.Key.resources

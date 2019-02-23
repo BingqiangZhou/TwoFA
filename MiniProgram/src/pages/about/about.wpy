@@ -67,6 +67,7 @@ audio {
       <text>{{title}}</text>
     </view>
     <view class='about-image-view'>
+      <!-- <image class='about-image' src='../../img/logo.jpg'></image> -->
         <image class='about-image' src='{{miniprograminfo.logosrc}}'></image>
     </view>
     <view class='about-content'>
@@ -99,10 +100,10 @@ audio {
       title: '关于',
       barHeight: wepy.$instance.globalData.statusBarHeight,
       miniprograminfo: {
-        logosrc: wepy.$instance.globalData.url + 'data/logo.jpg',
+        logosrc: wepy.$instance.globalData.url + '/data/logo.jpg',
         versioninfo: wepy.$instance.globalData.versioninfo,
         email: 'bingqiang_zhou@qq.com',
-        imgalist: [wepy.$instance.globalData.url + 'data/qrcode.jpg']
+        imgalist: [wepy.$instance.globalData.url + '/data/qrcode.jpg']
       },
       music: {
         name: '',
@@ -116,29 +117,29 @@ audio {
       }
     };
     onLoad() {
-      var that = this
-// 请求音乐信息
-      wx.request(
-        {
-          url: wepy.$instance.globalData.url + 'api/getinfo',
-          method: 'post',
-          dataType: 'json',
-          success: function (res) {
-            that.music.name = res.data.name;
-            that.music.author = res.data.author;
-            that.$apply();
-          },
-          fail: function () {
-            wx.showModal({
-              title: '提示',
-              content: '请求服务器失败,请联系作者！',
-              showCancel: false
-            })
-          }
-        }
-      )
-      this.audioCtx = wx.createAudioContext('myAudio')
-      this.audioCtx.title = 'play'
+//       var that = this
+// // 请求音乐信息
+//       wx.request(
+//         {
+//           url: wepy.$instance.globalData.url + 'api/getinfo',
+//           method: 'post',
+//           dataType: 'json',
+//           success: function (res) {
+//             that.music.name = res.data.name;
+//             that.music.author = res.data.author;
+//             that.$apply();
+//           },
+//           fail: function () {
+//             wx.showModal({
+//               title: '提示',
+//               content: '请求服务器失败,请联系作者！',
+//               showCancel: false
+//             })
+//           }
+//         }
+//       )
+//       this.audioCtx = wx.createAudioContext('myAudio')
+//       this.audioCtx.title = 'play'
     };
     methods = {
 // 复制邮箱号

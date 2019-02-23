@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    
+ViewBag.Title = "两步验证";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/js")
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            为什么需要它
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">对有些人来说，盗取密码比您想象的更简单</h5>
+            <p class="card-text">
+                以下任意一种常见操作都可能让您面临密码被盗的风险：
+                <ul>
+                    <li>在多个网站上使用同一密码</li>
+                    <li>从互联网上下载软件</li>
+                    <li>点击电子邮件中的链接</li>
+                </ul>
+                两步验证可以将别有用心的人阻挡在外，即使他们知道您的密码也无可奈何。
+            </p>
+            <h5 class="card-title">想像一下您无法访问自己的帐户及其中的内容 </h5>
+            <p class="card-text">
+                当别有用心的人盗取您的密码后，他们能让您无法访问自己的帐户，还可以执行以下操作：
+                <ul>
+                <li>翻看（甚至删除）您所有的电子邮件、联系人、照片等</li>
+                <li>冒充您给您的联系人发送垃圾邮件或有害的电子邮件</li>
+                <li>使用您的帐户重置您其他帐户（银行帐户、购物帐户等）的密码</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            它如何保护您
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">多一道安全防线</h5>
+            <p class="card-text">大多数用户的帐户只有密码这一道安全防线。启用两步验证后，即使有人破解了您的密码，他们仍需要借助您的手机或安全密钥，才能登录您的帐户。</p>
+            <h5 class="card-title">登录需要用到您知道的某些信息和拥有的某些东西</h5>
+            <p class="card-text">启用两步验证后，您便能同时通过自己知道的密码以及持有的手机或安全密钥来保护您的帐户。</p>
+            <h5 class="card-title">验证码专为您而制</h5>
+            <p class="card-text">验证码是由系统在您需要时专门为您的帐户生成的。</p>
+        </div>
+    </div>
+</body>
+</html>

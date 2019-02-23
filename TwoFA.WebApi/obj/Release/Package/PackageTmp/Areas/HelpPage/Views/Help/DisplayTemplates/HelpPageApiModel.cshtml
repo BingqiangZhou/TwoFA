@@ -1,0 +1,75 @@
+﻿@using System.Web.Http
+@using System.Web.Http.Description
+@using TwoFA.WebApi.Areas.HelpPage.Models
+@using TwoFA.WebApi.Areas.HelpPage.ModelDescriptions
+@model HelpPageApiModel
+
+@{
+    ApiDescription description = Model.ApiDescription;
+}
+<h1>@description.HttpMethod.Method @description.RelativePath</h1>
+<div>
+    <p>@description.Documentation</p>
+
+    @*<h2>Request Information</h2>*@
+    <h2>请求参数信息列表</h2>
+
+    @*<h3>URI Parameters</h3>*@
+    @*<h3>请求链接</h3>
+        @Html.DisplayFor(m => m.UriParameters, "Parameters")*@
+
+    @*<h3>Body Parameters</h3>*@
+
+    <p>@Model.RequestDocumentation</p>
+
+    @if (Model.RequestModelDescription != null)
+    {
+        @:请求参数模型
+        @Html.DisplayFor(m => m.RequestModelDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.RequestModelDescription })
+        if (Model.RequestBodyParameters != null)
+        {
+            @Html.DisplayFor(m => m.RequestBodyParameters, "Parameters")
+        }
+    }
+    else
+    {
+        <p>None.</p>
+    }
+
+    @if (Model.SampleRequests.Count > 0)
+    {
+        @*<h3>Request Formats</h3>*@
+        <h3>请求参数格式（建议使用以下第一种JSON格式数据请求）</h3>
+        @Html.DisplayFor(m => m.SampleRequests, "Samples")
+    }
+
+    @*<h2>Response Information</h2>*@
+    <h2>响应参数信息列表</h2>
+
+    @*<h3>Resource Description</h3>*@
+
+    @*<p>@description.ResponseDescription.Documentation</p>*@
+    @*<h3>返回数据说明： @description.ResponseDescription.Documentation</h3>*@
+
+    @if (Model.ResourceDescription != null)
+    {
+        @:响应参数模型
+        @Html.DisplayFor(m => m.ResourceDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.ResourceDescription })
+        if (Model.ResourceProperties != null)
+        {
+            @Html.DisplayFor(m => m.ResourceProperties, "Parameters")
+        }
+    }
+    else
+    {
+        <p>None.</p>
+    }
+
+    @if (Model.SampleResponses.Count > 0)
+    {
+        @*<h3>Response Formats</h3>*@
+        <h3>响应数据格式</h3>
+        @Html.DisplayFor(m => m.SampleResponses, "Samples")
+    }
+
+</div>
