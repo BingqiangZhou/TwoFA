@@ -31,43 +31,42 @@
         </div>
         <div class="login-info">
             <a class="btn btn-lg  btn-primary disabled" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
-            <a class="btn btn-lg  btn-primary" id="Verification" href="JavaScript::void(0);">验证是否添加成功</a>
+            <a class="btn btn-lg  btn-primary" id="verification" href="javascript:void(0);">验证是否添加成功</a>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    var loaclResult;
-        $.ajax({
-            url: '@siteURL'+"/api/TwoFA/CreateAccount",
-            data: {
-                'userName': '@Model.userName',
-                'mId': '@Model.mId',
-                'token': '@Model.token'
-            },
-            method: 'post',
-            success: function (result) {
-                loaclResult = result;
-                //console.log(result.Base64String);
-                $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
-                $("#Result").removeAttr("hidden");
-                $("#ResetKey").text(result.resetKey);
-            },
-            error: function () {
-                $("#QRCode").attr('alt', "二维码加载失败，请刷新页面！");
-            }
-        });
+    $.ajax({
+        type:"post",
+        url: "@siteURL"+"/api/TwoFA/CreateAccount",
+        cache: false,
+        data: {
+            "userName": "@Model.userName",
+            "mId": "@Model.mId",
+            "token": "@Model.token",
+        },
+        success: function (result) {
+            //console.log(result.Base64String);
+            $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
+            $("#Result").removeAttr("hidden");
+            $("#ResetKey").text(result.resetKey);
+        },
+        error: function () {
+            $("#QRCode").attr('alt', "二维码加载失败，请刷新页面！");
+        }
+    });
     $(document).ready(function () {
-        $("#Verification").click(function ()
+        $("#verification").click(function ()
         {
-            //alert(loaclResult);
             $.ajax({
-                url: '@siteURL'+"/api/TwoFA/VerifyAccountIsVaild",
+                type: 'post',
+                url: "@siteURL"+"/api/TwoFA/VerifyAccountIsVaild",
+                cache: false,
                 data: {
-                    'userName': loaclResult.uName,
-                    'mName': loaclResult.mName,
-                    'key': loaclResult.Key
+                    "userName": "@Model.userName",
+                    "mId": "@Model.mId",
+                    "token": "@Model.token"
                 },
-                method: 'post',
                 success: function (res) {
                     if (res.Result == true) {
                         $("#allDocument").empty();
@@ -76,12 +75,12 @@
                         //$("#Back").removeAttr("hidden")
                     }
                     else {
-                        $("#Verification").text("您还没有正确添加,刷新")
+                        $("#verification").text("您还没有正确添加,刷新")
                         $("#Back").attr("hidden", "hidden")
                     }
                 },
                 error: function () {
-                    $("#Verification").text("出现错误，请与技术人员联系")
+                    $("#verification").text("出现错误，请与技术人员联系")
                 }
             });
         })

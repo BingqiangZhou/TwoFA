@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwoFA.WebMVC", "TwoFA.WebMV
 		{18D0AD8D-E9F3-4174-AF70-1557BAA692D6} = {18D0AD8D-E9F3-4174-AF70-1557BAA692D6}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exhibition", "Exhibition\Exhibition.csproj", "{7D05837A-F761-4EF8-AFAD-D75BC58885B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{6A9A1AC3-484C-422A-90F4-5A07B2C390FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A9A1AC3-484C-422A-90F4-5A07B2C390FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A9A1AC3-484C-422A-90F4-5A07B2C390FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D05837A-F761-4EF8-AFAD-D75BC58885B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D05837A-F761-4EF8-AFAD-D75BC58885B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D05837A-F761-4EF8-AFAD-D75BC58885B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D05837A-F761-4EF8-AFAD-D75BC58885B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

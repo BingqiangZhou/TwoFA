@@ -17,5 +17,6 @@ namespace TwoFA.WebMVC.ViewModel
         public string token { get; set; }
         public string ReturnURL { get; set; }
         public string accessToken { get; set; }
+        public string __RequestVerificationToken { get; set; }
     }
 }

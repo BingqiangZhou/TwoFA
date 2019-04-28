@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using TwoFA.Utils.ToolsClass;
 using TwoFA.WebMVC.Models.Infrastructure;
+using TwoFA.WebMVC.Models.Model;
 using TwoFA.WebMVC.ViewModel;
 
 namespace TwoFA.WebMVC.Controllers
@@ -22,26 +23,38 @@ namespace TwoFA.WebMVC.Controllers
             return View("Forget1");
         }
         [HttpPost]        
-        public async Task<ActionResult> Forget(ForgetPasswordModel forgetPassowrdModel)
+        public ActionResult Forget(ForgetPasswordModel forgetPassowrdModel)
         {
-            var user = await UserManager.FindByEmailAsync(forgetPassowrdModel.Email);
-            if (user == null || false == user.UserName.Split('_')[0].Equals(forgetPassowrdModel.Name))
+            User user = FindUserByEmail(forgetPassowrdModel.Email);
+            //验证邮箱与用户名
+            if (user == null || false == DecodeUserName(user).Equals(forgetPassowrdModel.Name))
             {
+                //设置错误提示
                 ModelState.AddModelError("Email", "信息不匹配，无法进行下一步操作");
                 return View("Forget1",forgetPassowrdModel);
             }
-            string token = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            //获取重置密码token
+            string token = GeneratePasswordResetTokenById(user.Id);
+            if(token == null)
+            {
+                //设置错误提示
+                ModelState.AddModelError("Email", "内部程序错误，请重试，如多次尝试无效，请联系技术人员");
+                return View("Forget1", forgetPassowrdModel);
+            }
+            //构造url，并发送邮件
             string url = ConfigurationManager.AppSettings["SiteURL"];
             token = HttpUtility.UrlEncode(token);
             url = url + "Password/ForgetPassword?name=" + user.UserName + "&token=" + token;
             bool res = SendCodeToEmail.ModifyPassword(forgetPassowrdModel.Email,url);
             if (res == false)
             {
+                //设置错误提示
                 ModelState.AddModelError("Email", "验证邮件发送出现异常,请联系相关技术人员");
                 return View("Forget1", forgetPassowrdModel);
             }
-            var result = await UserManager.AddClaimAsync(user.Id, new Claim("PasswordResetToken", token));
-            if (result.Succeeded == false)
+            //设置重置密码token
+            bool result = SetPasswordResetTokenById(user.Id, token);
+            if (result== false)
             {
                 ModelState.AddModelError("Email", "出现未知异常,请联系相关技术人员");
                 return View("Forget1", forgetPassowrdModel);
@@ -49,46 +62,29 @@ namespace TwoFA.WebMVC.Controllers
             return View("Forget2");
         }
         [HttpGet]
-        public async  Task<ActionResult> ForgetPassword(string name,string token)
+        public ActionResult ForgetPassword(string name,string token)
         {
-            var user = await UserManager.FindByNameAsync(name);
+            //查找用户
+            User user = FindUserByUserName(name);
             if (user == null)
             {
                 ModelState.AddModelError("Email", "链接不正确，请勿修改链接");
                 return View("Forget1");
             }
-            var claims = await UserManager.GetClaimsAsync(user.Id);
-            string tokenTmp = "0";
-            Claim claimTmp = null;
-            foreach (var claim in claims)
-            {
-                if (claim.Type == "PasswordResetToken")
-                {
-                    tokenTmp = HttpUtility.UrlDecode(claim.Value);
-                    claimTmp = claim;
-                }
-            }
-            //token = HttpUtility.UrlDecode(token);
-            if (tokenTmp.Equals(token) == true)
-            {
-                var res = await UserManager.RemoveClaimAsync(user.Id, claimTmp);
-                if (res.Succeeded == false)
-                {
-                    return Content("该链接已失效01");
-                }
-            }
-            else
-            {
-                return Content("该链接已失效02");
+            //验证token是否匹配
+            bool result = VerifyPasswordResetToken(user.Id, token);
+            if (result != true)
+            { 
+                return Content("该链接已失效");
             }
             return View("Forget3",new ForgetPasswordConfirmModel { Id = user.Id,Token=token});
         }
-        public async Task<ActionResult> ForgetAndConfirmPassword(ForgetPasswordConfirmModel forgetPasswordConfirmModel)
+        public ActionResult ForgetAndConfirmPassword(ForgetPasswordConfirmModel forgetPasswordConfirmModel)
         {
             //string token = HttpUtility.UrlEncode(forgetPasswordConfirmModel.Token);
-            IdentityResult result = await UserManager.ResetPasswordAsync(forgetPasswordConfirmModel.Id,
+            bool result = ResetPassword(forgetPasswordConfirmModel.Id,
                 forgetPasswordConfirmModel.Token, forgetPasswordConfirmModel.Password);
-            if (result.Succeeded == false)
+            if (result == false)
             {
                 ModelState.AddModelError("Password", "密码保存失败");
                 return View("Forget3", forgetPasswordConfirmModel);
@@ -103,25 +99,24 @@ namespace TwoFA.WebMVC.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Modify(ModifyPasswordModel modifyPasswordModel)
+        public ActionResult Modify(ModifyPasswordModel modifyPasswordModel)
         {
-            var user = await UserManager.FindByNameAsync(modifyPasswordModel.Name);
+            //查找用户
+            User user = FindUserByUserName(modifyPasswordModel.Name);
             if (user == null)
             {
                 ModelState.AddModelError("ConfirmPassword", "出现未知错误,请联系相关技术人员");
                 return View("Modify1", modifyPasswordModel);
             }
-            var res = await UserManager.ChangePasswordAsync(user.Id,
-                modifyPasswordModel.OldPassword, modifyPasswordModel.NewPassword);
-            if (res.Succeeded == false)
+            //用户修改密码
+            var result = ChangePassword(user.Id,modifyPasswordModel.OldPassword, modifyPasswordModel.NewPassword);
+            if (result == false)
             {
                 ModelState.AddModelError("ConfirmPassword", "请输入正确的密码");
                 return View("Modify1", modifyPasswordModel);
             }
-            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //var cookie = Request.Cookies["UserName"];
-            //cookie.Expires = DateTime.Now.AddDays(-1);
-            //Response.Cookies.Add(cookie);
+            //用户退出登录
+            UserSignOut();
             return View("Modify2", modifyPasswordModel);
         }
     }

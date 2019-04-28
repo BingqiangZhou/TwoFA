@@ -11,7 +11,7 @@ namespace TwoFA.WebMVC.Controllers
         // GET: UserManual
         public ActionResult Index()
         {
-            return View("Home");
+            return View();
         }
     }
 }

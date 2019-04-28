@@ -76,8 +76,8 @@ export default class extends wepy.app {
   globalData = {
     statusBarHeight: '',
     versioninfo: 'v1.5.0',
-    url: 'https://bingqiangzhou.cn/Graduation/'
-    // http://localhost:62225
+    url: 'http://localhost:62225'
+    // url: 'https://bingqiangzhou.cn/Graduation'
   }
   onLaunch() {
     // this.testAsync();

@@ -18,9 +18,11 @@ namespace TwoFA.WebMVC.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
+        //登录页面
         public ActionResult Login()
         {
-            if (HttpContext.User.Identity.Name != null && HttpContext.User.Identity.Name.Equals("")==false)
+            //判断是否有用户已经登录，如果有用户已经登录，转到首页，不然转到登录页面
+            if (null != HaveUserLogined())
             {
                 return View("Index","Home");
             }
@@ -28,56 +30,54 @@ namespace TwoFA.WebMVC.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Login(LoginModel loginModel)
+        //判断登录提交的数据，做出相应的响应
+        public ActionResult Login(LoginModel loginModel)
         {
+            //验证model数据是否有效
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByEmailAsync(loginModel.Email);
+                //验证账号
+                var user = VerifyAccountByEmailAndPassword(loginModel.Email, loginModel.Password);
                 if (user != null)
                 {
-                    var u = UserManager.Find(user.UserName, loginModel.Password);
-                    if (u != null)
-                    {   
-                        var accessToken= await UserManager.GenerateEmailConfirmationTokenAsync(u.Id);
-                        TempData["accessToken"] = accessToken;
-                        TempData["user"] = u;
-                        string mId = ConfigurationManager.AppSettings["Id"];
-                        string token = ConfigurationManager.AppSettings["Token"];
-                        string userName = u.UserName.Split('_')[0];
-                        return RedirectToAction("Index", "TwoFAValidationService",
-                            new VerifyModel { userName= userName,mId= mId, token= token, accessToken= accessToken });
-                    }
-                }
-                else {
-                    ModelState.AddModelError("Email", "邮箱号或密码错误");
+                    //获取token
+                    var accessToken= GetTokenById(user.Id);
+                    //将token和user对象存到缓存
+                    TempData["accessToken"] = accessToken;
+                    TempData["user"] = user;
+                    //获取厂商ID和Token
+                    string mId = ConfigurationManager.AppSettings["Id"];
+                    string token = ConfigurationManager.AppSettings["Token"];
+                    //解码用户名
+                    string userName = DecodeUserName(user);
+                    //重定向到验证服务
+                    return RedirectToAction("Index", "TwoFAValidationService",
+                        new VerifyModel { userName= userName,mId= mId, token= token, accessToken= accessToken });
                 }
             }
-            else
-            {
-                ModelState.AddModelError("Email", "邮箱号或密码错误");
-            }
+            //设置错误提示
+            ModelState.AddModelError("Email", "邮箱号或密码错误");
             return View("Login", loginModel);
         }
-        public async Task<ActionResult> LoginSuccess(string accessToken)
+        public ActionResult LoginSuccess(string accessToken)
         {
+            //比对accessToken是否匹配
             if (TempData["accessToken"].Equals(accessToken) == false)
             {
+                //设置错误提示
                 return Content("警告：恶意访问将付法律责任");
             }
-            User u = (User)TempData["user"];
-            ClaimsIdentity ident = await UserManager.CreateIdentityAsync(u, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            AuthManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
-            //HttpContext.Response.Cookies.Add(new HttpCookie("UserName",u.UserName));
+            //获取User对象
+            User user = (User)TempData["user"];
+            //用户登录
+            UserSignIn(user);
             return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Logout()
         {
-            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //var cookie = Request.Cookies["UserName"];
-            //cookie.Expires = DateTime.Now.AddDays(-1);
-            //Response.Cookies.Add(cookie);
+            //用户退出登录
+            UserSignOut();
             return RedirectToAction("Index", "Home");
         }
     }

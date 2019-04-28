@@ -46,7 +46,6 @@ namespace TwoFA.Utils.ToolsClass
                 }
                 str = displayString.ToString();
             };
-
             return str;
         }
 

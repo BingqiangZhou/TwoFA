@@ -1,0 +1,33 @@
+﻿@model User
+@{
+    ViewBag.Title = "开启两步验证";
+}
+
+<link type="text/css" rel="stylesheet" href="~/Content/bootstrap.min.css"  />
+@using (Html.BeginForm("Open", "Home"))
+{
+    @Html.AntiForgeryToken()//避免CSRF攻击
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">开启两步验证</h1>
+        <p>请输入以下信息</p>
+    </div>
+    <div class="col-lg-4 offset-lg-4">
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">开启两步验证</button>
+    </div>
+}
+

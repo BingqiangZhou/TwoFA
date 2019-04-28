@@ -24,68 +24,60 @@ namespace TwoFA.WebApi.Controllers
             return res;
         }
         [HttpGet]
-        public async Task<VerifyResultViewModel> ComfirmAccount(string userName, string key, string openId, string mName)
+        public VerifyResultViewModel ComfirmAccount(string userName, string key, string openId, string mName)
         {
             // 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
             //验证
-            var mUser = await UserManager.FindByNameAsync(mName);
+            User mUser = FindUserByUserName(mName);
             if (mUser == null)
             {
                 return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
             }
             //验证
-            var user = await UserManager.FindByNameAsync(userName);
+            string name = EncodeUserName(mUser.Id,DecodeUserName(userName));
+            User user = FindUserByUserName(userName);
             if (user == null)
             {
                 return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
             }
             //验证 key是否有效添加
-            var loginInfos = await UserManager.GetLoginsAsync(user.Id);
-            foreach (var item in loginInfos)
+            bool result = VerifyManufactureNameAndKey(user.Id, mName, key);
+            if(result)
             {
-                //验证 厂商和秘钥
-                if (item.LoginProvider.Equals(mName) && item.ProviderKey.Equals(key))
+                //将openid更新数据库，完成账号创建
+                bool res = SetOpenId(user.Id,openId);
+                if (res)
                 {
-                    //将openid更新数据库，完成账号创建
-                    user.OpenID = openId;
-                    var res = await UserManager.UpdateAsync(user);
-                    if (res.Succeeded)
-                    {
-                        return new VerifyResultViewModel { Result = true };
-                    }
-                    else
-                    {
-                        return new VerifyResultViewModel { Result = false,ErrorMsg="用户信息更新失败" };
-                    }
+                    return new VerifyResultViewModel { Result = true };
+                }
+                else
+                {
+                    return new VerifyResultViewModel { Result = false,ErrorMsg="用户信息更新失败" };
                 }
             }
             return new VerifyResultViewModel { Result = false ,ErrorMsg="信息不匹配"};
         }
         [HttpGet]
-        public async Task<DataSynchronizationViewModel> DataSynchronization(string openId)
+        public DataSynchronizationViewModel DataSynchronization(string openId)
         {
             //数据同步，通过openid（phonenumber）获取key以及mName
-            List<Account> accounts = new List<Account>();
-            var accountInfo = UserManager.Users.AsEnumerable().Where(u => u.OpenID == openId).Select(m=> new {Id= m.Id,Name = m.UserName });
+            var accountInfo = FindAllUserByOpenId(openId);
             if (accountInfo.Count() == 0)
             {
                 return new DataSynchronizationViewModel { Result = false,ErrorMsg="无相关账号信息" };
             }
+            //获取用户登录的厂商和key
+            List<Account> accounts = new List<Account>();
             foreach (var item in accountInfo.AsEnumerable())
             {
-                var loginInfo = await UserManager.GetLoginsAsync(item.Id);
+                var loginInfo = FindProviderManufactureInfo(item.Id);
                 if(loginInfo == null)
                 {
                     continue;
                 }
                 foreach (var login in loginInfo.AsEnumerable())
                 {
-                    string uName = item.Name;
-                    //判断是否是厂商
-                    if (item.Name.Contains("_") == true)
-                    {
-                        uName = uName.Split('_')[0];
-                    }
+                    string uName = DecodeUserName(item.UserName);
                     accounts.Add(new Account { account = uName, key = login.ProviderKey, manufacturer = login.LoginProvider });
                 }
             }

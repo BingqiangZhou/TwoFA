@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="TwoFADb-Web.config Connection String" description="TwoFADb Connection String used in web.config by the application to access the database." defaultValue="Data Source=bingqiangzhou.cn;Initial Catalog=TwoFA;User ID=sa;Password=Zhoubq2018;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;MultipleActiveResultSets=True;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\Other\ files\\graduation\\mine\\TwoFA\\TwoFA\.WebMVC\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='TwoFADb']/@connectionString" />
+  </parameter>
+</parameters>

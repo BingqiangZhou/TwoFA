@@ -14,10 +14,17 @@ namespace TwoFA.WebMVC.Controllers
         public ActionResult Index(OpenTwoFAServiceModel model)
         {
             TempData["Model"] = model;
+            //TempData["Url"]= HttpContext.Request.UrlReferrer.ToString();
             return RedirectToAction("Open");
         }
         public ActionResult Open()
         {
+            //string url = (string)TempData["Url"];
+            //ViewBag.UrlReferrer = url;
+            //if (url.Equals("https://bingqiangzhou.cn/"))
+            //{
+            //    ViewBag.UrlReferrer = null;
+            //}
             OpenTwoFAServiceModel model = (OpenTwoFAServiceModel)TempData["Model"];
             return View("Index", model);
         }

@@ -39,7 +39,17 @@ namespace TwoFA.Utils.ToolsClass
         public static bool ModifyPassword(string toMailAddress, string url)
         {
             string subjectInfo = "修改密码";
-            string bodyInfo = String.Format(@""+ url + "");
+            string bodyInfo = String.Format(@"<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+</head>
+<body>
+	<a href='"+url+ @"'>(点击跳转到修改密码页面)</a>
+	<p style='color: red;'>若出现链接无法正确跳转的情况，请手动复制以下链接，再打开浏览器进行下一步操作。</p>
+	<p>" + url+@"</p>
+</body>
+</html>");
 
             //string attachPath = "E:\\123123.txt; E:\\haha.pdf";
             try

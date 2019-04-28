@@ -17,31 +17,21 @@ namespace TwoFA.WebMVC.Controllers
             TempData["Model"] = model;
             return RedirectToAction("Verify");
         }
-        public async Task<ActionResult> Verify()
+        public ActionResult Verify()
         {
             VerifyModel model = (VerifyModel)TempData["Model"];
-            var userName = model.userName + "_" + model.mId.Replace('-', '_'); ;
-            var user = await UserManager.FindByNameAsync(userName);
-            if (user != null)
-            {
-                var claims = await UserManager.GetClaimsAsync(model.mId);
-                if (claims != null)
-                {
-                    foreach (var claim in claims)
-                    {
-                        if (claim.Type.Equals("ReturnUrl"))
-                        {
-                            model.ReturnURL = claim.Value;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
+            var mUser = FindUserById(model.mId);
+            if (mUser == null)
             {
                 return Content("用户信息不存在！");
             }
-            if (user.OpenID != null && user.OpenID.Length != 0)
+            //获取ReturnURL
+            model.ReturnURL = GetReturnURLById(mUser.Id);
+            //model.userName + "_" + model.mId.Replace('-', '_')
+            var userName = EncodeUserName(model.mId,model.userName);
+
+            var uUser = FindUserByUserName(userName);
+            if (uUser != null && uUser.OpenID != null && uUser.OpenID.Length != 0)
             {
                 return View("Index", model);
             }

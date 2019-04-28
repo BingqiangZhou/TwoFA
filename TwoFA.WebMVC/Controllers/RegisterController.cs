@@ -25,13 +25,13 @@ namespace TwoFA.WebMVC.Controllers
         [AllowAnonymous]
         public ActionResult Step2(RegisterModel registerModel)
         {
-            var user = UserManager.FindByName(registerModel.Name);
+            var user = FindUserByUserName(registerModel.Name);
             if (user != null)
             {
                 ModelState.AddModelError("Name", "该企业已注册");
                 return View("register1", registerModel);
             }
-            user = UserManager.FindByEmail(registerModel.Email);
+            user = FindUserByEmail(registerModel.Email);
             if (user != null)
             {
                 ModelState.AddModelError("Email", "该邮箱已注册");
@@ -51,21 +51,19 @@ namespace TwoFA.WebMVC.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Step3(RegisterModel registerModel)
+        public ActionResult Step3(RegisterModel registerModel)
         {
-            //获取Id（厂商ID）
-            string appID = ConfigurationManager.AppSettings["Id"].Replace('-','_');
+            //获取Id（厂商Id）
+            string appId = ConfigurationManager.AppSettings["Id"];
             //用户名
-            string userName = registerModel.Name + "_" + appID;
+            string userName = EncodeUserName(appId,registerModel.Name);
             //创建用户
-            IdentityResult result = await UserManager.CreateAsync(
-                new User { Email = registerModel.Email, UserName =  userName },
-                registerModel.Password);
-            if (result.Succeeded)
+            bool result = CreateUser(registerModel.Email,userName,registerModel.Password);
+            if (result == true)
             {
-                var user = UserManager.FindByEmail(registerModel.Email);
+                User user = FindUserByEmail(registerModel.Email);
                 //设置角色
-                UserManager.AddToRole(user.Id, "M");
+                AddRoleToManufactruerById(user.Id);
                 ViewBag.Id = ConfigurationManager.AppSettings["Id"];
                 ViewBag.Token = ConfigurationManager.AppSettings["Token"];
                 return View("register3",registerModel);

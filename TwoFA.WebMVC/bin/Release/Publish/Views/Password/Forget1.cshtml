@@ -1,0 +1,40 @@
+﻿@model ForgetPasswordModel
+@{
+    ViewBag.Title = "忘记密码";
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+}
+
+<style>
+    .login-info {
+        margin: 20px 0;
+    }
+</style>
+
+@using (Html.BeginForm("Forget", "Password"))
+{
+    @Html.AntiForgeryToken()//避免CSRF攻击
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">忘记密码</h1>
+        <p>请填写相关信息</p>
+    </div>
+    <div class="col-lg-4 offset-lg-4">
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">忘记密码</button>
+        <div class="text-center">
+            @Html.ActionLink("返回首页", "Index", "Home")
+        </div>
+    </div>
+}

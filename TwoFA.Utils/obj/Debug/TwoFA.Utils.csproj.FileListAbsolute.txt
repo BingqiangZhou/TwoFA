@@ -1,6 +1,8 @@
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\TwoFA.Utils.exe.config
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\TwoFA.Utils.exe
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\TwoFA.Utils.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Algorithms.dll
+E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Primitives.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\zxing.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\zxing.presentation.dll
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\zxing.pdb
@@ -11,6 +13,3 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.csproj.Co
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.csproj.CopyComplete
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.exe
 E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.pdb
-E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Algorithms.dll
-E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\bin\Debug\System.Security.Cryptography.Primitives.dll
-E:\Other files\graduation\mine\TwoFA\TwoFA.Utils\obj\Debug\TwoFA.Utils.csprojAssemblyReference.cache

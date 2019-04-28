@@ -187,7 +187,6 @@
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\VerifResetKey.cs" />
-    <Compile Include="Models\VerifyAccountIsVaildModel.cs" />
     <Compile Include="Models\VerifyAccountModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />

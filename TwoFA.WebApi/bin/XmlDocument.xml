@@ -493,7 +493,7 @@
             <param name="model">创建用户参数模型</param>
             <returns>返回二维码图片base64字符串，以及手动添加账号需输入的Token</returns>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccountIsVaild(TwoFA.WebApi.Models.VerifyAccountIsVaildModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccountIsVaild(TwoFA.WebApi.Models.AccountModel)">
             <summary>
             验证账号是否正确添加
             </summary>
@@ -564,26 +564,6 @@
         <member name="P:TwoFA.WebApi.Models.VerifResetKey.resetKey">
             <summary>
             验证码
-            </summary>
-        </member>
-        <member name="T:TwoFA.WebApi.Models.VerifyAccountIsVaildModel">
-            <summary>
-            验证账号是否成功添加模型
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.userName">
-            <summary>
-            用户唯一标识
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.mName">
-            <summary>
-            厂商名
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountIsVaildModel.key">
-            <summary>
-            秘钥
             </summary>
         </member>
         <member name="T:TwoFA.WebApi.Models.VerifyAccountModel">

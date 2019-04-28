@@ -61,7 +61,7 @@
             <hr class="my-4">
         }
     }
-    <h3>开启/关闭两步验证</h3>
+    <h3>为本账号开启/关闭两步验证</h3>
     <table class="table">
         <tbody>
             <tr>
@@ -69,7 +69,7 @@
                     @{
                         if (Model.serviceIsOpen == false)
                         {
-                            using (Html.BeginForm("Index", "OpenTwoFAService",FormMethod.Post,new { target = "_blank" }))
+                            using (Html.BeginForm("Index", "OpenTwoFAService",FormMethod.Get,new { target = "_blank" }))
                             {
                                 @Html.HiddenFor(m => m.userName)
                                 @Html.Hidden("mId",id)

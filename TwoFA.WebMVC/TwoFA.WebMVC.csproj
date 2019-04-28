@@ -151,6 +151,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Document\logo.ico" />
     <Content Include="Document\New Document.html" />
     <Content Include="Document\picture01.png" />
     <Content Include="Document\picture02.png" />
@@ -206,7 +207,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -278,7 +281,7 @@
     <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <Content Include="Views\Config\Index.cshtml" />
     <Content Include="Views\TwoFAReset\Index.cshtml" />
-    <Content Include="Views\UserManual\Home.cshtml" />
+    <Content Include="Views\UserManual\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

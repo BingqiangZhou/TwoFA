@@ -1,0 +1,53 @@
+﻿@model RegisterModel
+@{
+    Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
+    ViewBag.Title = "注册";
+}
+
+<style>
+    .login-info{
+        margin:20px 0;
+    }
+</style>
+@using (Html.BeginForm("Step2", "Register"))
+{
+    @Html.AntiForgeryToken()//避免CSRF攻击
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">注册</h1>
+        <p>第一步：填写相关信息</p>
+    </div>
+    <div class="col-lg-4 offset-lg-4">
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+        </div>
+        <div class="login-info">
+            <div class="form-label-group">
+                @Html.DisplayNameFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
+        </div>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">下一步</button>
+        <div class="text-center">
+            @Html.ActionLink("已有账号，立即登录", "Login", "Login")
+        </div>
+    </div>
+        }

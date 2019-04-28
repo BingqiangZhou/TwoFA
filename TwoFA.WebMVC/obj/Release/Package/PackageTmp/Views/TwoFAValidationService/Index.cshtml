@@ -46,9 +46,9 @@
 </script>
 }
 @Html.ActionLink("_", "VerifySuccess", "TwoFAValidationService", Model, new { id = "verifySuccess", style = "display:none;" })
-@using (Html.BeginForm())
+@*@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()//避免CSRF攻击
+    @Html.AntiForgeryToken()//避免CSRF攻击*@
     <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">两步验证</h1>
         <p>请输入验证码</p>
@@ -69,4 +69,4 @@
             @Html.ActionLink("无法验证", "Index", "TwoFAReset", Model, null)
         </div>
     </div>
-}
+@*}*@
