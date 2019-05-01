@@ -1,0 +1,102 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "代码比较";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="~/Img/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../Scripts/highlight//styles/vs2015.css">
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+    <script src="../../Scripts/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <div class="alert alert-secondary" role="alert" style="margin:1% 0 0 0;">
+                    之前的代码
+                </div>
+                <pre>
+                <code class="csharp" style="height:950px;">
+public ActionResult Login(User user)
+{
+    var u = db.users.AsNoTracking().
+                        Where(m => m.Name == user.Name && m.Password == user.Password).
+                        FirstOrDefault();                       //数据库中查询用户信息
+    if (u != null)                                  
+    {
+        return View("LoginSuccess");                            //用户存在登录成功
+    }
+    ModelState.AddModelError("Password", "账号或密码不正确！");   //未找到用户，提示错误
+    return View("Index");
+}
+                </code>
+		</pre>
+            </div>
+            <div class="col-6">
+                <div class="alert alert-secondary" role="alert" style="margin:1% 0 0 0;">
+                    现在的代码
+                </div>
+                <pre>
+                <code class="csharp" style="height:950px;">
+//登录
+public ActionResult Login(User user)
+{
+    var u = db.users.AsNoTracking().
+                        Where(m => m.Name == user.Name && m.Password == user.Password).
+                        FirstOrDefault();           //数据库中查询用户信息
+    if (u != null)                                  //用户存在请求两步验证
+    {
+        string host = ConfigurationManager.AppSettings["TwoFAHost"];
+        string id = ConfigurationManager.AppSettings["Id"];
+        string token = ConfigurationManager.AppSettings["Token"];
+        string accessToken = "888888";              //这里的“888888”，只是标识
+                                                    //实际应该包括用户信息并加密，最后在回置控制器中提取用户信息
+        Dictionary&lt;string, string&gt;dict = new Dictionary&lt;string, string&gt;();
+        dict.Add("user", u.Id.ToString());          //传入用户唯一标识，这里省略查询用户数据步骤，传入用户id
+        dict.Add("mId", id);                        //这里传企业两步验证账号id
+        dict.Add("signatureKey", token);            //这里传入企业两步验证token
+        dict.Add("accessToken", accessToken);       //这里传入回置链接参数accessToken
+        string timestamp = Singature.GetTimeStamp();//获取当前时间戳
+        dict.Add("timestamp", timestamp);           //传入当前时间戳，当前时间到1970-1-1的秒数
+        string sign = Singature.GetSignature(dict); //获取到sign
+        dict.Remove("signatureKey");
+        dict.Add("sign", sign);
+        string urlParam = Singature.GetUrl(dict);   //构造参数链接
+        return Redirect(host + "TwoFAValidationService?" + urlParam);
+    }
+    ModelState.AddModelError("Password", "账号或密码不正确！");
+    return View("Index");                           //未找到用户，提示错误
+}
+
+//登录回置
+public ActionResult LoginSuccess(string assessToken)
+{
+                                                    //这里简单对比accessToken
+    if (assessToken == "888888")                    //实际应该解析用户信息，记录用户登录状态
+    {
+        return Content("accessToken不对");
+    }
+    return View();                                  //登录成功
+                                                    //根据实际情况转到相应的页面
+}
+                    </code>
+		</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

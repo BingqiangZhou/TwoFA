@@ -220,7 +220,7 @@
     <Compile Include="Controllers\OpenTwoFAServiceController.cs" />
     <Compile Include="Controllers\PasswordController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
-    <Compile Include="Controllers\TwoFAResetController.cs" />
+    <Compile Include="Controllers\TwoFAResetServiceController.cs" />
     <Compile Include="Controllers\TwoFAValidationServiceController.cs" />
     <Compile Include="Controllers\UserManualController.cs" />
     <Compile Include="Global.asax.cs">
@@ -229,6 +229,34 @@
     <Compile Include="Migrations\201902170500244_InitialCreate.cs" />
     <Compile Include="Migrations\201902170500244_InitialCreate.Designer.cs">
       <DependentUpon>201902170500244_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904290319083_NameMigration.cs" />
+    <Compile Include="Migrations\201904290319083_NameMigration.Designer.cs">
+      <DependentUpon>201904290319083_NameMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904290408246_ManufactureMigration.cs" />
+    <Compile Include="Migrations\201904290408246_ManufactureMigration.Designer.cs">
+      <DependentUpon>201904290408246_ManufactureMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904290605176_RemoveManufactureMigration.cs" />
+    <Compile Include="Migrations\201904290605176_RemoveManufactureMigration.Designer.cs">
+      <DependentUpon>201904290605176_RemoveManufactureMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904290614341_TestMigration.cs" />
+    <Compile Include="Migrations\201904290614341_TestMigration.Designer.cs">
+      <DependentUpon>201904290614341_TestMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904290708418_InitMigration.cs" />
+    <Compile Include="Migrations\201904290708418_InitMigration.Designer.cs">
+      <DependentUpon>201904290708418_InitMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904291306532__001Migration.cs" />
+    <Compile Include="Migrations\201904291306532__001Migration.Designer.cs">
+      <DependentUpon>201904291306532__001Migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904300251529_addManufacturer.cs" />
+    <Compile Include="Migrations\201904300251529_addManufacturer.Designer.cs">
+      <DependentUpon>201904300251529_addManufacturer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Context\TwoFADbContext.cs" />
@@ -243,7 +271,7 @@
     <Compile Include="ViewModel\ConfigModel.cs" />
     <Compile Include="ViewModel\ForgetPasswordModel.cs" />
     <Compile Include="ViewModel\ModifyPasswordModel.cs" />
-    <Compile Include="ViewModel\OpenTwoFAServiceModel.cs" />
+    <Compile Include="ViewModel\SignatureModel.cs" />
     <Compile Include="ViewModel\RegisterModel.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
     <Compile Include="ViewModel\VerifyModel.cs" />
@@ -280,8 +308,9 @@
     <Content Include="Views\OpenTwoFAService\Index.cshtml" />
     <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <Content Include="Views\Config\Index.cshtml" />
-    <Content Include="Views\TwoFAReset\Index.cshtml" />
+    <Content Include="Views\TwoFAResetService\Index.cshtml" />
     <Content Include="Views\UserManual\Index.cshtml" />
+    <Content Include="Views\TwoFAResetService\ResetSucceed.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -307,6 +336,27 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201902170500244_InitialCreate.resx">
       <DependentUpon>201902170500244_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904290319083_NameMigration.resx">
+      <DependentUpon>201904290319083_NameMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904290408246_ManufactureMigration.resx">
+      <DependentUpon>201904290408246_ManufactureMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904290605176_RemoveManufactureMigration.resx">
+      <DependentUpon>201904290605176_RemoveManufactureMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904290614341_TestMigration.resx">
+      <DependentUpon>201904290614341_TestMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904290708418_InitMigration.resx">
+      <DependentUpon>201904290708418_InitMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904291306532__001Migration.resx">
+      <DependentUpon>201904291306532__001Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904300251529_addManufacturer.resx">
+      <DependentUpon>201904300251529_addManufacturer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

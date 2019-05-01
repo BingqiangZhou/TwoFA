@@ -28,20 +28,21 @@ namespace TwoFA.WebApi.Controllers
         {
             // 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
             //验证
-            User mUser = FindUserByUserName(mName);
+            string id = FindUserIdByUserName(mName);
+            User mUser = FindUserById(id);
             if (mUser == null)
             {
                 return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
             }
             //验证
-            string name = EncodeUserName(mUser.Id,DecodeUserName(userName));
-            User user = FindUserByUserName(userName);
+            string uId = FindUserIdByUserName(userName);
+            User user = FindUserById(uId);
             if (user == null)
             {
                 return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
             }
             //验证 key是否有效添加
-            bool result = VerifyManufactureNameAndKey(user.Id, mName, key);
+            bool result = VerifyManufactureNameAndKey(user.Id, mUser.Id, key);
             if(result)
             {
                 //将openid更新数据库，完成账号创建
@@ -77,8 +78,8 @@ namespace TwoFA.WebApi.Controllers
                 }
                 foreach (var login in loginInfo.AsEnumerable())
                 {
-                    string uName = DecodeUserName(item.UserName);
-                    accounts.Add(new Account { account = uName, key = login.ProviderKey, manufacturer = login.LoginProvider });
+                    var mUser = FindUserById(login.LoginProvider);
+                    accounts.Add(new Account { account = item.Name, key = login.ProviderKey, manufacturer = mUser.Name });
                 }
             }
             return new DataSynchronizationViewModel { Result=true, AccountList=accounts };

@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "登录成功";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>登录成功</title>
+    <link type="text/css" rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 class="display-4">登录成功</h1>
+        <p class="lead">这就是加入了两步验证的的登录过程。</p>
+        <ul class="list-group">
+            <li class="list-group-item text-muted"><a target="_blank" href="@Url.Action("CodeCompare","Home")">比较加入两步验证服务之前与之后的代码的改变<a></li>
+        </ul>
+        <p class="lead">有可能您要问了，没有开启的用户，在开启两步验证的代码结构下，如何处理呢？</p>
+        <hr class="my-4">
+        <p>好了，我们下一步，来回答这个问题，我们先关闭账号两步验证服务在进行登录操作！</p>
+        <a class="btn btn-primary btn-lg" href="@Url.Action("CloseTwoFAService","Home")" target="_blank" role="button">为用户关闭两步验证</a>
+    </div>
+</body>
+</html>

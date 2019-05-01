@@ -184,26 +184,13 @@
       code:0,
       countdown:0,
       havaTimer:false,
-      accountInfo:[],//格式：{account(manufacturer)}
-      showAccountList:[]
+      accountInfo:[]//格式：{account(manufacturer)}
       //account_show:true,
       //function_show:true,
     };
     onLoad()
     {
-      // if (this.havaTimer == false) {
-      //   this.accountList.push({key:"hello",account:"bingqiangzhou",manufacturer:"GitHub"});
-      //   this.accountList.push({key:"123",account:"1",manufacturer:"GitHub"});
-      //   //console.log(this.account_list)
-      //   this.$apply();
-      // }
       this.accountList = wx.getStorageSync('accountList');
-      var accountList = this.accountList;
-      for (var i = accountList.length - 1; i >= 0; i--) {
-        accountList[i].account = accountList[i].account.split('_')[0];
-        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
-      }
-      this.showAccountList = accountList;
       this.$apply();
       var openId = wx.getStorageSync('openId');
       if (openId == null) {
@@ -236,31 +223,18 @@
     {
       this.accountList = wx.getStorageSync('accountList');
       //console.log(this.accountList);
-      if (this.accountList.length == 0) {
+      if (this.accountList == [] || this.accountList.length == 0) {
           return;
       }
-      var accountList = this.accountList;
-      for (var i = accountList.length - 1; i >= 0; i--) {
-        accountList[i].account = accountList[i].account.split('_')[0];
-        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
-      }
-      this.showAccountList = accountList;
       this.accountInfo=[];
-        for (var i = 0; i < this.showAccountList.length; i++) {
+      for (var i = 0; i < this.accountList.length; i++) {
           this.accountInfo.push(
-            this.showAccountList[i].account+"("+this.showAccountList[i].manufacturer+")");
-        }
+            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
+      }
       this.$apply();
       var date = new Date();
       this.counter = Math.floor(date.getTime() / (30*1000));
       this.countdown = Math.ceil(date.getSeconds()%30 * (100/30));
-      // console.log(this.account_list[0].account)
-      // console.log(date.getTime());
-      // console.log(this.countdown);
-      // console.log(this.account_list[this.account_index].key);
-      // console.log(this.counter);
-      // console.log(this.account_index);
-      // this.$apply();
       this.code = totp.GetCode(this.accountList[this.accountIndex].key,this.counter.toString()); 
       this.$apply();
       var that = this;
@@ -277,7 +251,7 @@
           that.$apply();
         }, 300);
         this.havaTimer = true;
-        that.$apply();
+        this.$apply();
       }
     }
     methods = {
@@ -370,6 +344,7 @@
                     console.log(info.AccountList);
                     wx.setStorageSync('accountList', info.AccountList);
                     that.accountList = info.AccountList;
+                    that.$apply();
                     wx.hideLoading();
                     wx.showToast({
                       title: '数据同步完成',
@@ -379,8 +354,6 @@
                 }
                 else{
                   wx.hideLoading();
-                  wx.setStorageSync('accountList', []);
-                  that.accountList = [];
                   wx.showModal({
                   title: '提示',
                   content: '无相关账号信息',
@@ -392,6 +365,12 @@
                   //   }
                   // }
                 })
+                  if (that.accountList != [] || that.accountList.length == 0) {
+                    return;
+                  }
+                  wx.setStorageSync('accountList', []);
+                    that.accountList = [];
+                    that.$apply();
                 }
               },
               fail()
@@ -413,13 +392,13 @@
       },
       ClickPicker()
       {
-        // this.accountInfo=[];
-        // for (var i = 0; i < this.accountList.length; i++) {
-        //   this.accountInfo.push(
-        //     this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
-        // }
-        // //this.accountInfo.push("hello");
-        // this.$apply();
+        this.accountInfo=[];
+        for (var i = 0; i < this.accountList.length; i++) {
+          this.accountInfo.push(
+            this.accountList[i].account+"("+this.accountList[i].manufacturer+")");
+        }
+        //this.accountInfo.push("hello");
+        this.$apply();
       },
       PickerChange(e)
       {

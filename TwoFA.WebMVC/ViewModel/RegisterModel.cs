@@ -29,12 +29,8 @@ namespace TwoFA.WebMVC.ViewModel
         [Compare("Password",ErrorMessage ="两次输入的密码不一致")]
         public string ConfirmPassword { get; set; }
         [Display(Name = "验证码")]
-        //[Required(ErrorMessage = "请输入验证码")]
+        [Required(ErrorMessage = "请输入验证码")]
         [RegularExpression(@"\d{6}", ErrorMessage = "请输入正确的六位验证码")]
         public int Code { get; set; }
-        [Display(Name = "验证码")]
-        [Required(ErrorMessage = "请输入验证码")]
-        [Compare("Code", ErrorMessage = "请输入正确的六位验证码")]
-        public int VeifyCode { get; set; }
     }
 }

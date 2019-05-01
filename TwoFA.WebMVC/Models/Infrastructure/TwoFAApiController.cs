@@ -42,6 +42,14 @@ namespace TwoFA.WebMVC.Models.Infrastructure
                 return HttpContext.Current.GetOwinContext().Authentication;
             }
         }
+
+        private TwoFADbContext db
+        {
+            get
+            {
+                return new TwoFADbContext();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -127,14 +135,14 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// 获取秘钥
         /// </summary>
         /// <param name="id">用户id</param>
-        /// <param name="mName">厂商名</param>
+        /// <param name="mid">厂商id</param>
         /// <returns></returns>
-        public string GetLoginKey(string id,string mName)
+        public string GetLoginKey(string id,string mid)
         {
             var loginInfos = UserManager.GetLogins(id);
             foreach (var item in loginInfos)
             {
-                if (item.LoginProvider.Equals(mName)
+                if (item.LoginProvider.Equals(mid)
                     && item.ProviderKey != null && item.ProviderKey.Length == 40)
                 {
                     return item.ProviderKey;
@@ -195,10 +203,10 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="name">用户名</param>
         /// <returns>查找到用户返回User对象，未找到返回null</returns>
-        public User FindUserByUserName(string name)
+        public string FindUserIdByUserName(string name)
         {
-            User user = null;
-            user = UserManager.FindByName(name);
+            string user = null;
+            user = db.Users.Where(x=>x.Name == name).Select(x=>x.Id).FirstOrDefault();
             return user;
         }
 
@@ -221,7 +229,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <returns></returns>
         public IEnumerable<User> FindAllUserByOpenId(string openId)
         {
-            return UserManager.Users.AsEnumerable().Where(u => u.OpenID == openId);
+            return UserManager.Users.AsEnumerable().Where(u => u.OpenId == openId);
         }
 
         public IEnumerable<UserLoginInfo> FindProviderManufactureInfo(string id)
@@ -330,7 +338,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         public bool SetOpenId(string id, string openId)
         {
             User user = FindUserById(id);
-            user.OpenID = openId;
+            user.OpenId = openId;
             var res = UserManager.Update(user);
             return res.Succeeded;
         }
@@ -342,13 +350,13 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="mName">厂商名</param>
         /// <param name="key">秘钥</param>
         /// <returns></returns>
-        public bool VerifyManufactureNameAndKey(string uId,string mName,string key)
+        public bool VerifyManufactureNameAndKey(string uId,string mId,string key)
         {
             var loginInfos = UserManager.GetLogins(uId);
             foreach (var item in loginInfos)
             {
                 //验证 厂商和秘钥
-                if (item.LoginProvider.Equals(mName) && item.ProviderKey.Equals(key))
+                if (item.LoginProvider.Equals(mId) && item.ProviderKey.Equals(key))
                 {
                     return true;
                 }

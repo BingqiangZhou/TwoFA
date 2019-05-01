@@ -18,17 +18,22 @@ namespace TwoFA.WebMVC.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Name = null;
+            User user = HaveUserLogined();
+            if (user != null)
+            {
+                ViewBag.Name = user.Name;
+            }
             return View();
         }
 
-        
         [HttpGet]
         [AllowAnonymous]
         public ActionResult Detail()
         {
             return View("twofa_detail");
         }
-        
+
         public ActionResult Init()
         {
             try
@@ -39,9 +44,9 @@ namespace TwoFA.WebMVC.Controllers
                 var roleMgr = HttpContext.GetOwinContext().Get<TwoFARoleManager>();
 
                 //厂商角色名
-                const string manufactruerRoleName = "M";
+                const string manufactruerRoleName = "Manufactruer";
                 //普通用户角色名
-                const string ordinaryUserRoleName = "O";
+                const string ordinaryUserRoleName = "OrdinaryUser";
                 //当前APP名（用于厂商的初始使用）
                 const string appUserName = "TwoFA";
 
@@ -61,14 +66,13 @@ namespace TwoFA.WebMVC.Controllers
                 var appUser = userMgr.FindByName(appUserName);
                 if (appUser == null)
                 {
-                    userMgr.Create(new User { UserName = appUserName });
+                    userMgr.Create(new User { UserName = appUserName,
+                        Id = ConfigurationManager.AppSettings["Id"],
+                        SecurityStamp = ConfigurationManager.AppSettings["Token"],Name=appUserName
+                    });
                     appUser = userMgr.FindByName(appUserName);
                 }
-                userMgr.AddClaim(appUser.Id, new Claim("ReturnUrl",ConfigurationManager.AppSettings["SiteURL"]+ "Login/LoginSuccess"));
-                //将应用信息添加到AppSetting
-                ConfigurationManager.AppSettings["Id"] = appUser.Id;
-                ConfigurationManager.AppSettings["Token"] = appUser.SecurityStamp;
-
+                userMgr.AddClaim(appUser.Id, new Claim("ReturnUrl",ConfigurationManager.AppSettings["HostURL    "] + "/Login/LoginSuccess"));
                 return Content("初始化成功");
             }
             catch

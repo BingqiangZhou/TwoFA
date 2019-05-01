@@ -1,33 +1,23 @@
 ﻿@model User
 @{
-    ViewBag.Title = "进行两步验证";
+    ViewBag.Title = "演示页面";
 }
 
 <link type="text/css" rel="stylesheet" href="~/Content/bootstrap.min.css"  />
-@using (Html.BeginForm("Login", "Home"))
-{
-    @Html.AntiForgeryToken()//避免CSRF攻击
-    <div class="text-center mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">进行两步验证</h1>
-        <p>请输入以下信息</p>
-    </div>
-    <div class="col-lg-4 offset-lg-4">
-        <div class="login-info">
-            <div class="form-label-group">
-                @Html.DisplayNameFor(m => m.Name)
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Name)
-            </div>
-        </div>
-        <div class="login-info">
-            <div class="form-label-group">
-                @Html.DisplayNameFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Password)
-            </div>
-        </div>
-        <div style="clear:both;"></div>
-        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">登录</button>
-    </div>
-}
+<div class="jumbotron">
+    <h1 class="display-4">尊敬的老师，您好！</h1>
+    <p class="lead">我们在这里模拟企业登录过程，您将看到：</p>
+    <ul class="list-group">
+        <li class="list-group-item text-muted">有与没有两步验证的区别</li>
+        <li class="list-group-item text-muted">两种情况代码结构的变化</li>
+    </ul>
+    <p class="lead">个人思考实现的方案，还有许多不全面的地方，希望能得到您的指导。</p>
+    <hr class="my-4">
+    <p>测试账号：test，密码：123456</p>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Index","NoTwoFA")" role="button">开始演示</a>
+</div>
+@*<div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">@ViewBag.Title</h1>
+    <h6>测试账号：test，密码：123456</h6>
+</div>*@
 

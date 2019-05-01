@@ -3,6 +3,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -40,6 +42,14 @@ namespace TwoFA.WebMVC.Models.Infrastructure
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+
+        private TwoFADbContext db
+        {
+            get
+            {
+                return new TwoFADbContext();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -59,15 +69,56 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         }
 
         /// <summary>
+        /// 获取秘钥
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="mid">厂商id</param>
+        /// <returns></returns>
+        public string GetLoginKey(string id, string mid)
+        {
+            var loginInfos = UserManager.GetLogins(id);
+            foreach (var item in loginInfos)
+            {
+                if (item.LoginProvider.Equals(mid)
+                    && item.ProviderKey != null && item.ProviderKey.Length == 40)
+                {
+                    return item.ProviderKey;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 创建用户
         /// </summary>
         /// <param name="email">用户邮箱</param>
         /// <param name="name">用户名</param>
         /// <param name="password">用户密码</param>
+        /// <param name="mId">厂商id</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
-        public bool CreateUser(string email,string name,string password)
+        public bool CreateUser(string email,string name,string password,string mId)
         {
-            var result = UserManager.Create(new User { Email = email, UserName = name },password);
+            User user = new User { Email = email, Name = name,Manufacturer=mId};
+            //UserName 无实际意义
+            user.UserName = Guid.NewGuid().ToString().Replace("-","");//生成guid，填充UserName
+            var result = UserManager.Create(user,password);
+            return result.Succeeded;
+        }
+
+        /// <summary>
+        /// 创建用户
+        /// </summary>
+        /// <param name="email">用户邮箱</param>
+        /// <param name="name">用户名</param>
+        /// <param name="password">用户密码</param>
+        /// <param name="mId">厂商id</param>
+        /// <returns>操作成功返回true,操作失败返回false</returns>
+        public bool CreateCustomUser(string name,string mId)
+        {
+            User user = new User {  Name = name, Manufacturer = mId };
+            //UserName 无实际意义
+            user.UserName = Guid.NewGuid().ToString().Replace('-', '_');//生成guid，填充UserName
+            var result = UserManager.Create(user);
             return result.Succeeded;
         }
 
@@ -78,7 +129,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <returns>操作成功返回true,操作失败返回false</returns>
         public bool AddRoleToManufactruerById(string id)
         {
-            var result = UserManager.AddToRole(id, "M");
+            var result = UserManager.AddToRole(id, "Manufactruer");
             return result.Succeeded;
         }
 
@@ -89,7 +140,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <returns>操作成功返回true,操作失败返回false</returns>
         public bool AddRoleToOrdinaryUserById(string id)
         {
-            var result = UserManager.AddToRole(id, "O");
+            var result = UserManager.AddToRole(id, "OrdinaryUser");
             return result.Succeeded;
         }
 
@@ -110,11 +161,35 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="name">用户名</param>
         /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        public string FindUserIdByName(string name)
+        {
+            string id = null;
+            id = db.Users.Where(x=>x.Name.Equals(name)).Select(x=>x.Id).FirstOrDefault();
+            return id;
+        }
+
+        /// <summary>
+        /// 通过用户名查找用户
+        /// </summary>
+        /// <param name="name">用户名</param>
+        /// <returns>查找到用户返回User对象，未找到返回null</returns>
         public User FindUserByUserName(string name)
         {
             User user = null;
             user = UserManager.FindByName(name);
             return user;
+        }
+
+        /// <summary>
+        /// 通过用户名查找用户
+        /// </summary>
+        /// <param name="name">用户名</param>
+        /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        public string FindCustomUserByName(string name,string mid)
+        {
+            string id = null;
+            id = db.Users.Where(x => (x.Name.Equals(name) && x.Manufacturer.Equals(mid))).Select(x=>x.Id).FirstOrDefault();
+            return id;     
         }
 
         /// <summary>
@@ -142,6 +217,35 @@ namespace TwoFA.WebMVC.Models.Infrastructure
                 return user;
             user = UserManager.Find(user.UserName,password);
             return user;
+        }
+
+        /// <summary>
+        /// 生成用于用户的token
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>正确生成token返回token,否则返回null</returns>
+        public string GenerateUserToken(string id)
+        {
+            return UserManager.GenerateUserToken("TwoFA KEY", id);
+        }
+
+        /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool UpdateUser(User user)
+        {
+            //db.Users.Attach(user);
+            //return true;
+            var res = UserManager.Update(user);
+            return res.Succeeded;
+        }
+
+        public int SaveToDatabase()
+        {
+            return db.SaveChanges();
+            //db.Dispose();
         }
 
         /// <summary>
@@ -246,6 +350,27 @@ namespace TwoFA.WebMVC.Models.Infrastructure
             }
             //添加新的声明
             var addResult = UserManager.AddClaim(id, new Claim("ReturnUrl", url));
+            return addResult.Succeeded;
+        }
+
+        public bool SetTwoFAKeyById(string id,string mId,string twoFAKey)
+        {
+            //找到声明"ReturnUrl"，删除声明
+            var userLogins = UserManager.GetLogins(id);
+            foreach (var login in userLogins)
+            {
+                if (login.LoginProvider.Equals(mId))
+                {
+                    var removeResult = UserManager.RemoveLogin(id, login);
+                    if (removeResult.Succeeded == false)
+                    {
+                        return false;
+                    }
+                    break;
+                }
+            }
+            //添加新的声明
+            var addResult = UserManager.AddLogin(id, new UserLoginInfo(mId,twoFAKey));
             return addResult.Succeeded;
         }
 

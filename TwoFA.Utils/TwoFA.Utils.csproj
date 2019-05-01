@@ -63,6 +63,7 @@
     <Compile Include="ToolsClass\GenerateQRCodeByZxing.cs" />
     <Compile Include="ToolsClass\HttpTool.cs" />
     <Compile Include="ToolsClass\SendCodeToEmail.cs" />
+    <Compile Include="ToolsClass\Singature.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

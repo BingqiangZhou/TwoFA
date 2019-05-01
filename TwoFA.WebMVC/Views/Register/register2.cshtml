@@ -19,17 +19,12 @@
     </div>
 
     <div class="col-lg-4 offset-lg-4">
-        @Html.HiddenFor(m => m.Email)
-        @Html.HiddenFor(m => m.Name)
-        @Html.HiddenFor(m => m.Password)
-        @Html.HiddenFor(m => m.ConfirmPassword)
-        @Html.HiddenFor(m => m.Code)
         <div class="login-info">
             <div class="form-label-group">
-                @Html.DisplayNameFor(m => m.VeifyCode)
+                @Html.DisplayNameFor(m => m.Code)
                 (已发送至 @Model.Email)
-                @Html.TextBoxFor(m => m.VeifyCode, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.VeifyCode)
+                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Code)
             </div>
         </div>
         <button class="btn btn-lg  btn-primary btn-block" type="submit">下一步</button>

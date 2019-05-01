@@ -71,3 +71,9 @@ E:\Other files\graduation\mine\TwoFA\Exhibition\obj\Debug\Exhibition.csproj.Core
 E:\Other files\graduation\mine\TwoFA\Exhibition\obj\Debug\Exhibition.csproj.CopyComplete
 E:\Other files\graduation\mine\TwoFA\Exhibition\obj\Debug\Exhibition.dll
 E:\Other files\graduation\mine\TwoFA\Exhibition\obj\Debug\Exhibition.pdb
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\TwoFA.Utils.exe
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\zxing.dll
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\TwoFA.Utils.pdb
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\TwoFA.Utils.exe.config
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\zxing.pdb
+E:\Other files\graduation\mine\TwoFA\Exhibition\bin\zxing.xml

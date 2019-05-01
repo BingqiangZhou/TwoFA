@@ -1,4 +1,4 @@
-﻿@model RegisterModel
+﻿@*@model RegisterModel*@
 @{
     Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
     ViewBag.Title = "注册";
@@ -13,13 +13,13 @@
         <h1 class="h3 mb-3 font-weight-normal">完成注册</h1>
     </div>
     <div class="col-lg-4 offset-lg-4 text-center">
-        <div class="login-info">
+        @*<div class="login-info">
             <div class="text-center">
                 @Html.ActionLink("开启两步验证", "Index", "OpenTwoFAService"
                ,new OpenTwoFAServiceModel { userName=Model.Name, mId = ViewBag.Id,token = ViewBag.Token },
                new { @class = "btn btn-lg  btn-primary" })
             </div>
-        </div>
+        </div>*@
         <div class="login-info">
             @Html.ActionLink("完成注册，立即登录", "Login","Login", null, new { @class = "btn btn-lg  btn-primary" })
         </div>

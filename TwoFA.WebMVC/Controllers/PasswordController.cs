@@ -27,7 +27,7 @@ namespace TwoFA.WebMVC.Controllers
         {
             User user = FindUserByEmail(forgetPassowrdModel.Email);
             //验证邮箱与用户名
-            if (user == null || false == DecodeUserName(user).Equals(forgetPassowrdModel.Name))
+            if (user == null || false == user.Name.Equals(forgetPassowrdModel.Name))
             {
                 //设置错误提示
                 ModelState.AddModelError("Email", "信息不匹配，无法进行下一步操作");
@@ -42,9 +42,9 @@ namespace TwoFA.WebMVC.Controllers
                 return View("Forget1", forgetPassowrdModel);
             }
             //构造url，并发送邮件
-            string url = ConfigurationManager.AppSettings["SiteURL"];
+            string url = ConfigurationManager.AppSettings["HostURL"];
             token = HttpUtility.UrlEncode(token);
-            url = url + "Password/ForgetPassword?name=" + user.UserName + "&token=" + token;
+            url = url + "/Password/ForgetPassword?user=" + user.UserName + "&token=" + token;
             bool res = SendCodeToEmail.ModifyPassword(forgetPassowrdModel.Email,url);
             if (res == false)
             {
@@ -62,22 +62,22 @@ namespace TwoFA.WebMVC.Controllers
             return View("Forget2");
         }
         [HttpGet]
-        public ActionResult ForgetPassword(string name,string token)
+        public ActionResult ForgetPassword(string user,string token)
         {
             //查找用户
-            User user = FindUserByUserName(name);
-            if (user == null)
+            User u = FindUserByUserName(user);
+            if (u == null)
             {
                 ModelState.AddModelError("Email", "链接不正确，请勿修改链接");
                 return View("Forget1");
             }
             //验证token是否匹配
-            bool result = VerifyPasswordResetToken(user.Id, token);
+            bool result = VerifyPasswordResetToken(u.Id, token);
             if (result != true)
             { 
                 return Content("该链接已失效");
             }
-            return View("Forget3",new ForgetPasswordConfirmModel { Id = user.Id,Token=token});
+            return View("Forget3",new ForgetPasswordConfirmModel { Id = u.Id,Token=token});
         }
         public ActionResult ForgetAndConfirmPassword(ForgetPasswordConfirmModel forgetPasswordConfirmModel)
         {
@@ -95,6 +95,12 @@ namespace TwoFA.WebMVC.Controllers
         [Authorize]
         public ActionResult Modify()
         {
+            ViewBag.Name = null;
+            User user = HaveUserLogined();
+            if (user != null)
+            {
+                ViewBag.Name = user.Name;
+            }
             return View("Modify1",new ModifyPasswordModel { Name=HttpContext.User.Identity.Name });
         }
         [HttpPost]

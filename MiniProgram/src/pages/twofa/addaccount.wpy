@@ -78,7 +78,6 @@
       barHeight: wepy.$instance.globalData.statusBarHeight,
       isManualInput:false,
       accountList: [],
-      showAccountList:[],
       openId:''
     };
     onLoad() {
@@ -213,12 +212,6 @@
                   }
                   //将用户信息列表保存到缓存中
                   wx.setStorageSync('accountList', that.accountList)
-                  for (var i = that.accountList.length - 1; i >= 0; i--) {
-                    accountList[i].account = accountList[i].account.split('_')[0];
-                    accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
-                  }
-                  //将处理后的用户信息列表保存到显示列表中
-                  this.showAccountList = accountList;
                   that.$apply(); 
                   wx.redirectTo({
                     url: '/pages/twofa/addsuccess'

@@ -1,39 +1,84 @@
-﻿<!DOCTYPE html>
+﻿@using System.Configuration
+@{
+    string twoFAHost = ConfigurationManager.AppSettings["TwoFAHost"];
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="~/Img/logo.ico" type="image/x-icon" />
     <title>@ViewBag.Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .login-info {
+            margin-top: 20px;
+        }
+
+        .field-validation-error {
+            color: #f00;
+        }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        .input-validation-error {
+            border: 1px solid #f00;
+            background-color: #fee;
+        }
+
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">演示网页</a>
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">模拟企业“官网”</a>
             @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>*@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="@Url.Action("Index","Home")">进行两步验证</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="@Url.Action("Open","Home")">开启两步验证</a>
+                        <a class="nav-link" href="@twoFAHost" target="_blank" role="button">两步验证“官网”</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="@Url.Action("ShowQRCode","Home")">小程序</a>
                     </li>
                 </ul>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        模拟企业登录
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="@Url.Action("Index","NoTwoFA")">无两步验证</a>
+                        <a class="dropdown-item" href="@Url.Action("Index","HaveTwoFA")">含两步验证</a>
+                    </div>
+                </div>
             </div>
         </nav>
         <div>
             @RenderBody()
         </div>
         <div style="width: 100%;text-align: center; color: #666;margin-bottom:20px;margin-top:20px;">
-            湘ICP备18015965号<br>
+            @*湘ICP备18015965号<br>*@
             仅用于毕业设计展示--Bingqiang Zhou
         </div>
     </div>
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
 </body>
 </html>

@@ -19,29 +19,42 @@ namespace TwoFA.WebMVC.Controllers
         [AllowAnonymous]
         public ActionResult Step1()
         {
+            User user = HaveUserLogined();
+            ViewBag.Name = null;
+            if (user != null)
+            {
+                ViewBag.Name = user.Name;
+            }
             return View("register1");
         }
         [HttpPost]
         [AllowAnonymous]
         public ActionResult Step2(RegisterModel registerModel)
         {
-            var user = FindUserByUserName(registerModel.Name);
+            //查询企业是否已经注册
+            string id = FindUserIdByName(registerModel.Name);
+            User user = FindUserById(id);
             if (user != null)
             {
                 ModelState.AddModelError("Name", "该企业已注册");
                 return View("register1", registerModel);
             }
+            //查询邮箱是否已经被注册
             user = FindUserByEmail(registerModel.Email);
             if (user != null)
             {
                 ModelState.AddModelError("Email", "该邮箱已注册");
                 return View("register1", registerModel);
             }
+            //生成6位验证码
             registerModel.Code = GenerateCode.GenerateEmailCode(100000, 999999);
+            //发送到邮件
             bool res = SendCodeToEmail.SendCode(registerModel.Email, registerModel.Code.ToString());
             if (res == true)
             {
-                return View("register2", registerModel);
+                //进入第二步
+                TempData["Model"] = registerModel;
+                return View("register2", new RegisterModel { Email=registerModel.Email });
             }
             else
             {
@@ -53,24 +66,27 @@ namespace TwoFA.WebMVC.Controllers
         [AllowAnonymous]
         public ActionResult Step3(RegisterModel registerModel)
         {
+            RegisterModel info =(RegisterModel)TempData["Model"];
+            if (info.Code != registerModel.Code)
+            {
+                ModelState.AddModelError("Code", "请输入正确的验证码！");
+            }
             //获取Id（厂商Id）
             string appId = ConfigurationManager.AppSettings["Id"];
-            //用户名
-            string userName = EncodeUserName(appId,registerModel.Name);
             //创建用户
-            bool result = CreateUser(registerModel.Email,userName,registerModel.Password);
+            bool result = CreateUser(info.Email, info.Name, info.Password,appId);
             if (result == true)
             {
-                User user = FindUserByEmail(registerModel.Email);
+                User user = FindUserByEmail(info.Email);
                 //设置角色
                 AddRoleToManufactruerById(user.Id);
                 ViewBag.Id = ConfigurationManager.AppSettings["Id"];
                 ViewBag.Token = ConfigurationManager.AppSettings["Token"];
-                return View("register3",registerModel);
+                return View("register3", info);
             }
             else
             {
-                ModelState.AddModelError("VeifyCode", "出现未知错误,请与技术人员联系");
+                ModelState.AddModelError("Code", "出现未知错误,请与技术人员联系");
                 return View("register2", registerModel);
             }
         }

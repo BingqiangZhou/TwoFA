@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using TwoFA.Utils.ToolsClass;
 using TwoFA.WebMVC.Models.Infrastructure;
 using TwoFA.WebMVC.Models.Model;
 using TwoFA.WebMVC.ViewModel;
@@ -22,6 +23,7 @@ namespace TwoFA.WebMVC.Controllers
         public ActionResult Login()
         {
             //判断是否有用户已经登录，如果有用户已经登录，转到首页，不然转到登录页面
+            ViewBag.Name = null;
             if (null != HaveUserLogined())
             {
                 return View("Index","Home");
@@ -41,18 +43,28 @@ namespace TwoFA.WebMVC.Controllers
                 if (user != null)
                 {
                     //获取token
-                    var accessToken= GetTokenById(user.Id);
-                    //将token和user对象存到缓存
+                    var accessToken= GenerateCode.GenerateSHA1(GetTokenById(user.Id));
+                    //获取厂商ID和Token
+                    string id = ConfigurationManager.AppSettings["Id"];
+                    string signatureKey = ConfigurationManager.AppSettings["Token"];
+                    string hostURL = ConfigurationManager.AppSettings["hostURL"];
+                    string timestamp = Singature.GetTimeStamp();
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    dict.Add("user", user.Name);
+                    dict.Add("mId", id);
+                    dict.Add("signatureKey", signatureKey);
+                    dict.Add("timestamp", timestamp);
+                    dict.Add("accessToken", HttpUtility.UrlEncode(accessToken));
+                    string sign = Singature.GetSignature(dict);
+                    dict.Remove("signatureKey");
+                    dict.Add("sign", sign);
+                    string urlParamas = Singature.GetUrl(dict);
+
                     TempData["accessToken"] = accessToken;
                     TempData["user"] = user;
-                    //获取厂商ID和Token
-                    string mId = ConfigurationManager.AppSettings["Id"];
-                    string token = ConfigurationManager.AppSettings["Token"];
-                    //解码用户名
-                    string userName = DecodeUserName(user);
+
+                    return Redirect(hostURL + "/TwoFAValidationService?" + urlParamas);
                     //重定向到验证服务
-                    return RedirectToAction("Index", "TwoFAValidationService",
-                        new VerifyModel { userName= userName,mId= mId, token= token, accessToken= accessToken });
                 }
             }
             //设置错误提示
@@ -62,6 +74,10 @@ namespace TwoFA.WebMVC.Controllers
         public ActionResult LoginSuccess(string accessToken)
         {
             //比对accessToken是否匹配
+            if (TempData["accessToken"] == null)
+            {
+                return Content("非法访问！   （001）");
+            }
             if (TempData["accessToken"].Equals(accessToken) == false)
             {
                 //设置错误提示
@@ -69,6 +85,10 @@ namespace TwoFA.WebMVC.Controllers
             }
             //获取User对象
             User user = (User)TempData["user"];
+            if (user == null)
+            {
+                return Content("非法访问！   （002）");
+            }
             //用户登录
             UserSignIn(user);
             return RedirectToAction("Index", "Home");

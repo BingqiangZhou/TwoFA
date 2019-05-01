@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "登录成功";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>登录成功</title>
+    <link type="text/css" rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 class="display-4">登录成功</h1>
+        <p class="lead">这就是一个简单的登录过程。</p>
+        <ul class="list-group">
+            <li class="list-group-item text-muted">简单的登录过程：使用口令直接登录，口令泄露，账号安全受到威胁。</li>
+        </ul>
+        <hr class="my-4">
+        <p>现在我们在进行下一步，我们打开两步验证服务。</p>
+        <a class="btn btn-primary btn-lg" href="@Url.Action("OpenTwoFAService","Home")" target="_blank" role="button">为用户开启两步验证</a>
+    </div>
+</body>
+</html>

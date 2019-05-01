@@ -12,6 +12,10 @@ namespace TwoFA.WebMVC.ViewModel
         //[Required(ErrorMessage = "请输入验证码")]
         [RegularExpression(@"\d{6}", ErrorMessage = "请输入正确的六位验证码")]
         public double code { get; set; }
+        [Display(Name = "重置码")]
+        //[Required(ErrorMessage = "请输入验证码")]
+        [RegularExpression(@"([a-z]|[A-Z]|[0-9]){12}", ErrorMessage = "请输入正确的重置码")]
+        public string resetCode { get; set; }
         public string userName { get; set; }
         public string mId { get; set; }
         public string token { get; set; }
