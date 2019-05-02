@@ -365,7 +365,7 @@
                   //   }
                   // }
                 })
-                  if (that.accountList != [] || that.accountList.length == 0) {
+                  if (that.accountList == [] || that.accountList.length == 0) {
                     return;
                   }
                   wx.setStorageSync('accountList', []);

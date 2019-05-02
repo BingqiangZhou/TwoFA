@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using TwoFA.Utils.ToolsClass;
 using TwoFA.WebMVC.Models.Context;
 using TwoFA.WebMVC.Models.Model;
@@ -59,9 +60,10 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="name">用户名</param>
         /// <param name="password">用户密码</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
-        public bool CreateUser(string email, string name, string password)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool CreateUser(string name)
         {
-            var result = UserManager.Create(new User { Email = email, UserName = name }, password);
+            var result = UserManager.Create(new User {  UserName = name });
             return result.Succeeded;
         }
 
@@ -70,27 +72,20 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="user">用户对象</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool UpdateUser(User user)
         {
             var result = UserManager.Update(user);
             return result.Succeeded;
         }
 
-        /// <summary>
-        /// 判断是否为普通用户
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public bool IsOrdinaryUser(string id)
-        {
-            return UserManager.IsInRole(id, "O");
-        }
 
         /// <summary>
         /// 删除用户
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool DeleteUser(User user)
         {
             var loginInfos = UserManager.GetLogins(user.Id);
@@ -114,17 +109,18 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteUserLogin(string id)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool DeleteUserLogin(string id,string mId)
         {
             var loginInfos = UserManager.GetLogins(id);
             if (loginInfos != null)
             {
                 foreach (var item in loginInfos)
                 {
-                    var res = UserManager.RemoveLogin(id, item);
-                    if (res.Succeeded == false)
+                    if (item.LoginProvider.Equals(mId))
                     {
-                        return false;
+                        var res = UserManager.RemoveLogin(id, item);
+                        return res.Succeeded;
                     }
                 }
             }
@@ -137,6 +133,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="id">用户id</param>
         /// <param name="mid">厂商id</param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GetLoginKey(string id,string mid)
         {
             var loginInfos = UserManager.GetLogins(id);
@@ -158,10 +155,26 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="mName">登录厂商</param>
         /// <param name="key">两步验证秘钥</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
-        public bool SetUserLoginInfo(string id,string mName,string key)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool SetUserLoginInfo(string id, string mId, string twoFAKey)
         {
-            var result = UserManager.AddLogin(id, new UserLoginInfo(mName, key));
-            return result.Succeeded;
+            //找到声明"ReturnUrl"，删除声明
+            var userLogins = UserManager.GetLogins(id);
+            foreach (var login in userLogins)
+            {
+                if (login.LoginProvider.Equals(mId))
+                {
+                    var removeResult = UserManager.RemoveLogin(id, login);
+                    if (removeResult.Succeeded == false)
+                    {
+                        return false;
+                    }
+                    break;
+                }
+            }
+            //添加新的声明
+            var addResult = UserManager.AddLogin(id, new UserLoginInfo(mId, twoFAKey));
+            return addResult.Succeeded;
         }
 
         /// <summary>
@@ -169,6 +182,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool AddRoleToManufactruerById(string id)
         {
             var result = UserManager.AddToRole(id, "M");
@@ -180,6 +194,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool AddRoleToOrdinaryUserById(string id)
         {
             var result = UserManager.AddToRole(id, "O");
@@ -191,6 +206,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="email">邮箱号</param>
         /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public User FindUserByEmail(string email)
         {
             User user = null;
@@ -203,6 +219,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="name">用户名</param>
         /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string FindUserIdByUserName(string name)
         {
             string user = null;
@@ -211,10 +228,24 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         }
 
         /// <summary>
+        /// 通过用户名查找用户
+        /// </summary>
+        /// <param name="name">用户名</param>
+        /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public string FindUserIdByNameWithmId(string name, string mId)
+        {
+            string user = null;
+            user = db.Users.Where(x => x.Name == name && x.Manufacturer == mId).Select(x => x.Id).FirstOrDefault();
+            return user;
+        }
+
+        /// <summary>
         /// 通过id查找用户
         /// </summary>
         /// <param name="id">用户名</param>
         /// <returns>查找到用户返回User对象，未找到返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public User FindUserById(string id)
         {
             User user = null;
@@ -227,11 +258,13 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="openId"></param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IEnumerable<User> FindAllUserByOpenId(string openId)
         {
             return UserManager.Users.AsEnumerable().Where(u => u.OpenId == openId);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IEnumerable<UserLoginInfo> FindProviderManufactureInfo(string id)
         {
             return UserManager.GetLogins(id);
@@ -242,6 +275,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="email">邮箱号</param>
         /// <param name="password">密码</param>
         /// <returns>验证成功返回User对象，验证失败返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public User VerifyAccountByEmailAndPassword(string email, string password)
         {
             User user = FindUserByEmail(email);
@@ -256,6 +290,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id">用户id</param>
         /// <returns>返回token</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GetTokenById(string id)
         {
             return UserManager.GenerateEmailConfirmationToken(id);
@@ -266,6 +301,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="user">User对象</param>
         /// <returns>返回用户名</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string DecodeUserName(string userName)
         {
             return userName.Split('_')[0];
@@ -277,6 +313,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="appId">厂商id</param>
         /// <param name="name">用户名</param>
         /// <returns>返回用户名</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string EncodeUserName(string appId, string name)
         {
             //厂商Id
@@ -287,33 +324,11 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         }
 
         /// <summary>
-        /// 用户登录
-        /// </summary>
-        /// <param name="user">User对象</param>
-        public void UserSignIn(User user)
-        {
-            ClaimsIdentity ident = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            AuthManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
-            //HttpContext.Response.Cookies.Add(new HttpCookie("UserName",u.UserName));
-        }
-
-        /// <summary>
-        /// 用户注销登录
-        /// </summary>
-        public void UserSignOut()
-        {
-            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //var cookie = Request.Cookies["UserName"];
-            //cookie.Expires = DateTime.Now.AddDays(-1);
-            //Response.Cookies.Add(cookie);
-        }
-
-        /// <summary>
         /// 通过id获取ReturnURL
         /// </summary>
         /// <param name="id"></param>
         /// <returns>返回ReturnURL，未找到则返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GetReturnURLById(string id)
         {
             string url = null;
@@ -335,6 +350,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="id">用户id</param>
         /// <param name="openId"></param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool SetOpenId(string id, string openId)
         {
             User user = FindUserById(id);
@@ -350,6 +366,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="mName">厂商名</param>
         /// <param name="key">秘钥</param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool VerifyManufactureNameAndKey(string uId,string mId,string key)
         {
             var loginInfos = UserManager.GetLogins(uId);
@@ -371,6 +388,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="id"></param>
         /// <param name="url"></param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool SetReturnURLById(string id, string url)
         {
             //找到声明"ReturnUrl"，删除声明
@@ -397,6 +415,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns>正确生成token返回token,否则返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GenerateUserToken(string id)
         {
             return UserManager.GenerateUserToken("TwoFA KEY", id);
@@ -407,6 +426,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns>正确生成token返回token,否则返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GeneratePasswordResetTokenById(string id)
         {
             return UserManager.GeneratePasswordResetToken(id);
@@ -419,6 +439,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="token"></param>
         /// <param name="password">新密码</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool ResetPassword(string id, string token, string password)
         {
             var result = UserManager.ResetPassword(id, token, password);
@@ -432,6 +453,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="oldPassword">旧密码</param>
         /// <param name="newPassword">新密码</param>
         /// <returns>操作成功返回true,操作失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool ChangePassword(string id, string oldPassword, string newPassword)
         {
             var result = UserManager.ChangePassword(id, oldPassword, newPassword);
@@ -443,6 +465,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// </summary>
         /// <param name="id"></param>
         /// <returns>成功获取到token，返回token，否则返回null</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public string GetPasswordResetTokenById(string id)
         {
             string token = null;
@@ -464,6 +487,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="id"></param>
         /// <param name="token"></param>
         /// <returns>返回设置token操作的结果，成功返回true，失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool SetPasswordResetTokenById(string id, string token)
         {
             //找到声明"PasswordResetToken"，删除声明
@@ -491,6 +515,7 @@ namespace TwoFA.WebMVC.Models.Infrastructure
         /// <param name="id">用户id</param>
         /// <param name="token"></param>
         /// <returns>返回验证token操作的结果，匹配成功返回true，失败返回false</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public bool VerifyPasswordResetToken(string id, string token)
         {
             string tokenTemp = null;

@@ -88,8 +88,8 @@
       // //console.log(this.account_list)
       var accountList = wx.getStorageSync('accountList');
       for (var i = accountList.length - 1; i >= 0; i--) {
-        accountList[i].account = accountList[i].account.split('_')[0];
-        accountList[i].manufacturer = accountList[i].manufacturer.split('_')[0];
+        accountList[i].account = accountList[i].account;
+        accountList[i].manufacturer = accountList[i].manufacturer;
       }
       this.showAccountList = accountList;
       this.$apply();

@@ -169,6 +169,15 @@
                 }
               })
             }
+            for (var i = that.accountList.length - 1; i >= 0; i--) {
+                      if (that.accountList[i].account==info[1] && that.accountList[i].manufacturer==info[2]) {
+                          wx.showModal({
+                          title: '提示',
+                          content: '账号已添加请勿重新添加'
+                          })
+                          return;
+                      }
+                    }
             var infoList = {key:info[0],account:info[1],manufacturer:info[2]};
             // wx.switchTab({
             //   url: '/pages/twofa/twofa'
@@ -184,10 +193,10 @@
               },
               success(res){
                 //console.log(res)
-                if(res.data.Result == false){
+                if(res.data.result == false){
                   wx.showModal({
                     title: '提示',
-                    content: res.data.ErrorMsg,
+                    content: res.data.errorMsg,
                     confirmText: '重新扫描',
                     success(res) {
                     }
@@ -195,21 +204,7 @@
                 }
                 else{
                   //将处理后的用户信息存到用户信息列表
-                  if (that.accountList.length == 0) {
-                    that.accountList=[infoList];
-                  }
-                  else{
-                      for (var i = that.accountList.length - 1; i >= 0; i--) {
-                        if (that.accountList[i].account==info[1] && that.accountList[i].manufacturer==info[2]) {
-                            wx.showModal({
-                            title: '提示',
-                            content: '账号已添加请勿重新添加'
-                            })
-                            return;
-                        }
-                      }
-                      that.accountList.push(infoList);
-                  }
+                  that.accountList.push(infoList);
                   //将用户信息列表保存到缓存中
                   wx.setStorageSync('accountList', that.accountList)
                   that.$apply(); 

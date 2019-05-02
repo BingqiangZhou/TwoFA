@@ -24,7 +24,7 @@ namespace TwoFA.WebApi.Controllers
             return res;
         }
         [HttpGet]
-        public VerifyResultViewModel ComfirmAccount(string userName, string key, string openId, string mName)
+        public ResultInfo ComfirmAccount(string userName, string key, string openId, string mName)
         {
             // 小程序将收到的信息发送过来一确认信息，并且添加信息（logininfo、openid）到数据库
             //验证
@@ -32,14 +32,14 @@ namespace TwoFA.WebApi.Controllers
             User mUser = FindUserById(id);
             if (mUser == null)
             {
-                return new VerifyResultViewModel { Result = false, ErrorMsg = "厂商不存在" };
+                return new ResultInfo { result = false, errorMsg = "厂商不存在" };
             }
             //验证
-            string uId = FindUserIdByUserName(userName);
+            string uId = FindUserIdByNameWithmId(userName,mUser.Id);
             User user = FindUserById(uId);
             if (user == null)
             {
-                return new VerifyResultViewModel { Result = false, ErrorMsg = "用户不存在" };
+                return new ResultInfo { result = false, errorMsg = "用户不存在" };
             }
             //验证 key是否有效添加
             bool result = VerifyManufactureNameAndKey(user.Id, mUser.Id, key);
@@ -49,14 +49,14 @@ namespace TwoFA.WebApi.Controllers
                 bool res = SetOpenId(user.Id,openId);
                 if (res)
                 {
-                    return new VerifyResultViewModel { Result = true };
+                    return new ResultInfo { result = true };
                 }
                 else
                 {
-                    return new VerifyResultViewModel { Result = false,ErrorMsg="用户信息更新失败" };
+                    return new ResultInfo { result = false,errorMsg="用户信息更新失败" };
                 }
             }
-            return new VerifyResultViewModel { Result = false ,ErrorMsg="信息不匹配"};
+            return new ResultInfo { result = false ,errorMsg="信息不匹配"};
         }
         [HttpGet]
         public DataSynchronizationViewModel DataSynchronization(string openId)
