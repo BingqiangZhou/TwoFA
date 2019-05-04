@@ -186,6 +186,7 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="Document\New Document.md" />
+    <Content Include="libman.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
@@ -207,6 +208,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\UserManual\Index.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -309,7 +313,6 @@
     <Content Include="Views\TwoFAValidationService\Index.cshtml" />
     <Content Include="Views\Config\Index.cshtml" />
     <Content Include="Views\TwoFAResetService\Index.cshtml" />
-    <Content Include="Views\UserManual\Index.cshtml" />
     <Content Include="Views\TwoFAResetService\ResetSucceed.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

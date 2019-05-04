@@ -28,6 +28,11 @@ namespace Exhibition.Controllers
             return View();
         }
 
+        public ActionResult SignatureWay()
+        {
+            return View();
+        }
+
         public ActionResult OpenTwoFAService()
         {
             string host = ConfigurationManager.AppSettings["TwoFAHost"];

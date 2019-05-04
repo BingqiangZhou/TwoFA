@@ -115,3 +115,4 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Helpers.xml
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Http.Cors.xml
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\System.Web.Optimization.xml
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\Antlr3.Runtime.pdb
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebApi\bin\Views\UserManual\Index.cshtml

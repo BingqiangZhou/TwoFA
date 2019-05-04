@@ -481,147 +481,152 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="T:TwoFA.WebApi.Controllers.TwoFAController">
+        <member name="T:TwoFA.WebApi.Controllers.TwoFAServiceController">
             <summary>
             两步验证开放API
             </summary>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CreateAccount(TwoFA.WebApi.Models.AccountModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAServiceController.Open(TwoFA.WebApi.Models.BaseModel)">
             <summary>
-            开通TwoFA账号
+            开启两步验证服务
             </summary>
-            <param name="model">创建用户参数模型</param>
-            <returns>返回二维码图片base64字符串，以及手动添加账号需输入的Token</returns>
+            <param name = "model" > 参数模型 </param>
+            <returns> 返回二维码图片base64字符串，以及生成验证码的key</returns>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccountIsVaild(TwoFA.WebApi.Models.AccountModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAServiceController.VerifyIsOpened(TwoFA.WebApi.Models.BaseModel)">
             <summary>
             验证账号是否正确添加
             </summary>
-            <param name="model">参数模式</param>
+            <param name="model">参数模型</param>
             <returns>返回验证结果</returns>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyAccount(TwoFA.WebApi.Models.VerifyAccountModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAServiceController.Verify(TwoFA.WebApi.Models.VerifyModel)">
             <summary>
-            验证TwoFA账号
+            验证两步验证验证码
             </summary>
-            <param name="model">验证用户参数模型</param>
+            <param name="model">参数模型</param>
             <returns>返回验证结果</returns>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.VerifyResetKey(TwoFA.WebApi.Models.VerifResetKey)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAServiceController.Close(TwoFA.WebApi.Models.CloseModel)">
             <summary>
-            验证TwoFA重置秘钥
+            关闭两步验证服务
             </summary>
-            <param name="model">验证用户参数模型</param>
+            <param name="model">参数模型</param>
             <returns>返回验证结果</returns>
         </member>
-        <member name="M:TwoFA.WebApi.Controllers.TwoFAController.CancelAccount(TwoFA.WebApi.Models.AccountModel)">
+        <member name="M:TwoFA.WebApi.Controllers.TwoFAServiceController.GetResetKey(TwoFA.WebApi.Models.BaseModel)">
             <summary>
-            注销TwoFA账号
+            获取重置码
             </summary>
-            <param name="model">注销用户参数模型</param>
-            <returns>返回注销结果</returns>
+            <param name="model">参数模型</param>
+            <returns>返回操作结果</returns>
         </member>
-        <member name="T:TwoFA.WebApi.Models.AccountModel">
+        <member name="T:TwoFA.WebApi.Models.BaseModel">
             <summary>
-            创建用户数据模型
+            基础参数模型
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.AccountModel.userName">
+        <member name="P:TwoFA.WebApi.Models.BaseModel.user">
             <summary>
             厂商提供该用户唯一标识
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.AccountModel.mId">
+        <member name="P:TwoFA.WebApi.Models.BaseModel.mId">
             <summary>
             厂商id
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.AccountModel.token">
+        <member name="P:TwoFA.WebApi.Models.BaseModel.sign">
             <summary>
-            厂商token
+            签名
             </summary>
         </member>
-        <member name="T:TwoFA.WebApi.Models.VerifResetKey">
+        <member name="P:TwoFA.WebApi.Models.BaseModel.timestamp">
             <summary>
-            验证重置秘钥模型
+            时间戳
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifResetKey.userName">
+        <member name="T:TwoFA.WebApi.Models.CloseModel">
+            <summary>
+            关闭两步验证参数模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.CloseModel.user">
             <summary>
             厂商提供该用户唯一标识
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifResetKey.mId">
+        <member name="P:TwoFA.WebApi.Models.CloseModel.mId">
             <summary>
             厂商id
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifResetKey.token">
+        <member name="P:TwoFA.WebApi.Models.CloseModel.sign">
             <summary>
-            厂商token
+            签名
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifResetKey.resetKey">
+        <member name="P:TwoFA.WebApi.Models.CloseModel.timestamp">
+            <summary>
+            时间戳
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.CloseModel.resetKey">
             <summary>
             验证码
             </summary>
         </member>
-        <member name="T:TwoFA.WebApi.Models.VerifyAccountModel">
+        <member name="T:TwoFA.WebApi.Models.VerifyModel">
             <summary>
-            验证用户数据模型
+            两步验证验证参数模型
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountModel.userName">
+        <member name="P:TwoFA.WebApi.Models.VerifyModel.user">
             <summary>
             厂商提供该用户唯一标识
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountModel.mId">
+        <member name="P:TwoFA.WebApi.Models.VerifyModel.mId">
             <summary>
             厂商id
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountModel.token">
+        <member name="P:TwoFA.WebApi.Models.VerifyModel.sign">
             <summary>
-            厂商token
+            签名
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.Models.VerifyAccountModel.code">
+        <member name="P:TwoFA.WebApi.Models.VerifyModel.timestamp">
+            <summary>
+            时间戳
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.Models.VerifyModel.code">
             <summary>
             验证码
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.Base64String">
+        <member name="T:TwoFA.WebApi.ViewModels.OpenServiceViewModel">
+            <summary>
+            打开两步验证服务响应模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.OpenServiceViewModel.base64String">
             <summary>
             二维码base64字符串形式，包含Key+厂商ID信息
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.mName">
-            <summary>
-            厂商名
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.uName">
-            <summary>
-            用户唯一标识
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.Key">
-            <summary>
-            生成TwoFA验证码的秘钥
-            </summary>
-        </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.resetKey">
+        <member name="P:TwoFA.WebApi.ViewModels.OpenServiceViewModel.resetKey">
             <summary>
             重置TwoFA的秘钥
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.Result">
+        <member name="P:TwoFA.WebApi.ViewModels.OpenServiceViewModel.result">
             <summary>
             结果状态码，true表示返回正确的信息
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.CreateAccountViewModel.ErrorMsg">
+        <member name="P:TwoFA.WebApi.ViewModels.OpenServiceViewModel.errorMsg">
             <summary>
             错误信息
             </summary>
@@ -636,12 +641,37 @@
             错误信息
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.VerifyResultViewModel.Result">
+        <member name="T:TwoFA.WebApi.ViewModels.ResetKeyModel">
+            <summary>
+            获取重置码响应模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.ResetKeyModel.resetKey">
+            <summary>
+            重置码
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.ResetKeyModel.result">
             <summary>
             结果状态码，true表示验证码验证成功
             </summary>
         </member>
-        <member name="P:TwoFA.WebApi.ViewModels.VerifyResultViewModel.ErrorMsg">
+        <member name="P:TwoFA.WebApi.ViewModels.ResetKeyModel.errorMsg">
+            <summary>
+            错误信息，验证成功时为null
+            </summary>
+        </member>
+        <member name="T:TwoFA.WebApi.ViewModels.ResultInfo">
+            <summary>
+            基础结果响应模型
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.ResultInfo.result">
+            <summary>
+            结果状态码，true表示验证码验证成功
+            </summary>
+        </member>
+        <member name="P:TwoFA.WebApi.ViewModels.ResultInfo.errorMsg">
             <summary>
             错误信息，验证成功时为null
             </summary>

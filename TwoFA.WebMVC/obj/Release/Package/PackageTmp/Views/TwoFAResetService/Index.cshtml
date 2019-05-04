@@ -1,11 +1,11 @@
 ﻿@model VerifyModel
 @{
-    ViewBag.Title = "验证";
+    ViewBag.Title = "重置两步验证";
     Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
     var siteURL = System.Configuration.ConfigurationManager.AppSettings["SiteURL"];
 }
 
-@section Script{
+@*@section Script{
     <script type="text/javascript">
     $(document).ready(function () {
         $("button").click(function () {
@@ -47,7 +47,7 @@
                                 }
                                 else {
                                     //跳转页面
-                                    @*window.location.href = '@Url.Action("Index", "Home")';*@
+                                    window.location.href = '@Url.Action("Index", "Home")';
                                     location.replace("http://" + location.host + $("#verifySuccess").attr("href"))
                                 }
                              },
@@ -65,8 +65,7 @@
         })
     })
     </script>
-}
-@Html.ActionLink("_", "VerifySuccess", "TwoFAValidationService", Model, new { id = "verifySuccess", style = "display:none;" })
+}*@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()//避免CSRF攻击
@@ -75,15 +74,13 @@
         <p>请输入重置码</p>
     </div>
     <div class="col-lg-4 offset-lg-4">
-        @Html.HiddenFor(m => m.mId)
-        @Html.HiddenFor(m => m.userName)
-        @Html.HiddenFor(m => m.token)
         <div class="login-info">
             <div class="form-label-group">
-                重置码<text id="errorMsg" style="float:right;color:red;"></text>
-                @Html.TextBox("ResetKey", null, new { @class = "form-control" })
+                @Html.DisplayNameFor(m => m.resetCode)
+                @Html.TextBoxFor(m => m.resetCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.resetCode)
             </div>
         </div>
-        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="button">重置</button>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">重置</button>
     </div>
 }

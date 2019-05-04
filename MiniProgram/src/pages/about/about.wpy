@@ -17,7 +17,7 @@
 }
 .about-content-info
 {
-  text-decoration: underline;
+  /*text-decoration: underline;*/
   color: #25C6FC;
 }
 .about-button-view{
@@ -74,10 +74,10 @@ audio {
         此小程序为个人主体类型的小程序，主要用于个人小程序开发学习。感谢您的访问！如果您有什么建议和反馈都可以联系作者。
     </view>
     <view class='about-content'>
-        作者邮箱号:<span class='about-content-info' bindtap='Click_CopyInfo'>{{miniprograminfo.email}}</span>
+        关联公众号:<span class='about-content-info' bindtap='Click_ShowOfficeAccountImage'>小周的小粥</span>
     </view>
     <view class='about-content'>
-        关联公众号:<span class='about-content-info' bindtap='Click_ShowOfficeAccountImage'>WE DEVELOP TOGETHER</span>
+        作者邮箱号:<span class='about-content-info' bindtap='Click_CopyInfo'>{{miniprograminfo.email}}</span>
     </view>
     <official-account class='office-account'></official-account>
     <!-- <official-account>hello</official-account> -->
@@ -90,7 +90,7 @@ audio {
       bindtap='Click_AudioPlay' bindtimeupdate='TimeUpdate_Audio' bindpause='Click_AudioPause' controls  loop></audio>
     </view> -->
     <view class='about-version'>
-        <text>WeDevelopTogether\n{{miniprograminfo.versioninfo}}</text>
+        <text>小小粥 {{miniprograminfo.versioninfo}}</text>
     </view>
 </template>
 <script>
@@ -100,7 +100,7 @@ audio {
       title: '关于',
       barHeight: wepy.$instance.globalData.statusBarHeight,
       miniprograminfo: {
-        logosrc: wepy.$instance.globalData.url + '/data/logo.jpg',
+        logosrc: wepy.$instance.globalData.url + '/data/logo(2).jpg',
         versioninfo: wepy.$instance.globalData.versioninfo,
         email: 'bingqiang_zhou@qq.com',
         imgalist: [wepy.$instance.globalData.url + '/data/qrcode.jpg']
@@ -121,7 +121,7 @@ audio {
 // // 请求音乐信息
 //       wx.request(
 //         {
-//           url: wepy.$instance.globalData.url + 'api/getinfo',
+//           url: wepy.$instance.globalData.url + '/api/getinfo',
 //           method: 'post',
 //           dataType: 'json',
 //           success: function (res) {

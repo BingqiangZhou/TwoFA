@@ -1,4 +1,4 @@
-﻿@model OpenTwoFAServiceModel
+﻿@model SignatureModel
 @{
     ViewBag.Title = "开通两步验证";
     Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
@@ -13,76 +13,55 @@
 <div id="allDocument">
     <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">开通两步验证</h1>
-        <p>请扫描以下二维码</p>
+        <p id="Tip">请扫描以下二维码</p>
     </div>
     <div class="col-lg-4 offset-lg-4 text-center">
         <div class="login-info">
             <div class="text-center">
-                <img id="QRCode" src="" alt="正在加载中..." />
+                <img id="QRCode" src="data:image/jpeg;base64,@ViewBag.base64String" alt="正在加载中..." />
             </div>
         </div>
         <div class="login-info">
-            <div class="text-center" hidden id="Result">
+            <div class="text-center" id="Result">
                 <p class="text-primary">
-                    重置码:<span id="ResetKey"></span>
+                    重置码:<span id="ResetKey">@ViewBag.resetKey</span>
                 </p>
                 <h5 class="text-danger">注意记住上面的重置码，在无法验证时会用得上</h5>
             </div>
         </div>
         <div class="login-info">
-            <a class="btn btn-lg  btn-primary disabled" hidden id="Back" href="@Url.Action("Index", "Home")">服务开通成功，返回</a>
-            <a class="btn btn-lg  btn-primary" id="verification" href="javascript:void(0);">验证是否添加成功</a>
+            <h4 class="text-danger" hidden id="Back" href="#">服务开通成功，安全起见，请关闭窗口</h4>
+            <a class="btn btn-lg  btn-primary" id="Verify" href="javascript:void(0);">验证是否添加成功</a>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $.ajax({
-        type:"post",
-        url: "@siteURL"+"/api/TwoFA/CreateAccount",
-        cache: false,
-        data: {
-            "userName": "@Model.userName",
-            "mId": "@Model.mId",
-            "token": "@Model.token",
-        },
-        success: function (result) {
-            //console.log(result.Base64String);
-            $("#QRCode").attr('src', "data:image/png;base64," + result.Base64String);
-            $("#Result").removeAttr("hidden");
-            $("#ResetKey").text(result.resetKey);
-        },
-        error: function () {
-            $("#QRCode").attr('alt', "二维码加载失败，请刷新页面！");
-        }
-    });
-    $(document).ready(function () {
-        $("#verification").click(function ()
-        {
-            $.ajax({
-                type: 'post',
-                url: "@siteURL"+"/api/TwoFA/VerifyAccountIsVaild",
-                cache: false,
-                data: {
-                    "userName": "@Model.userName",
-                    "mId": "@Model.mId",
-                    "token": "@Model.token"
-                },
-                success: function (res) {
-                    if (res.Result == true) {
-                        $("#allDocument").empty();
-                        $("#allDocument").addClass("text-center");
-                        $("#allDocument").text("服务开通成功!");
-                        //$("#Back").removeAttr("hidden")
+
+@section Script{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Verify").click(function () {
+                $.ajax({
+                    url: '@Url.Action("HaveAddSucceed", "OpenTwoFAService")',
+                    method: "post",
+                    success: function (res) {
+                        if (res == "Yes") {
+                            $("#Back").removeAttr("hidden");
+                            $("#Verify").attr("hidden", "hidden");
+                            $("#QRCode").attr("hidden", "hidden");
+                            $("#Result").attr("hidden", "hidden");
+                            $("#Tip").attr("hidden", "hidden");
+                        }
+                        else {
+                            $("#Verify").text("未正确添加，请添加之后再次验证");
+                        }
+                    },
+                    error: function () {
+                        //alert(inputUrl);
+                        $("#Verify").text("出错了，请刷新重试！");
                     }
-                    else {
-                        $("#verification").text("您还没有正确添加,刷新")
-                        $("#Back").attr("hidden", "hidden")
-                    }
-                },
-                error: function () {
-                    $("#verification").text("出现错误，请与技术人员联系")
-                }
-            });
+                });
+            })
         })
-    })
-</script>
+    </script>
+}
+

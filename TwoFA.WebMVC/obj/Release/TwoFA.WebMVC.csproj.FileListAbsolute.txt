@@ -109,3 +109,11 @@ E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.pdb
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\zxing.xml
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.InitialCreate.resources
 E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.csproj.GenerateResource.cache
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\bin\Views\UserManual\Index.cshtml
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.NameMigration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.ManufactureMigration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.RemoveManufactureMigration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.TestMigration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.InitMigration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations._001Migration.resources
+E:\Other files\graduation\mine\TwoFA\TwoFA.WebMVC\obj\Release\TwoFA.WebMVC.Migrations.addManufacturer.resources

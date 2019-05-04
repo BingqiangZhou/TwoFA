@@ -20,7 +20,7 @@ namespace TwoFA.Utils.ToolsClass
         public static bool SendCode(string toMailAddress,string code)
         {
             string subjectInfo = "邮箱验证";
-            string bodyInfo = String.Format(@"验证码：" + code + "");
+            string bodyInfo = String.Format(@"您正在注册两步验证服务，您的验证码是：" + code + "");
 
             //string attachPath = "E:\\123123.txt; E:\\haha.pdf";
             try

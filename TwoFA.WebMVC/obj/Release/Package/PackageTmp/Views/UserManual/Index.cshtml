@@ -1,6 +1,9 @@
-﻿@{
+﻿
+
+@{
     //ViewBag.Title = "使用手册";
     //Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    var siteURL = System.Configuration.ConfigurationManager.AppSettings["SiteURL"];
 }
 
 <!DOCTYPE html>
@@ -15,8 +18,9 @@
             position: relative;
             overflow-y: scroll;
         }
-        img{
-            width:600px;
+
+        img {
+            width: 600px;
         }
     </style>
 </head>
@@ -44,12 +48,12 @@
                     <a class="list-group-item list-group-item-action" href="#list-item-3">调用</a>
                 </div>
             </div>
-            <h2 id="list-item-1"><strong><em>第一步：<a href="https://bingqiangzhou.cn/Register/Step1">注册</a>与<a href="https://bingqiangzhou.cn/Login/Login">登录</a></em></strong></h2>
+            <h2 id="list-item-1"><strong><em>第一步：<a href="@Url.Action("Step1","Register")">注册</a>与<a href="@Url.Action("Login","Login")">登录</a></em></strong></h2>
             <hr />
             <h3>1.1. 填写相关信息</h3>
             <p>根据要求填写您的邮箱，企业名称，密码（两次输入确认密码），页面如图一所示。</p>
             <div align="center">
-                <img src="~/Document/picture01.png" alt="填写相关信息页面" class="col-lg-6 col-md-9 col-sm-12"/>
+                <img src="~/Document/picture01.png" alt="填写相关信息页面" class="col-lg-6 col-md-9 col-sm-12" />
             </div>
             <div align="center">图一、填写相关信息页面</div>
             <h3>1.2. 验证邮箱</h3>
@@ -60,7 +64,7 @@
             <div align=center>图二、验证邮箱</div>
             <h3>1.3. 完成注册</h3>
             <p>当您看到一下页面（如图三所示）时，代表您已经注册成功了。</p>
-            <div align="center" >
+            <div align="center">
                 <img src="~/Document/picture03.png" alt="完成注册" class="col-lg-6 col-md-9 col-sm-12" />
             </div>
             <div align="center">图三、完成注册</div>
@@ -76,7 +80,7 @@
             </div>
             <div align="center">图五、登录成功</div>
             <p><strong>恭喜您完成注册并登录，接下来我们进行第二步--配置。</strong></p>
-            <h2 id="list-item-2"><strong><em>第二步：<a href="http://bingqiangzhou.cn/Config">配置</a></em></strong></h2>
+            <h2 id="list-item-2"><strong><em>第二步：<a href="@Url.Action("Index","Config")">配置</a></em></strong></h2>
             <hr />
             <h3>2.1. 配置回置链接</h3>
             <p>
@@ -103,7 +107,7 @@
                 用户可以使用小程序WeDevelopTogether来记录这些信息，并生成秘钥，用于下次登录时的验证。
                 当您传入的参数正确时，您将看到下面的页面（如图八所示）。
             </p>
-            <div align="center" >
+            <div align="center">
                 <img src="~/Document/picture08.png" alt="开启服务页面" class="col-lg-6 col-md-9 col-sm-12" />
             </div>
             <div align="center">图八、开启服务页面</div>
@@ -112,20 +116,20 @@
                 当您的用户进行登录操作时，您需要传入用户的唯一标识、您的openId以及token以及您的accessToken(可以省略)转到https://bingqiangzhou.cn/TwoFAValidationService,如果您的用户开启了两步验证服务，我们将要求您的用户进行两步验证，如果您的用户没有开启两步验证服务，我们将不会去要求他进行验证操作，而是直接将accessToken返回到之前您配置的回置链接，您可以验证accessToken来辨别登录用户和登录的安全性，如果您不设置accesstoken,您可以设置https://bingqiangzhou.cn为唯一可访问的服务器。
                 当您传入的参数正确时，您将看到下面的页面（如图九所示），用户通过输入小程序生成的验证码，而完成登录。
             </p>
-            <div align="center" >
+            <div align="center">
                 <img src="~/Document/picture09.png" alt="两步验证服务页面" class="col-lg-6 col-md-9 col-sm-12" />
             </div>
             <div align="center">图九、两步验证服务页面</div>
             <h3>3.4. 其他服务</h3>
             <p>
-                其他关闭两步验证服务以及重置服务等，请您具体查看<a href="https://bingqiangzhou.cn/Graduation/Help">API说明</a>。
+                其他关闭两步验证服务以及重置服务等，请您具体查看<a href="@siteURL/Help" target="_blank">API说明</a>。
                 <strong><em>感谢您的使用！</em></strong>
             </p>
             <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
         </div>
     </div>
-<div style="clear:both;"></div>
-@Html.Partial("_PartialPageFooter")
+    <div style="clear:both;"></div>
+    @Html.Partial("_PartialPageFooter")
 </body>
 </html>
 

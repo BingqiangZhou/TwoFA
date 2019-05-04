@@ -1,11 +1,11 @@
 ﻿@model VerifyModel
 @{
-    ViewBag.Title = "验证";
+    ViewBag.Title = "两步验证";
     Layout = "~/Views/Shared/_LayoutHomeOperator.cshtml";
     var siteURL = System.Configuration.ConfigurationManager.AppSettings["SiteURL"];
 }
 
-@section Script{
+@*@section Script{
 <script type="text/javascript">
     $(document).ready(function () {
         $("button").click(function () {
@@ -44,9 +44,8 @@
         })
     })
 </script>
-}
-@Html.ActionLink("_", "VerifySuccess", "TwoFAValidationService", Model, new { id = "verifySuccess", style = "display:none;" })
-@*@using (Html.BeginForm())
+}*@
+@using (Html.BeginForm("Verify", "TwoFAValidationService"))
 {
     @Html.AntiForgeryToken()//避免CSRF攻击*@
     <div class="text-center mb-4">
@@ -54,19 +53,16 @@
         <p>请输入验证码</p>
     </div>
     <div class="col-lg-4 offset-lg-4">
-        @Html.HiddenFor(m => m.mId)
-        @Html.HiddenFor(m => m.userName)
-        @Html.HiddenFor(m => m.token)
         <div class="login-info">
             <div class="form-label-group">
-                @Html.DisplayNameFor(m => m.code)<text id="errorMsg" style="float:right;color:red;"></text>
+                @Html.DisplayNameFor(m => m.code)
                 @Html.TextBoxFor(m => m.code, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.code)
             </div>
         </div>
-        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="button">验证</button>
+        <button class="btn btn-lg  btn-primary btn-block" style="margin-top:20px;" type="submit">验证</button>
         <div class="text-center">
             @Html.ActionLink("无法验证", "Index", "TwoFAReset", Model, null)
         </div>
     </div>
-@*}*@
+}

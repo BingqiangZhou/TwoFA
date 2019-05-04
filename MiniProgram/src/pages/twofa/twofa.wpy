@@ -191,7 +191,9 @@
     onLoad()
     {
       this.accountList = wx.getStorageSync('accountList');
-      this.$apply();
+      if (this.accountList != null || this.accountList.length > 0) {
+        this.$apply();
+      }   
       var openId = wx.getStorageSync('openId');
       if (openId == null) {
         wx.login({

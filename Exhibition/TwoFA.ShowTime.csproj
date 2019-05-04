@@ -278,6 +278,7 @@
     <Content Include="Views\HaveTwoFA\Index.cshtml" />
     <Content Include="Views\HaveTwoFA\LoginSuccess.cshtml" />
     <Content Include="Views\Home\CodeCompare.cshtml" />
+    <Content Include="Views\Home\SignatureWay.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

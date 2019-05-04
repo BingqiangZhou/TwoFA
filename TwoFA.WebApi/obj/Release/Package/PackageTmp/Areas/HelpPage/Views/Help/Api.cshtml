@@ -20,3 +20,10 @@
         @Html.DisplayForModel()
     </section>
 </div>
+
+@Html.DisplayForModel("TestClientDialogs")
+@*@Html.DisplayForModel("TestClientReferences")*@
+@section Scripts{
+    <link href="~/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+    @Html.DisplayForModel("TestClientReferences")
+}

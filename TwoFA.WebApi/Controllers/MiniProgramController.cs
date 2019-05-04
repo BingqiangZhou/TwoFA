@@ -71,15 +71,18 @@ namespace TwoFA.WebApi.Controllers
             List<Account> accounts = new List<Account>();
             foreach (var item in accountInfo.AsEnumerable())
             {
-                var loginInfo = FindProviderManufactureInfo(item.Id);
-                if(loginInfo == null)
+                if (item.OpenId != null && item.OpenId.Length > 0)
                 {
-                    continue;
-                }
-                foreach (var login in loginInfo.AsEnumerable())
-                {
-                    var mUser = FindUserById(login.LoginProvider);
-                    accounts.Add(new Account { account = item.Name, key = login.ProviderKey, manufacturer = mUser.Name });
+                    var loginInfo = FindProviderManufactureInfo(item.Id);
+                    if (loginInfo == null)
+                    {
+                        continue;
+                    }
+                    foreach (var login in loginInfo.AsEnumerable())
+                    {
+                        var mUser = FindUserById(login.LoginProvider);
+                        accounts.Add(new Account { account = item.Name, key = login.ProviderKey, manufacturer = mUser.Name });
+                    }
                 }
             }
             return new DataSynchronizationViewModel { Result=true, AccountList=accounts };
